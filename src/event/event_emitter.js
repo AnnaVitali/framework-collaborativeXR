@@ -5,8 +5,9 @@ class EventEmitter {
         this.listeners
             .filter(({ name }) => name === eventName)
             .forEach(
-                ({ callback }) => setTimeout(callback.apply(this, [this, ...data]), 0));
-        console.log(this.listeners);
+                ({ callback }) => {
+                    setTimeout(callback.apply(this, [this, ...data]), 0)
+                });
     }
     on(name, callback) {
         if (
@@ -27,4 +28,6 @@ class EventEmitter {
     }
 }
 
-export {EventEmitter}
+const eventEmitter = new EventEmitter()
+
+export {eventEmitter}
