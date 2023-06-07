@@ -13,13 +13,17 @@
 <canvas id="renderCanvas"></canvas>
 <script type="module">
     import {SessionManager} from "./src/session/sesssion_manager.js";
+    import {Scene} from "./src/scene/scene.js";
 
     const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
 
     const sessionManager = new SessionManager();
-    const sessionStarter = await sessionManager.startSession(apiKey, appId);
-    console.log("is session started: " + sessionStarter);
+    await sessionManager.startSession(apiKey, appId);
+    const scene = new Scene(sessionManager);
+    scene.initializeScene();
+    scene.activateRenderLoop();
+
 </script>
 </body>
 </html>
