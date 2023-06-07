@@ -1,4 +1,4 @@
-import {EventEmitter} from "../event/event_emitter.js";
+import {eventEmitter} from "../event/event_emitter.js";
 
 const canvas = document.getElementById("renderCanvas");
 
@@ -9,14 +9,18 @@ class RootModel extends Croquet.Model {
      * */
     init() {
         this.linkedViews = [];
-        this.eventEmitter = new EventEmitter();
+
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
         this.subscribe(this.sessionId, "view-exit", this.viewDrop);
 
-        this.#initializeScene();
-        this.#activateRenderLoop();
+        eventEmitter.on("initialize", (data) => {
+            this.initializeScene();
+        });
 
+        eventEmitter.on("render", (data) => {
+            this.activateRenderLoop();
+        });
     }
 
     /**
@@ -26,7 +30,6 @@ class RootModel extends Croquet.Model {
     viewJoin(viewId){
         console.log("MODEL: received view join");
         this.linkedViews.push(viewId);
-        console.log("Is user manipulating " + this.isUserManipulating);
     }
 
     /**
@@ -41,7 +44,8 @@ class RootModel extends Croquet.Model {
         }
     }
 
-    #initializeScene(){
+    initializeScene(){
+        console.log("MODEL: initialize scene called");
         this.engine = new BABYLON.Engine(canvas, true);
         this.scene = new BABYLON.Scene(this.engine);
         this.scene.clearColor = new BABYLON.Color3.Black;
@@ -91,7 +95,8 @@ class RootModel extends Croquet.Model {
         return this.scene;
     }
 
-    #activateRenderLoop() {
+    activateRenderLoop() {
+        console.log("MODEL: activate render loop called");
         this.#createWebXRExperience().then(sceneToRender => {
             this.engine.runRenderLoop(() => sceneToRender.render());
         });
@@ -103,4 +108,4 @@ class RootModel extends Croquet.Model {
 RootModel.register("RootModel");
 
 
-export { RootModel };
+export { RootModel, eventEmitter };
