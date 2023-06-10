@@ -5,7 +5,7 @@
     <title>Collaborative WebXR Application</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
-    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.0.5"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -14,6 +14,9 @@
 <script type="module">
     import {SessionManager} from "./src/session/sesssion_manager.js";
     import {Scene} from "./src/scene/scene.js";
+    import {Hologram} from "./src/Hologram/hologram.js";
+    import {Vector3} from "./src/utility/vector3.js";
+    import {Quaternion} from "./src/utility/quaternion.js";
 
     const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
@@ -22,6 +25,16 @@
     await sessionManager.startSession(apiKey, appId);
     const scene = new Scene(sessionManager);
     scene.initializeScene();
+
+    const hologramName = "industrialRobot";
+    const hologramPosition = new Vector3(0, 0.2, 0.1);
+    const hologramRotation = new Quaternion(0, 0, 0, 0);
+    const hologramScaling = new Vector3(2, 2, 2);
+    const hologramMeshFilePath = "./industrial_robot/scene.gltf";
+    const hologram = new Hologram(hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
+
+    scene.addHologramToScene(hologramName, hologram);
+
     scene.activateRenderLoop();
 
 </script>

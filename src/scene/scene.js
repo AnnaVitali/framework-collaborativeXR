@@ -16,6 +16,13 @@ class Scene{
         eventEmitter.emit("initialize", "");
     }
 
+    addHologramToScene(hologramName, hologram){
+        if(this.debug){
+            console.log("Scene: add hologram");
+        }
+        eventEmitter.emit("hologramCreate", JSON.stringify({name: hologramName, hologram: hologram}));
+    }
+
     activateRenderLoop(){
         if(this.debug){
             console.log("Scene: activate render loop");

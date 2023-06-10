@@ -2,7 +2,7 @@ import {CroquetSession} from "../croquet/croquet_session.js";
 class SessionManager {
     constructor(){
         this.debug = true;
-        this.sessionStarted = false;
+        this._sessionStarted = false;
     }
 
     async startSession(apiKey, appId){
@@ -22,13 +22,13 @@ class SessionManager {
             if(this.debug) {
                 console.log("SessionManager: session started true");
             }
-            this.sessionStarted = true;
+            this._sessionStarted = true;
             resolve(true);
         });
     }
 
     isSessionStarted(){
-        return this.sessionStarted;
+        return this._sessionStarted;
     }
 }
 
