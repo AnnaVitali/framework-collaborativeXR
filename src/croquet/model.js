@@ -1,4 +1,5 @@
 import {eventEmitter} from "../event/event_emitter.js";
+import {HologramModel} from "./hologram_model.js";
 
 const canvas = document.getElementById("renderCanvas");
 
@@ -9,11 +10,16 @@ class RootModel extends Croquet.Model {
      * */
     init() {
         this.linkedViews = [];
-
+        this.hologramModel = HologramModel.create();
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
         this.subscribe(this.sessionId, "view-exit", this.viewDrop);
+        //this.subscribe(this.id, "hologramCreate", this.createHologramModel)
 
+        this.#setupBackEndEventHandlers()
+    }
+
+    #setupBackEndEventHandlers(){
         eventEmitter.on("initialize", (data) => {
             this.initializeScene();
         });
@@ -21,6 +27,12 @@ class RootModel extends Croquet.Model {
         eventEmitter.on("render", (data) => {
             this.activateRenderLoop();
         });
+
+        eventEmitter.on("hologramCreate", (hologram) => {
+            console.log("MODEL: create hologram");
+            //this.publish(this.id, "hologramCreate", hologram);
+            this.#createHologramModel(hologram);
+        } )
     }
 
     /**
@@ -50,12 +62,8 @@ class RootModel extends Croquet.Model {
         this.scene = new BABYLON.Scene(this.engine);
         this.scene.clearColor = new BABYLON.Color3.Black;
 
-        const alpha =  3 * Math.PI/2;
-        const beta = Math.PI/50;
-        const radius = 220;
-        const target = new BABYLON.Vector3(0, 0, 0);
-
-        const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, this.scene);
+        const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -5), this.scene);
+        camera.setTarget(BABYLON.Vector3.Zero());
         camera.attachControl(canvas, true);
 
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
@@ -63,6 +71,8 @@ class RootModel extends Croquet.Model {
 
         this.GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
         this.GUIManager.useRealisticScaling = true;
+
+        this.hologramModel.setScene(this.scene);
     }
 
     async #createWebXRExperience() {
@@ -102,10 +112,18 @@ class RootModel extends Croquet.Model {
         });
     }
 
+    #createHologramModel(hologram){
+        //console.log(this);
+        //HologramModel.create();
+        //this.call(HologramModel.create(), "")
+        this.hologramModel.createNewHologramInstance(hologram);
+        //console.log("MODEL: children -> " + this.children);
+    }
+
 }
 
 
 RootModel.register("RootModel");
 
 
-export { RootModel, eventEmitter };
+export {RootModel};
