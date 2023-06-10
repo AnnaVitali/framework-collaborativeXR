@@ -6,7 +6,7 @@ class EventEmitter {
             .filter(({ name }) => name === eventName)
             .forEach(
                 ({ callback }) => {
-                    setTimeout(callback.apply(this, [this, ...data]), 0)
+                    setTimeout(callback.apply(this, [data]), 0)
                 });
     }
     on(name, callback) {
