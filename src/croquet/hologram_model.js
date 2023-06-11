@@ -1,3 +1,5 @@
+import {eventEmitter} from "../event/event_emitter.js";
+
 class HologramModel extends Croquet.Model {
 
     init(options={}){
@@ -39,12 +41,13 @@ class HologramModel extends Croquet.Model {
             result.meshes[0].scaling = new BABYLON.Vector3(hologramObject._scaling._x, hologramObject._scaling._y,
                 hologramObject._scaling._z);
 
-            //console.log(mesh.absolutePosition);
             this.holograms.delete(hologramName);
             this.holograms.set(hologramName, result.meshes[0]);
             console.log("POSITION: " + this.holograms.get(hologramName).position);
             console.log("ROTATION: " + this.holograms.get(hologramName).rotation);
             console.log("SCALE: " + this.holograms.get(hologramName).scaling);
+
+            eventEmitter.emit("hologramCreated", "");
         });
 
 
