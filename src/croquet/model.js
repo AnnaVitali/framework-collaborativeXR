@@ -15,7 +15,7 @@ class RootModel extends Croquet.Model {
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
         this.subscribe(this.sessionId, "view-exit", this.viewDrop);
 
-        this.#setupBackEndEventHandlers()
+        this.#setupBackEndEventHandlers();
     }
 
     #setupBackEndEventHandlers(){
@@ -61,8 +61,8 @@ class RootModel extends Croquet.Model {
         this.scene = new BABYLON.Scene(this.engine);
         this.scene.clearColor = new BABYLON.Color3.Black;
 
-        const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -5), this.scene);
-        camera.setTarget(BABYLON.Vector3.Zero());
+        const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 1.3, -0.3), this.scene);
+        camera.minZ = 0.01;
         camera.attachControl(canvas, true);
 
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
