@@ -14,7 +14,6 @@ class RootModel extends Croquet.Model {
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
         this.subscribe(this.sessionId, "view-exit", this.viewDrop);
-        //this.subscribe(this.id, "hologramCreate", this.createHologramModel)
 
         this.#setupBackEndEventHandlers()
     }

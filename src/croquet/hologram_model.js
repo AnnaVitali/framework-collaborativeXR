@@ -25,9 +25,6 @@ class HologramModel extends Croquet.Model {
         console.log("HOLOGRAM MODEL: " + directory);
         console.log("HOLOGRAM MODEL: " + stringSplit[stringSplit.length - 1]);
 
-
-        //this.holograms.set(hologramObject.name, hologramObject.hologram);
-
         BABYLON.SceneLoader.ImportMeshAsync(
             "",
             directory,
