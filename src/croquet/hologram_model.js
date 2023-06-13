@@ -50,7 +50,6 @@ class HologramModel extends Croquet.Model {
             eventEmitter.emit("hologramCreated", "");
         });
 
-
     }
 }
 

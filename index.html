@@ -14,7 +14,7 @@
 <script type="module">
     import {SessionManager} from "./src/session/sesssion_manager.js";
     import {Scene} from "./src/scene/scene.js";
-    import {Hologram} from "./src/Hologram/hologram.js";
+    import {Hologram} from "./src/hologram/hologram.js";
     import {Vector3} from "./src/utility/vector3.js";
     import {Quaternion} from "./src/utility/quaternion.js";
     import {ManipulatorButtonProperties} from "./src/controls/manipulator_button_properties.js";
@@ -34,7 +34,7 @@
     const hologramMeshFilePath = "./industrial_robot/scene.gltf";
     const hologram = new Hologram(hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
 
-    scene.addHologramToScene(hologramName, hologram);
+    await scene.addHologramToScene(hologramName, hologram);
 
     const nearMenuPositionRespectToHologram = new Vector3(0.2, 1.2, 0.5);
     const buttonText = "manipulate";

@@ -18,7 +18,14 @@ class Scene{
         if(this.debug){
             console.log("Scene: add hologram");
         }
+
         eventEmitter.emit("hologramCreate", JSON.stringify({name: hologramName, hologram: hologram}));
+
+        return new Promise((resolve) => {
+            eventEmitter.on("hologramCreated", () => {
+                resolve()
+            });
+        })
     }
 
     addManipulatorMenu(hologramName, menuPosition, buttonProperties){

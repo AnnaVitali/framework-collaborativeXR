@@ -68,6 +68,7 @@ class RootModel extends Croquet.Model {
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
         light.intensity = 1;
 
+
         this.GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
         this.GUIManager.useRealisticScaling = true;
 
