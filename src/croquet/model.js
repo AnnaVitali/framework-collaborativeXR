@@ -58,7 +58,6 @@ class RootModel extends Croquet.Model {
     viewDrop(viewId){
         console.log("MODEL: received view left");
         this.linkedViews.splice(this.linkedViews.indexOf(viewId),1);
-
         if(this.linkedViews.length === 0){
             this.destroy();
         }
@@ -111,7 +110,6 @@ class RootModel extends Croquet.Model {
 
         this.GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
         this.GUIManager.useRealisticScaling = true;
-
         this.hologramModel.setScene(this.scene);
     }
 

@@ -5,6 +5,8 @@ class HologramModel extends Croquet.Model {
     init(options={}){
         super.init();
         this.holograms = new Map();
+
+        this.#setupViewEventHandlers();
     }
 
     setScene(scene){
@@ -50,6 +52,18 @@ class HologramModel extends Croquet.Model {
             eventEmitter.emit("hologramCreated", "");
         });
 
+    }
+
+    updatePosition(data){
+        const hologramName = data.hologramName;
+        console.log("H-MODEL: recevied update position " + hologramName);
+
+        const hologram = this.holograms.get(hologramName);
+        hologram.position =  new BABYLON.Vector3(data.position_x, data.position_y - 0.2, data.position_z);
+    }
+
+    #setupViewEventHandlers(){
+        this.subscribe("hologram", "positionChanged", this.updatePosition);
     }
 }
 

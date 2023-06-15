@@ -34,6 +34,17 @@ class RootView extends Croquet.View {
         this.#setDefaultControlButtonBehavior(data.hologramName, hologramControls.y);
     }
 
+    notifyHologramPositionChanged(hologramName, position){
+        console.log("VIEW: hologram position change");
+        this.publish("hologram", "positionChanged",
+            {
+                hologramName: hologramName,
+                position_x: position.x,
+                position_y: position.y,
+                position_z: position.z
+            });
+    }
+
     #setOtherUserInControlBehaviorControlButton(controlButton){
         controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
         controlButton.frontMaterial.albedoColor = BABYLON.Color3.Red();
@@ -126,8 +137,9 @@ class RootView extends Croquet.View {
         const sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
         sixDofDragBehavior.dragDeltaRatio = 1;
         sixDofDragBehavior.zDragFactor = 1;
+
         sixDofDragBehavior.onPositionChangedObservable.add(() => {
-            //this.notifyHologramPositionChanged(hologram.absolutePosition);
+            this.notifyHologramPositionChanged(hologramName, box.absolutePosition);
         });
         boundingBox.addBehavior(sixDofDragBehavior);
 
