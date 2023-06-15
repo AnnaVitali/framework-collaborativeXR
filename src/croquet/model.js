@@ -39,6 +39,7 @@ class RootModel extends Croquet.Model {
 
     #setupViewEventHandlers(){
         this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
+        this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
     }
 
     /**
@@ -72,10 +73,22 @@ class RootModel extends Croquet.Model {
         console.log(data);
         this.isUserManipulating = true;
         this.viewInControl = data.view;
-        console.log(this.linkedViews);
+
+        console.log(this.linkedViews)
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
-            this.publish(v, "freezeControlButton", {hologramName: data.hologramName})
+            this.publish(v, "freezeControlButton", {hologramName: data.hologramName});
+            console.log("v:" + v);
         });
+    }
+
+    /**
+     * Manage the relase of the control from the user who had it.
+     * @param {any} data object that contains the id of the view where the user released the control.
+     */
+    manageUserHologramControlReleased(data){
+        console.log("MODEL: received manage user hologram control released");
+        this.isUserManipulating = false;
+        //this.linkedViews.filter(v => data.view !== v).forEach(v => this.publish(v, "showManipulatorMenu"));
     }
 
     initializeScene(){

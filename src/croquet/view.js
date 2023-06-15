@@ -45,7 +45,23 @@ class RootView extends Croquet.View {
         this.publish("controlButton", "clicked", {view: this.viewId, hologramName: hologramName});
     }
 
-    #addManipulatorMenu(hologramName, menuPosition, buttonProperties) {
+    #notifyCurrentUserReleaseControl(hologramName){
+        console.log("VIEW: user stop manipulating");
+        this.#setDefaultControlButtonBehavior(hologramName, this.hologramsManipulatorMenu.get(hologramName).y);
+        this.#removeElementHologramManipulator(hologramName);
+        this.publish("controlButton", "released", {view: this.viewId});
+    }
+
+    #removeElementHologramManipulator(hologramName){
+        const hologramManipulatorElements = this.hologramViewCopies.get(hologramName);
+
+        hologramManipulatorElements.x.dispose();
+        hologramManipulatorElements.y.dispose();
+        hologramManipulatorElements.z.attachedMesh = null;
+        hologramManipulatorElements.z.dispose();
+    }
+
+    #addManipulatorMenu(hologramName, menuPosition) {
         const manipulatorNearMenu = new BABYLON.GUI.NearMenu("NearMenu");
         manipulatorNearMenu.rows = 1;
         this.model.GUIManager.addControl(manipulatorNearMenu);
@@ -57,7 +73,7 @@ class RootView extends Croquet.View {
         const controlButton = new BABYLON.GUI.HolographicButton("manipulate", false);//new BABYLON.GUI.TouchHolographicButton();
         manipulatorNearMenu.addButton(controlButton);
 
-        this.#setDefaultControlButtonBehavior(hologramName, controlButton, buttonProperties)
+        this.#setDefaultControlButtonBehavior(hologramName, controlButton)
         this.hologramsManipulatorMenu.set(hologramName, new Pair(manipulatorNearMenu, controlButton));
     }
 
@@ -72,7 +88,16 @@ class RootView extends Croquet.View {
 
         controlButton.onPointerDownObservable.add(() => {
             this.#addHologramManipulator(hologramName);
+            this.#setManipulatingBehaviourControlButton(hologramName, controlButton);
             this.#notifyUserStartManipulating(hologramName);
+        });
+    }
+
+    #setManipulatingBehaviourControlButton(hologramName, controlButton){
+        controlButton.text = "Stop manipulating";
+        controlButton.onPointerDownObservable.clear();
+        controlButton.onPointerDownObservable.add(() => {
+            this.#notifyCurrentUserReleaseControl(hologramName);
         });
     }
 
@@ -93,28 +118,20 @@ class RootView extends Croquet.View {
         const sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
         sixDofDragBehavior.dragDeltaRatio = 1;
         sixDofDragBehavior.zDragFactor = 1;
-
-        /*
-
         sixDofDragBehavior.onPositionChangedObservable.add(() => {
-            this.notifyHologramPositionChanged(hologram.absolutePosition);
+            //this.notifyHologramPositionChanged(hologram.absolutePosition);
         });
-        this.boundingBox.addBehavior(sixDofDragBehavior);
+        boundingBox.addBehavior(sixDofDragBehavior);
 
-        this.gizmo.onScaleBoxDragObservable.add(() => {
-            this.notifyHologramScaleChanged(hologram.absoluteScaling);
-        });
-
-        this.gizmo.onRotationSphereDragObservable.add(() => {
-            this.notifyHologramRotationChanged(hologram.absoluteRotationQuaternion);
+        gizmo.onScaleBoxDragObservable.add(() => {
+            //this.notifyHologramScaleChanged(hologram.absoluteScaling);
         });
 
+        gizmo.onRotationSphereDragObservable.add(() => {
+            //this.notifyHologramRotationChanged(hologram.absoluteRotationQuaternion);
+        });
 
-        this.controlButton.text = "Stop manipulating";
-        this.controlButton.onPointerDownObservable.clear();
-        this.controlButton.onPointerDownObservable.add(() => {
-            this.notifyCurrentUserReleaseControl();
-        });*/
+        this.hologramViewCopies.set(hologramName, new Triple(box, boundingBox, gizmo));
     }
 
     #constructBox(hologram) {
