@@ -27,6 +27,13 @@ class RootView extends Croquet.View {
         this.#setOtherUserInControlBehaviorControlButton(hologramControls.y);
     }
 
+    restoreControlButton(data){
+        console.log("VIEW: recevied restore ControlButton hologram " + data.hologramName);
+        const hologramName = data.hologramName;
+        const hologramControls = this.hologramsManipulatorMenu.get(hologramName);
+        this.#setDefaultControlButtonBehavior(data.hologramName, hologramControls.y);
+    }
+
     #setOtherUserInControlBehaviorControlButton(controlButton){
         controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
         controlButton.frontMaterial.albedoColor = BABYLON.Color3.Red();
@@ -38,6 +45,7 @@ class RootView extends Croquet.View {
 
     #setupModelEventHandlers(){
         this.subscribe(this.viewId, "freezeControlButton", this.freezeControlButton);
+        this.subscribe(this.viewId, "restoreControlButton", this.restoreControlButton);
     }
 
     #notifyUserStartManipulating(hologramName){
@@ -49,7 +57,7 @@ class RootView extends Croquet.View {
         console.log("VIEW: user stop manipulating");
         this.#setDefaultControlButtonBehavior(hologramName, this.hologramsManipulatorMenu.get(hologramName).y);
         this.#removeElementHologramManipulator(hologramName);
-        this.publish("controlButton", "released", {view: this.viewId});
+        this.publish("controlButton", "released", {view: this.viewId, hologramName: hologramName});
     }
 
     #removeElementHologramManipulator(hologramName){

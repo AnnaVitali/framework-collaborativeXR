@@ -58,6 +58,7 @@ class RootModel extends Croquet.Model {
     viewDrop(viewId){
         console.log("MODEL: received view left");
         this.linkedViews.splice(this.linkedViews.indexOf(viewId),1);
+
         if(this.linkedViews.length === 0){
             this.destroy();
         }
@@ -88,7 +89,10 @@ class RootModel extends Croquet.Model {
     manageUserHologramControlReleased(data){
         console.log("MODEL: received manage user hologram control released");
         this.isUserManipulating = false;
-        //this.linkedViews.filter(v => data.view !== v).forEach(v => this.publish(v, "showManipulatorMenu"));
+
+        this.linkedViews.filter(v => data.view !== v).forEach(v => {
+            this.publish(v, "restoreControlButton", {hologramName: data.hologramName});
+        });
     }
 
     initializeScene(){
