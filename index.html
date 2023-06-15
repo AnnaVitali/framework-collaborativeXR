@@ -17,7 +17,6 @@
     import {Hologram} from "./src/hologram/hologram.js";
     import {Vector3} from "./src/utility/vector3.js";
     import {Quaternion} from "./src/utility/quaternion.js";
-    import {ManipulatorButtonProperties} from "./src/controls/manipulator_button_properties.js";
 
     const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
@@ -37,11 +36,8 @@
     await scene.addHologramToScene(hologramName, hologram);
 
     const nearMenuPositionRespectToHologram = new Vector3(0.2, 1.2, 0.5);
-    const buttonText = "manipulate";
-    const buttonImgFilePath = "./img/IconAdjust.png"
-    const manipulatorButtonProperties = new ManipulatorButtonProperties(buttonText, buttonImgFilePath);
 
-    scene.addManipulatorMenu(hologramName, nearMenuPositionRespectToHologram, manipulatorButtonProperties);
+    scene.addManipulatorMenu(hologramName, nearMenuPositionRespectToHologram);
 
     scene.activateRenderLoop();
 

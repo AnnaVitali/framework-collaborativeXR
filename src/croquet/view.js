@@ -16,6 +16,33 @@ class RootView extends Croquet.View {
         console.log("VIEW subscribed ");
 
         this.#setupBackEndEventHandlers();
+        this.#setupModelEventHandlers();
+    }
+
+    freezeControlButton(data){
+        console.log("VIEW: received freezeControlButton hologram " + data.hologramName);
+        const hologramName = data.hologramName;
+        const hologramControls = this.hologramsManipulatorMenu.get(hologramName);
+
+        this.#setOtherUserInControlBehaviorControlButton(hologramControls.y);
+    }
+
+    #setOtherUserInControlBehaviorControlButton(controlButton){
+        controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
+        controlButton.frontMaterial.albedoColor = BABYLON.Color3.Red();
+        controlButton.backMaterial.albedoColor = new BABYLON.Color3(0.67, 0.29, 0.29);
+
+        controlButton.imageUrl = "../../img/IconClose.png";
+        controlButton.onPointerDownObservable.clear();
+    }
+
+    #setupModelEventHandlers(){
+        this.subscribe(this.viewId, "freezeControlButton", this.freezeControlButton);
+    }
+
+    #notifyUserStartManipulating(hologramName){
+        console.log("VIEW: user start manipulating hologram " + hologramName);
+        this.publish("controlButton", "clicked", {view: this.viewId, hologramName: hologramName});
     }
 
     #addManipulatorMenu(hologramName, menuPosition, buttonProperties) {
@@ -27,27 +54,30 @@ class RootView extends Croquet.View {
         manipulatorNearMenu.parent = this.model.hologramModel.holograms.get(hologramName);
         manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
 
-        const controlButton = new BABYLON.GUI.TouchHolographicButton();
-        this.#setDefaultControlButtonBehavior(hologramName, controlButton, buttonProperties)
-
+        const controlButton = new BABYLON.GUI.HolographicButton("manipulate", false);//new BABYLON.GUI.TouchHolographicButton();
         manipulatorNearMenu.addButton(controlButton);
 
+        this.#setDefaultControlButtonBehavior(hologramName, controlButton, buttonProperties)
         this.hologramsManipulatorMenu.set(hologramName, new Pair(manipulatorNearMenu, controlButton));
     }
 
-    #setDefaultControlButtonBehavior(hologramName, controlButton, buttonProperties) {
-        controlButton.text = buttonProperties._text;
-        controlButton.imageUrl = buttonProperties._imgFilePath;
+    #setDefaultControlButtonBehavior(hologramName, controlButton) {
+        controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
+        controlButton.frontMaterial.albedoColor = BABYLON.Color3.Blue();
+        controlButton.backMaterial.albedoColor = new BABYLON.Color3(0.29, 0.37, 0.67);
+        controlButton.text = "Manipulate";
+        controlButton.imageUrl = "../../img/IconAdjust.png";
         controlButton.onPointerDownObservable.clear();
+
 
         controlButton.onPointerDownObservable.add(() => {
             this.#addHologramManipulator(hologramName);
-            //this.notifyUserStartManipulating();
+            this.#notifyUserStartManipulating(hologramName);
         });
     }
 
     #addHologramManipulator(hologramName){
-        const box = this.constructBox(this.model.hologramModel.holograms.get(hologramName));
+        const box = this.#constructBox(this.model.hologramModel.holograms.get(hologramName));
         box.isVisible = false;
 
         const boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(box);
@@ -87,7 +117,7 @@ class RootView extends Croquet.View {
         });*/
     }
 
-    constructBox(hologram) {
+    #constructBox(hologram) {
         let min = null;
         let max = null;
         hologram.getChildMeshes().forEach((mesh) => {
@@ -114,8 +144,6 @@ class RootView extends Croquet.View {
         const size = max.subtract(min);
 
         const box = BABYLON.MeshBuilder.CreateBox("bounds", {size: 1}, this.model.scene);
-        console.log("Size: " + size);
-        console.log("Size: " + size.multiplyByFloats(0.5));
         const multiplyFactor = 0.5
         box.scaling.copyFrom(new BABYLON.Vector3(size.x * multiplyFactor, size.y * multiplyFactor, size.z * multiplyFactor));
         box.position = hologram.position;
@@ -130,16 +158,13 @@ class RootView extends Croquet.View {
             const object = JSON.parse(data);
             const hologramName = object.name;
             const menuPosition = object.position;
-            const buttonProperties = object.buttonProperties;
 
             console.log("name ");
             console.log(hologramName);
             console.log("position ")
             console.log(menuPosition);
-            console.log("button properties ")
-            console.log(buttonProperties);
 
-            this.#addManipulatorMenu(hologramName, menuPosition, buttonProperties);
+            this.#addManipulatorMenu(hologramName, menuPosition, );
         })
     }
 }

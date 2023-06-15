@@ -28,13 +28,13 @@ class Scene{
         })
     }
 
-    addManipulatorMenu(hologramName, menuPosition, buttonProperties){
+    addManipulatorMenu(hologramName, menuPosition){
         if(this.debug){
             console.log("Scene: add manipulator menu");
         }
 
         eventEmitter.emit("addManipulatorMenu", JSON.stringify({name: hologramName,
-            position: menuPosition, buttonProperties: buttonProperties}));
+            position: menuPosition}));
     }
 
     activateRenderLoop(){

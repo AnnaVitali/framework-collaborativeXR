@@ -11,11 +11,14 @@ class RootModel extends Croquet.Model {
     init() {
         this.linkedViews = [];
         this.hologramModel = HologramModel.create();
+        this.isUserManipulating = false;
+        this.viewInControl = null;
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
         this.subscribe(this.sessionId, "view-exit", this.viewDrop);
 
         this.#setupBackEndEventHandlers();
+        this.#setupViewEventHandlers();
     }
 
     #setupBackEndEventHandlers(){
@@ -32,6 +35,10 @@ class RootModel extends Croquet.Model {
             //this.publish(this.id, "hologramCreate", hologram);
             this.#createHologramModel(hologram);
         } )
+    }
+
+    #setupViewEventHandlers(){
+        this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
     }
 
     /**
@@ -53,6 +60,22 @@ class RootModel extends Croquet.Model {
         if(this.linkedViews.length === 0){
             this.destroy();
         }
+    }
+
+    /**
+     * Manage the control of the hologram from the user.
+     * @param {any} data object that contains the id of the view in control.
+     */
+    manageUserHologramControl(data){
+        console.log("MODEL: received manage user hologram control");
+        console.log("data:");
+        console.log(data);
+        this.isUserManipulating = true;
+        this.viewInControl = data.view;
+        console.log(this.linkedViews);
+        this.linkedViews.filter(v => data.view !== v).forEach(v => {
+            this.publish(v, "freezeControlButton", {hologramName: data.hologramName})
+        });
     }
 
     initializeScene(){
@@ -113,11 +136,7 @@ class RootModel extends Croquet.Model {
     }
 
     #createHologramModel(hologram){
-        //console.log(this);
-        //HologramModel.create();
-        //this.call(HologramModel.create(), "")
         this.hologramModel.createNewHologramInstance(hologram);
-        //console.log("MODEL: children -> " + this.children);
     }
 
 }
