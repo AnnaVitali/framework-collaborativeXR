@@ -27,17 +27,17 @@
     scene.initializeScene();
 
     const hologramName = "industrialRobot";
-    const hologramPosition = new Vector3(0, 1, 0.5);
-    const hologramRotation = new Quaternion(0, 0, 0, 0);
-    const hologramScaling = new Vector3(0.5, 0.5, 0.5);
-    const hologramMeshFilePath = "./industrial_robot/scene.gltf";
+    const hologramPosition = new Vector3(0, 1, 1.2);
+    const hologramRotation = new Quaternion(0, 1, 0, 0);
+    const hologramScaling = 0.7;
+    const hologramMeshFilePath = "./industrial_robot/scene.gltf";//"./high-detailed-flying-bird/Flying hummingbird.glb";
     const hologram = new Hologram(hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
 
     await scene.addHologramToScene(hologramName, hologram);
 
     const nearMenuPositionRespectToHologram = new Vector3(0.2, 1.2, 0.5);
-
-    scene.addManipulatorMenu(hologramName, nearMenuPositionRespectToHologram);
+    const boundingBoxHigh = 0.30
+    scene.addManipulatorMenu(hologramName, nearMenuPositionRespectToHologram, boundingBoxHigh);
 
     scene.activateRenderLoop();
 

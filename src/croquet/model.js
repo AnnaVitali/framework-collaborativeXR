@@ -38,7 +38,7 @@ class RootModel extends Croquet.Model {
     }
 
     #setupViewEventHandlers(){
-        this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
+        //this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
         this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
     }
 
@@ -103,6 +103,8 @@ class RootModel extends Croquet.Model {
         const camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 1.3, -0.3), this.scene);
         camera.minZ = 0.01;
         camera.attachControl(canvas, true);
+        camera.inputs.addMouseWheel();
+
 
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
         light.intensity = 1;
