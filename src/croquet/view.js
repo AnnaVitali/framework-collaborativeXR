@@ -1,5 +1,4 @@
 import {eventEmitter} from "../event/event_emitter.js";
-import {Pair} from "../utility/pair.js";
 import {Triple} from "../utility/triple.js";
 import {ManipulatorView} from "./manipulator_view.js";
 class RootView extends Croquet.View {
@@ -33,6 +32,7 @@ class RootView extends Croquet.View {
         this.#log("VIEW: received restore ControlButton hologram " + data.hologramName);
         const hologramName = data.hologramName;
         const hologramControls = this.hologramsManipulatorMenu.get(hologramName);
+        this.hologramManipulatorView.get(hologramName).removeElementHologramManipulator();
         this.#setDefaultControlButtonBehavior(data.hologramName, hologramControls.y);
     }
 
@@ -44,7 +44,7 @@ class RootView extends Croquet.View {
         this.#log("VIEW: received show userManipulation")
         const hologramName = data.hologramName;
         if(!this.hologramManipulatorView.has(hologramName)){
-            const hologramView = new ManipulatorView(this.model.hologramModel, hologramName);
+            const hologramView = new ManipulatorView(this.model.hologramModel, hologramName, this.viewId);
             this.hologramManipulatorView.set(hologramName, hologramView);
             hologramView.showOtherUserManipulation();
         }else{
@@ -76,18 +76,9 @@ class RootView extends Croquet.View {
 
     #notifyCurrentUserReleaseControl(hologramName){
         this.#log("VIEW: user stop manipulating");
-        this.#setDefaultControlButtonBehavior(hologramName, this.hologramsManipulatorMenu.get(hologramName).y);
         this.hologramManipulatorView.get(hologramName).removeElementHologramManipulator();
+        this.#setDefaultControlButtonBehavior(hologramName, this.hologramsManipulatorMenu.get(hologramName).y);
         this.publish("controlButton", "released", {view: this.viewId, hologramName: hologramName});
-    }
-
-    #removeElementHologramManipulator(hologramName){
-        const hologramManipulatorElements = this.hologramViewCopies.get(hologramName);
-
-        hologramManipulatorElements.x.dispose();
-        hologramManipulatorElements.y.dispose();
-        hologramManipulatorElements.z.attachedMesh = null;
-        hologramManipulatorElements.z.dispose();
     }
 
     #addManipulatorMenu(hologramName, menuPosition, boundingBoxHigh) {
@@ -128,6 +119,10 @@ class RootView extends Croquet.View {
 
     #setManipulatingBehaviourControlButton(hologramName, controlButton){
         controlButton.text = "Stop manipulating";
+        controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
+        controlButton.frontMaterial.albedoColor = BABYLON.Color3.Green();
+        controlButton.backMaterial.albedoColor = new BABYLON.Color3(0.29, 0.67, 0.45);
+
         controlButton.onPointerDownObservable.clear();
         controlButton.onPointerDownObservable.add(() => {
             this.#notifyCurrentUserReleaseControl(hologramName);

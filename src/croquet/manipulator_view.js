@@ -24,16 +24,16 @@ class ManipulatorView extends Croquet.View {
 
     updateHologram(data){
         console.log("MANIPULATOR-VIEW: received update holograms");
-        console.log(data);
+
         const position = new BABYLON.Vector3(data.position_x, data.position_y, data.position_z);
         const scaling = new BABYLON.Vector3(data.scale_x, data.scale_y, data.scale_z);
-
         this.boundingBox.position = position;
         this.boundingBox.scaling = scaling;
     }
 
     addHologramManipulator(){
         console.log("MANIPULATOR-VIEW: publish showUserManipulation");
+        console.log("parent view " + this.parentView);
         this.publish("hologramManipulator", "showUserManipulation", {view: this.parentView, hologramName: this.hologramName});
         const hologramInformation = this.model.holograms.get(this.hologramName)
         const hologram = hologramInformation._x;
@@ -66,8 +66,9 @@ class ManipulatorView extends Croquet.View {
 
     removeElementHologramManipulator(){
         this.gizmo.attachedMesh = null;
-        this.boundingBox.dispose();
         this.gizmo.dispose();
+        this.boundingBox.getChildren().forEach(child => child.setParent(null));
+        this.boundingBox.dispose;
     }
 
     #serializeDataToSend(){

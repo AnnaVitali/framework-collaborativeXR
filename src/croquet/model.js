@@ -37,6 +37,7 @@ class RootModel extends Croquet.Model {
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "showUserManipulation", {hologramName: data.hologramName});
         });
+
     }
 
     /**
@@ -88,7 +89,6 @@ class RootModel extends Croquet.Model {
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "restoreControlButton", {hologramName: data.hologramName});
         });
-
     }
 
     #initializeScene(){
