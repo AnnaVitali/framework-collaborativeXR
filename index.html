@@ -36,8 +36,7 @@
     await scene.addHologramToScene(hologramName, hologram);
 
     const nearMenuPositionRespectToHologram = new Vector3(0.2, 1.2, 0.5);
-    const boundingBoxHigh = 0.30
-    scene.addManipulatorMenu(hologramName, nearMenuPositionRespectToHologram, boundingBoxHigh);
+    scene.addManipulatorMenu(hologramName, nearMenuPositionRespectToHologram);
 
     scene.activateRenderLoop();
 

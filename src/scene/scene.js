@@ -28,27 +28,16 @@ class Scene{
         })
     }
 
-    addManipulatorMenu(hologramName, menuPosition, boundingBoxHigh){
+    addManipulatorMenu(hologramName, menuPosition){
         if(this.debug){
             console.log("Scene: add manipulator menu");
         }
 
-        if(typeof boundingBoxHigh !== undefined){
-            eventEmitter.emit("addManipulatorMenu", JSON.stringify(
-                {
+        eventEmitter.emit("addManipulatorMenu", JSON.stringify(
+            {
                 name: hologramName,
-                position: menuPosition,
-                boundingBoxHigh: boundingBoxHigh
-                }
-            ));
-        }else {
-            eventEmitter.emit("addManipulatorMenu", JSON.stringify(
-                {
-                    name: hologramName,
-                    position: menuPosition
-                }
-            ));
-        }
+                position: menuPosition
+            }));
     }
 
     activateRenderLoop(){
