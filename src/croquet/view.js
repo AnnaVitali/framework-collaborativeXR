@@ -87,7 +87,7 @@ class RootView extends Croquet.View {
         this.model.GUIManager.addControl(manipulatorNearMenu);
         manipulatorNearMenu.isPinned = true;
 
-        manipulatorNearMenu.parent = this.model.hologramModel.holograms.get(hologramName)._x.parent;
+        manipulatorNearMenu.parent = this.model.hologramModel.holograms.get(hologramName).parent;
         manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
 
         const controlButton = new BABYLON.GUI.HolographicButton("manipulate", false);

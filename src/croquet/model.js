@@ -151,7 +151,6 @@ class RootModel extends Croquet.Model {
 
     #createHologramModel(hologram){
         this.hologramModel.createNewHologramInstance(hologram);
-
     }
 
     #setupBackEndEventHandlers(){
@@ -180,6 +179,12 @@ class RootModel extends Croquet.Model {
         if(this.debug){
             console.log(message);
         }
+    }
+
+    static types() {
+        return {
+            "BABYLON.GUI.GUI3DManager": BABYLON.GUI.GUI3DManager,
+        };
     }
 
 }

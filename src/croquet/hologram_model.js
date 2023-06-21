@@ -1,6 +1,4 @@
 import {eventEmitter} from "../event/event_emitter.js";
-import {Triple} from "../utility/triple.js";
-import {Pair} from "../utility/pair.js";
 
 class HologramModel extends Croquet.Model {
 
@@ -33,6 +31,7 @@ class HologramModel extends Croquet.Model {
         BABYLON.SceneLoader.LoadAssetContainer(directory, stringSplit[stringSplit.length - 1], this.scene, (container) => {
             try{
                 container.addAllToScene();
+                container.meshes[0].rotationQuaternion = null;
 
                 const box = BABYLON.MeshBuilder.CreateBox("box", {size: 1});
                 box.isVisible = false;
@@ -45,9 +44,8 @@ class HologramModel extends Croquet.Model {
                 container.meshes[0].position = new BABYLON.Vector3(0, 0, 0)
 
                 container.meshes[0].scaling.scaleInPlace(scaling);
-                container.meshes[0].markAsDirty("rotation");
 
-                this.holograms.set(hologramName, new Triple(container.meshes[0], filePath, new Pair(scaling, euler)));
+                this.holograms.set(hologramName, container.meshes[0]);
 
                 this.#log("POSITION: " + this.holograms.get(hologramName).position);
                 this.#log("ROTATION: " + this.holograms.get(hologramName).rotation);
@@ -77,6 +75,12 @@ class HologramModel extends Croquet.Model {
         if(this.debug){
             console.log(message);
         }
+    }
+
+    static types() {
+        return {
+            "BABYLON.Mesh": BABYLON.Mesh,
+        };
     }
 }
 
