@@ -12,12 +12,13 @@ class CroquetSession {
         }
 
         return Croquet.Session.join({
-            apiKey: '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH',
-            appId: 'it.unibo.studio.anna_2evitali4.collaborativeXR',
-            name: "unnamed",
-            password: "secret",
+            apiKey: apiKey,
+            appId: appId,
+            name: Croquet.App.autoSession(),
+            password: Croquet.App.autoPassword(),
             model: RootModel,
-            view: RootView
+            view: RootView,
+            autoSleep: false
         });
 
     }

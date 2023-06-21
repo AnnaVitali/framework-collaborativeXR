@@ -72,7 +72,6 @@ class RootModel extends Croquet.Model {
         this.#log(data);
 
         this.isUserManipulating = true;
-
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "freezeControlButton", {hologramName: data.hologramName});
         });
