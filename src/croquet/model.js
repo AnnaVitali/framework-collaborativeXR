@@ -70,7 +70,6 @@ class RootModel extends Croquet.Model {
         this.#log("MODEL: received manage user hologram control");
         this.#log("data:");
         this.#log(data);
-
         this.isUserManipulating = true;
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "freezeControlButton", {hologramName: data.hologramName});
