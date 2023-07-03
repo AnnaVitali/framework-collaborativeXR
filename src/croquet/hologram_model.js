@@ -1,4 +1,5 @@
 import {eventEmitter} from "../event/event_emitter.js";
+import {StandardShape} from "../hologram/standard_shape.js";
 
 class HologramModel extends Croquet.Model {
 
@@ -7,19 +8,19 @@ class HologramModel extends Croquet.Model {
         this.debug = true;
         this.holograms = new Map();
 
-        this.#setupViewEventHandlers();
+        this.#setupBackEndEventHandlers();
     }
 
     setScene(scene){
         this.scene = scene;
     }
 
-    createNewHologramInstance(hologram){
+    createNewImportedHologramInstance(hologramData){
         this.#log("HOLOGRAM MODEL: receive");
-        this.#log(hologram);
-        const object = JSON.parse(hologram)
-        const hologramName = object.name;
+        this.#log(hologramData);
+        const object = JSON.parse(hologramData);
         const hologramObject = object.hologram;
+        const hologramName = hologramObject._name;
         const filePath = hologramObject._meshFilePath;
         const scaling = hologramObject._scaling;
         const euler = new BABYLON.Quaternion(hologramObject._rotation._x,
@@ -51,14 +52,81 @@ class HologramModel extends Croquet.Model {
                 this.#log("ROTATION: " + this.holograms.get(hologramName).rotation);
                 this.#log("SCALE: " + this.holograms.get(hologramName).scaling);
 
-                eventEmitter.emit("hologramCreated", "");
+                eventEmitter.emit("importedHologramCreated", "");
             }catch(error){
                 throw new Error(error)
             }
         });
     }
 
-    #setupViewEventHandlers(){
+    createNewStandardHologramInstance(hologramData){
+        this.#log("HOLOGRAM MODEL: receive");
+        this.#log(hologramData);
+        const object = JSON.parse(hologramData);
+        const hologramObject = object.hologram;
+        const hologramName = hologramObject._name;
+        const euler = new BABYLON.Quaternion(hologramObject._rotation._x,
+            hologramObject._rotation._y, hologramObject._rotation._z, hologramObject._rotation._w).toEulerAngles();
+        const position = new BABYLON.Vector3(hologramObject._position._x, hologramObject._position._y,
+            hologramObject._position._z);
+
+        const mesh = this.#computeMesh(hologramObject, hologramName);
+        mesh.position = position;
+        mesh.rotate(BABYLON.Axis.X, euler.x);
+        mesh.rotate(BABYLON.Axis.Y, euler.y);
+        mesh.rotate(BABYLON.Axis.Z, euler.z);
+
+        this.holograms.set(hologramName, mesh);
+    }
+
+    #computeMesh(hologramObject, hologramName) {
+        let mesh = null
+        switch (hologramObject._shapeName) {
+            case StandardShape.Cube:
+                mesh = BABYLON.MeshBuilder.CreateBox(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            case StandardShape.Sphere:
+                mesh =BABYLON.MeshBuilder.CreateSphere(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            case StandardShape.Cylinder:
+                mesh =BABYLON.MeshBuilder.CreateCylinder(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            case StandardShape.Plane:
+                mesh = BABYLON.MeshBuilder.CreatePlane(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            case StandardShape.Disc:
+                mesh = BABYLON.MeshBuilder.CreateDisc(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            default:
+                throw new Error("The required shape is not supported");
+        }
+
+        const material = new BABYLON.StandardMaterial("material", this.scene);
+        material.diffuseColor = BABYLON.Color3.FromHexString(hologramObject._color);
+
+        mesh.material = material;
+
+        return mesh;
+    }
+
+    #updateColor(data){
+        const object = JSON.parse(data);
+        const hologramName = object.name;
+        const colorString  = object.color;
+
+        console.log(data);
+        console.log(this.holograms)
+        this.#log("name: " + hologramName)
+
+        const mesh = this.holograms.get(hologramName);
+        console.log(mesh)
+        mesh.material.diffuseColor = BABYLON.Color3.FromHexString(colorString);
+    }
+
+    #setupBackEndEventHandlers(){
+        eventEmitter.on("colorChange", (data) => {
+            this.#updateColor(data)
+        })
     }
 
     #extractFileAndDirectory(filePath) {

@@ -1,21 +1,17 @@
-import {eventEmitter} from "../event/event_emitter.js";
-
 class Hologram{
 
-    constructor(meshFilePath, position, rotation, scaling){
-        this._meshFilePath = meshFilePath;
+    constructor(name, position, rotation){
+        this._name = name;
         this._position = position;
         this._rotation = rotation;
-        this._scaling = scaling;
     }
 
-
-    get meshFilePath() {
-        return this._meshFilePath;
+    get name() {
+        return this._name;
     }
 
-    set meshFilePath(value) {
-        this._meshFilePath = value;
+    set name(value) {
+        this._name = value;
     }
 
     get position() {
@@ -33,14 +29,6 @@ class Hologram{
     set rotation(value) {
         this._rotation = value;
     }
-
-    get scaling() {
-        return this._scaling;
-    }
-
-    set scaling(value) {
-        this._scaling = value;
-    }
 }
 
-export {Hologram}
+export { Hologram };

@@ -14,18 +14,30 @@ class Scene{
         eventEmitter.emit("initialize", "");
     }
 
-    addHologramToScene(hologramName, hologram){
+    addImportedHologramToScene(hologram){
         if(this.debug){
-            console.log("Scene: add hologram");
+            console.log("Scene: add imported hologram");
         }
 
-        eventEmitter.emit("hologramCreate", JSON.stringify({name: hologramName, hologram: hologram}));
+        eventEmitter.emit("importedHologramCreate", JSON.stringify({hologram: hologram}));
 
         return new Promise((resolve) => {
-            eventEmitter.on("hologramCreated", () => {
+            eventEmitter.on("importedHologramCreated", () => {
                 resolve()
             });
         })
+    }
+
+    addStandardHologramToScene(hologram){
+        if(this.debug){
+            console.log("Scene: add standard hologram");
+        }
+
+        eventEmitter.emit("standardHologramCreate", JSON.stringify({hologram: hologram}));
+
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     addManipulatorMenu(hologramName, menuPosition){

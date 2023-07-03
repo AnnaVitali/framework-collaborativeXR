@@ -11,8 +11,7 @@ class RootModel extends Croquet.Model {
     init() {
         this.linkedViews = [];
         this.hologramModel = HologramModel.create();
-        this.isUserManipulating = false;
-        this.viewInControl = new Map();
+
         this.debug = true;
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
@@ -147,10 +146,6 @@ class RootModel extends Croquet.Model {
         });
     }
 
-    #createHologramModel(hologram){
-        this.hologramModel.createNewHologramInstance(hologram);
-    }
-
     #setupBackEndEventHandlers(){
         eventEmitter.on("initialize", (data) => {
             this.#initializeScene();
@@ -160,9 +155,14 @@ class RootModel extends Croquet.Model {
             this.#activateRenderLoop();
         });
 
-        eventEmitter.on("hologramCreate", (hologram) => {
-            console.log("MODEL: create hologram");
-            this.#createHologramModel(hologram);
+        eventEmitter.on("importedHologramCreate", (hologramName) => {
+            console.log("MODEL: create imported hologramName");
+            this.hologramModel.createNewImportedHologramInstance(hologramName);
+        });
+
+        eventEmitter.on("standardHologramCreate", (hologramData) => {
+            console.log("MODEL: create standard hologramData");
+            this.hologramModel.createNewStandardHologramInstance(hologramData);
         } )
     }
 
