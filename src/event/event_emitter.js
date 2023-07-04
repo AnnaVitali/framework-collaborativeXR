@@ -1,7 +1,6 @@
 class EventEmitter {
     listeners = [];
     emit(eventName, data) {
-        console.log("emit called");
         this.listeners
             .filter(({ name }) => name === eventName)
             .forEach(

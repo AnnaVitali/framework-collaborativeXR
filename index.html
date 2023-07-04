@@ -28,12 +28,12 @@
     const scene = new Scene(sessionManager);
     scene.initializeScene();
 
-   /* const hologramName = "industrialRobot";
-    const hologramPosition = new Vector3(0, 1, 1.2);
+   const hologramName = "industrialRobot";
+    /*const hologramPosition = new Vector3(0, 1, 1.2);
     const hologramRotation = new Quaternion(0, 0, 0, 0);
     const hologramScaling = 0.7;
     const hologramMeshFilePath = "./industrial_robot/scene.gltf";//"./high-detailed-flying-bird/Flying hummingbird.glb";
-    const hologram = new ImportedHologram(hologramName, hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
+    const hologram = new CroquetImportedHologram(hologramName, hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
     await scene.addImportedHologramToScene(hologram);
 
     const nearMenuPositionRespectToHologram = new Vector3(0.2, 1.2, 0.5);
@@ -44,7 +44,7 @@
     const hologramRotation2 = new Quaternion(0, 0, 0, 0);
     const hologramScaling2 = 2;
     const hologramMeshFilePath2 = "/lion/lion.glb";
-    const hologram2 = new ImportedHologram(hologramName, hologramMeshFilePath2, hologramPosition2, hologramRotation2, hologramScaling2);
+    const hologram2 = new CroquetImportedHologram(hologramName, hologramMeshFilePath2, hologramPosition2, hologramRotation2, hologramScaling2);
     await scene.addImportedHologramToScene(hologram2);
 
     const nearMenuPositionRespectToHologram2 = new Vector3(-0.3, 1.2, 0.5);
@@ -54,7 +54,7 @@
     const hologramPosition3 = new Vector3(0, 2, 0.5);
     const hologramRotation3 = new Quaternion(0,0,0,0);
     const hologram3 = new StandardHologram(hologramName3, StandardShape.Sphere, {diameter: 0.5}, hologramPosition3, hologramRotation3)
-    await scene.addStandardHologramToScene(hologram3);
+    scene.addStandardHologramToScene(hologramName3);
 
     hologram3.color = "#fbff2b"
 

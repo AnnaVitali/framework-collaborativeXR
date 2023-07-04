@@ -1,14 +1,12 @@
-import {Hologram} from "./hologram.js";
-import {eventEmitter} from "../event/event_emitter.js";
+import {CroquetHologram} from "./croquet_hologram.js";
+import {eventEmitter} from "../../event/event_emitter.js";
 
-class StandardHologram extends Hologram{
+class CroquetStandardHologram extends CroquetHologram{
     constructor(name, shapeName, creationOptions, position, rotation){
         super(name, position, rotation)
         this._creationOptions = creationOptions;
         this._shapeName = shapeName;
         this._color = "#ffffff";
-
-        eventEmitter.emit("standardHologramCreate", JSON.stringify(this));
     }
 
     get shapeName() {
@@ -21,7 +19,6 @@ class StandardHologram extends Hologram{
 
     set color(value) {
         this._color = value;
-        eventEmitter.emit("colorChange", JSON.stringify({hologramName: this.name, color: this.color}));
     }
 
     get color() {
@@ -29,4 +26,4 @@ class StandardHologram extends Hologram{
     }
 }
 
-export{ StandardHologram }
+export{ CroquetStandardHologram }

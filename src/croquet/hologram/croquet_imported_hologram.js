@@ -1,14 +1,12 @@
-import {eventEmitter} from "../event/event_emitter.js";
-import {Hologram} from "./hologram.js";
+import {eventEmitter} from "../../event/event_emitter.js";
+import {CroquetHologram} from "./croquet_hologram.js";
 
-class ImportedHologram extends Hologram{
+class CroquetImportedHologram extends CroquetHologram{
 
     constructor(name, meshFilePath, position, rotation, scaling){
         super(name, position, rotation)
         this._meshFilePath = meshFilePath;
         this._scaling = scaling;
-
-        eventEmitter.emit("importedHologramCreate", JSON.stringify(this));
     }
 
     get meshFilePath() {
@@ -24,4 +22,4 @@ class ImportedHologram extends Hologram{
     }
 }
 
-export {ImportedHologram}
+export {CroquetImportedHologram}

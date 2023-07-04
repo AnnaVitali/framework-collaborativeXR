@@ -1,5 +1,5 @@
-import { RootView } from "./view.js";
-import { RootModel } from "./model.js";
+import { RootView } from "./view/view.js";
+import { RootModel } from "./model/model.js";
 
 class CroquetSession {
     constructor(){

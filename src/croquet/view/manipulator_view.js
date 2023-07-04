@@ -7,7 +7,7 @@ class ManipulatorView extends Croquet.View {
     }
 
     showOtherUserManipulation(){
-        const hologram = this.model.holograms.get(this.hologramName);
+        const hologram = this.model.hologram;
 
         this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(hologram);
 
@@ -31,10 +31,11 @@ class ManipulatorView extends Croquet.View {
     }
 
     addHologramManipulator(){
-        console.log("MANIPULATOR-VIEW: publish showUserManipulation");
-        console.log("parent view " + this.parentView);
+        this.#log("MANIPULATOR-VIEW: publish showUserManipulation");
+        this.#log("parent view " + this.parentView);
+
         this.publish("hologramManipulator", "showUserManipulation", {view: this.parentView, hologramName: this.hologramName});
-        const hologram = this.model.holograms.get(this.hologramName);
+        const hologram = this.model.hologram;
 
         this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(hologram);
 
@@ -80,6 +81,13 @@ class ManipulatorView extends Croquet.View {
             scale_y: this.boundingBox.absoluteScaling.y,
             scale_z: this.boundingBox.absoluteScaling.z
         };
+    }
+
+    #log(message){
+        const debug = true;
+        if(debug){
+            console.log("M-VIEW: " + message);
+        }
     }
 }
 

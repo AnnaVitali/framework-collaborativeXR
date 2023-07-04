@@ -1,6 +1,7 @@
-import {eventEmitter} from "../event/event_emitter.js";
-import {Triple} from "../utility/triple.js";
+import {eventEmitter} from "../../event/event_emitter.js";
+import {Triple} from "../../utility/triple.js";
 import {ManipulatorView} from "./manipulator_view.js";
+import {SceneManager} from "../../babylon/scene_manager.js";
 class RootView extends Croquet.View {
 
     /**
@@ -10,26 +11,28 @@ class RootView extends Croquet.View {
     constructor(model) {
         super(model);
         this.model = model;
+        this.sceneManager = new SceneManager();
         this.hologramsManipulatorMenu = new Map();
         this.hologramManipulatorView = new Map();
-        this.debug = true;
 
-        this.#log("VIEW subscribed ");
+
+        this.#log("subscribed");
 
         this.#setupBackEndEventHandlers();
         this.#setupModelEventHandlers();
     }
 
     freezeControlButton(data){
-        this.#log("VIEW: received freezeControlButton hologram " + data.hologramName);
+        this.#log("received freezeControlButton hologram " + data.hologramName);
+
         const hologramName = data.hologramName;
         const hologramControls = this.hologramsManipulatorMenu.get(hologramName);
-
         this.#setOtherUserInControlBehaviorControlButton(hologramControls.y);
     }
 
     restoreControlButton(data){
-        this.#log("VIEW: received restore ControlButton hologram " + data.hologramName);
+        this.#log("received restore ControlButton hologram " + data.hologramName);
+
         const hologramName = data.hologramName;
         const hologramControls = this.hologramsManipulatorMenu.get(hologramName);
         this.hologramManipulatorView.get(hologramName).removeElementHologramManipulator();
@@ -41,10 +44,12 @@ class RootView extends Croquet.View {
     }
 
     showUserManipulation(data){
-        this.#log("VIEW: received show userManipulation")
+        this.#log("received show userManipulation")
+
         const hologramName = data.hologramName;
         if(!this.hologramManipulatorView.has(hologramName)){
-            const hologramView = new ManipulatorView(this.model.hologramModel, hologramName, this.viewId);
+            const hologramModel = this.model.children.get(hologramName);
+            const hologramView = new ManipulatorView(hologramModel, hologramName, this.viewId);
             this.hologramManipulatorView.set(hologramName, hologramView);
             hologramView.showOtherUserManipulation();
         }else{
@@ -62,20 +67,28 @@ class RootView extends Croquet.View {
         controlButton.onPointerDownObservable.clear();
     }
 
+    updateHologramColor(hologramName){
+        this.#log("received updateHologramColor");
+        this.sceneManager.hologramRenders.get(hologramName).updateColor(this.model.hologramModel.holograms.get(hologramName).color);
+    }
+
     #setupModelEventHandlers(){
         this.subscribe(this.viewId, "freezeControlButton", this.freezeControlButton);
         this.subscribe(this.viewId, "restoreControlButton", this.restoreControlButton);
         this.subscribe(this.viewId, "showUserManipulation", this.showUserManipulation);
         this.subscribe(this.viewId, "showHologramUpdates", this.showHologramUpdates);
+
+        this.subscribe("view", "updateHologramColor", this.updateHologramColor);
     }
 
     #notifyUserStartManipulating(hologramName){
-        this.#log("VIEW: user start manipulating hologram " + hologramName);
+        this.#log("user start manipulating hologram " + hologramName);
         this.publish("controlButton", "clicked", {view: this.viewId, hologramName: hologramName});
     }
 
     #notifyCurrentUserReleaseControl(hologramName){
-        this.#log("VIEW: user stop manipulating");
+        this.#log("user stop manipulating");
+
         this.hologramManipulatorView.get(hologramName).removeElementHologramManipulator();
         this.#setDefaultControlButtonBehavior(hologramName, this.hologramsManipulatorMenu.get(hologramName).y);
         this.publish("controlButton", "released", {view: this.viewId, hologramName: hologramName});
@@ -87,7 +100,7 @@ class RootView extends Croquet.View {
         this.model.GUIManager.addControl(manipulatorNearMenu);
         manipulatorNearMenu.isPinned = true;
 
-        manipulatorNearMenu.parent = this.model.hologramModel.holograms.get(hologramName).parent;
+        manipulatorNearMenu.parent = this.model.children.get(hologramName).hologram;
         manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
 
         const controlButton = new BABYLON.GUI.HolographicButton("manipulate", false);
@@ -107,7 +120,8 @@ class RootView extends Croquet.View {
 
         controlButton.onPointerDownObservable.add(() => {
             if(!this.hologramManipulatorView.has(hologramName)) {
-                const hologramView = new ManipulatorView(this.model.hologramModel, hologramName, this.viewId);
+                const hologramModel = this.model.children.get(hologramName);
+                const hologramView = new ManipulatorView(hologramModel, hologramName, this.viewId);
                 this.hologramManipulatorView.set(hologramName, hologramView);
             }
 
@@ -131,7 +145,7 @@ class RootView extends Croquet.View {
 
     #setupBackEndEventHandlers(){
         eventEmitter.on("addManipulatorMenu", (data) => {
-            this.#log("VIEW: received add manipulator menu");
+            this.#log("received add manipulator menu");
             const object = JSON.parse(data);
             const hologramName = object.name;
             const menuPosition = object.position;
@@ -142,12 +156,31 @@ class RootView extends Croquet.View {
             }
 
             this.#addManipulatorMenu(hologramName, menuPosition, boundingBoxHigh);
+        });
+
+        eventEmitter.on("initialize", (data) => {
+            this.sceneManager.initializeScene();
+        });
+
+        eventEmitter.on("render", (data) => {
+            this.sceneManager.activateRenderLoop();
+        });
+
+        eventEmitter.on("standardHologramShow", (data) => {
+            this.sceneManager.addStandardHologram(this.model.hologramModel.holograms.get(data));
         })
+
+        eventEmitter.on("colorChange", (data) => {
+            this.publish("updateHologram", "changeColor", data);
+        })
+
+        //TODO
     }
 
     #log(message){
-        if(this.debug){
-            console.log(message);
+        const debug = true;
+        if(debug){
+            console.log("VIEW: " + message);
         }
     }
 }
