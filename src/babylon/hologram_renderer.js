@@ -1,4 +1,5 @@
 import {StandardShape} from "../hologram/standard_shape.js";
+import {eventEmitter} from "../event/event_emitter.js";
 
 class HologramRenderer{
     constructor(scene) {
@@ -6,18 +7,61 @@ class HologramRenderer{
         this.scene = scene;
     }
 
-    renderStandardHologram(hologram){
+    renderImportedHologram(hologram){
         const hologramName = hologram.name;
-        const euler = new BABYLON.Quaternion(hologram.rotation._x,
+        const filePath = hologram.meshFilePath;
+        const scaling = hologram.scaling;
+        const euler = new BABYLON.Quaternion(hologram.rotation.x,
             hologram.rotation.y, hologram.rotation.z, hologram.rotation.w).toEulerAngles();
         const position = new BABYLON.Vector3(hologram.position.x, hologram.position.y,
             hologram.position.z);
+        const {stringSplit, directory} = this.#extractFileAndDirectory(filePath);
 
-       this.#computeMesh(hologram, hologramName);
+        BABYLON.SceneLoader.LoadAssetContainer(directory, stringSplit[stringSplit.length - 1], this.scene, (container) => {
+            try{
+                container.addAllToScene();
+                container.meshes[0].rotationQuaternion = null;
+
+                const box = BABYLON.MeshBuilder.CreateBox("box", {size: 1});
+                box.isVisible = false;
+                box.position = position;
+                box.rotate(BABYLON.Axis.X, euler.x);
+                box.rotate(BABYLON.Axis.Y, euler.y);
+                box.rotate(BABYLON.Axis.Z, euler.z);
+
+                container.meshes[0].parent = box;
+                container.meshes[0].position = new BABYLON.Vector3(0, 0, 0)
+
+                container.meshes[0].scaling.scaleInPlace(scaling);
+
+                this.mesh = container.meshes[0];
+
+                this.#log("POSITION: " + this.hologram.position);
+                this.#log("ROTATION: " + this.hologram.rotation);
+                this.#log("SCALE: " + this.hologram.scaling);
+
+                eventEmitter.emit("importedHologramCreated", "");
+            }catch(error){
+                this.log("ERROR " + error);
+            }
+        });
+    }
+
+    renderStandardHologram(hologram){
+        const hologramName = hologram.name;
+        const euler = new BABYLON.Quaternion(hologram.rotation._x,
+        hologram.rotation._y, hologram.rotation._z, hologram.rotation._w).toEulerAngles();
+        const position = new BABYLON.Vector3(hologram.position._x, hologram.position._y,
+        hologram.position._z);
+        this.#computeMesh(hologram, hologramName);
         this.mesh.position = position;
         this.mesh.rotate(BABYLON.Axis.X, euler.x);
         this.mesh.rotate(BABYLON.Axis.Y, euler.y);
         this.mesh.rotate(BABYLON.Axis.Z, euler.z);
+    }
+
+    updateColor(colorString){
+        this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(colorString);
     }
 
     #computeMesh(hologramObject, hologramName) {
@@ -47,8 +91,67 @@ class HologramRenderer{
         this.mesh.material = material;
     }
 
-    updateColor(colorString){
-        this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(colorString);
+    showOtherUserManipulation(){
+        this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
+
+        const utilLayer = new BABYLON.UtilityLayerRenderer(this.scene);
+        utilLayer.utilityLayerScene.autoClearDepthAndStencil = false;
+
+        this.gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FF0000"), utilLayer);
+        this.gizmo.rotationSphereSize = 0;
+        this.gizmo.scaleBoxSize = 0;
+        this.gizmo.attachedMesh = this.boundingBox;
+
+    }
+
+    addHologramManipulator(){
+
+        //this.publish("hologramManipulator", "showUserManipulation", {view: this.parentView, hologramName: this.hologramName});
+
+        this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
+
+        const utilLayer = new BABYLON.UtilityLayerRenderer(this.scene)
+        utilLayer.utilityLayerScene.autoClearDepthAndStencil = false;
+
+        this.gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FBFF00"), utilLayer)
+        this.gizmo.rotationSphereSize = 0;
+        this.gizmo.scaleBoxSize = 0.03;
+        this.gizmo.attachedMesh = this.boundingBox;
+
+        this.sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
+        this.sixDofDragBehavior.dragDeltaRatio = 1;
+        this.sixDofDragBehavior.zDragFactor = 1;
+
+        this.boundingBox.addBehavior(this.sixDofDragBehavior);
+
+    }
+
+    getSixDofDragBehaviour(){
+        return this.sixDofDragBehavior;
+    }
+
+    getGizmo(){
+        return this.gizmo
+    }
+
+    updatePosition(newPosition){
+        this.boundingBox.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
+    }
+    #extractFileAndDirectory(filePath) {
+        const stringSplit = filePath.split("/");
+        let directory = "";
+        for (let i = 0; i < (stringSplit.length - 1); i++){
+            directory += stringSplit[i] + "/";
+        }
+
+        return {stringSplit, directory};
+    }
+
+    #log(message){
+        const debug = true;
+        if(debug){
+            console.log("H-RENDERER: " + message);
+        }
     }
 }
 

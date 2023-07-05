@@ -20,8 +20,15 @@ class HologramModel extends Croquet.Model {
         }
     }
 
+    updatePosition(hologramName, position){
+        this.holograms.get(hologramName).position = position;
+    }
+
     changeColorHologram(hologramName, color){
         this.#log("change hologram color received");
+        this.#log(hologramName)
+        console.log(this.holograms);
+        console.log(this.holograms.get(hologramName));
         this.holograms.get(hologramName).color = color;
 
         this.publish("view", "updateHologramColor", hologramName);
@@ -100,6 +107,7 @@ class HologramModel extends Croquet.Model {
         if(debug){
             console.log("SH-MODEL: " + message);
         }
+
     }
 
     static types() {

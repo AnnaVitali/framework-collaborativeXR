@@ -66,14 +66,16 @@ class SceneManager{
 
     addStandardHologram(hologram){
         this.#log("addStandardHologram");
-        console.log(hologram);
         const hologramRender = new HologramRenderer(this.scene);
         hologramRender.renderStandardHologram(hologram);
         this.hologramRenders.set(hologram.name, hologramRender);
     }
 
-    addImportedHologram(){
-        this.#log("addImportedHologram")
+    addImportedHologram(hologram){
+        this.#log("addImportedHologram");
+        const hologramRender = new HologramRenderer(this.scene);
+        hologramRender.renderImportedHologram(hologram);
+        this.hologramRenders.set(hologram.name, hologramRender);
     }
 
     #log(message){

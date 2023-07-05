@@ -39,22 +39,18 @@ class RootView extends Croquet.View {
         this.#setDefaultControlButtonBehavior(data.hologramName, hologramControls.y);
     }
 
-    showHologramUpdates(data){
-        this.hologramManipulatorView.get(data.hologramName).updateHologram(data);
+    showHologramUpdatedPosition(data){
+        const newPosition = this.model.hologramModel.holograms.get(data).position;
+        this.sceneManager.hologramRenders.get(data).updatePosition(newPosition);
     }
 
     showUserManipulation(data){
-        this.#log("received show userManipulation")
-
+        this.#log("received show userManipulation " + data.hologramName);
         const hologramName = data.hologramName;
-        if(!this.hologramManipulatorView.has(hologramName)){
-            const hologramModel = this.model.children.get(hologramName);
-            const hologramView = new ManipulatorView(hologramModel, hologramName, this.viewId);
-            this.hologramManipulatorView.set(hologramName, hologramView);
-            hologramView.showOtherUserManipulation();
-        }else{
-            this.hologramManipulatorView.get(hologramName).showOtherUserManipulation();
-        }
+
+        const hologramRender = this.sceneManager.hologramRenders.get(hologramName);
+        hologramRender.showOtherUserManipulation();
+
     }
 
 
@@ -76,7 +72,7 @@ class RootView extends Croquet.View {
         this.subscribe(this.viewId, "freezeControlButton", this.freezeControlButton);
         this.subscribe(this.viewId, "restoreControlButton", this.restoreControlButton);
         this.subscribe(this.viewId, "showUserManipulation", this.showUserManipulation);
-        this.subscribe(this.viewId, "showHologramUpdates", this.showHologramUpdates);
+        this.subscribe(this.viewId, "showHologramUpdatedPosition", this.showHologramUpdatedPosition);
 
         this.subscribe("view", "updateHologramColor", this.updateHologramColor);
     }
@@ -97,10 +93,10 @@ class RootView extends Croquet.View {
     #addManipulatorMenu(hologramName, menuPosition, boundingBoxHigh) {
         const manipulatorNearMenu = new BABYLON.GUI.NearMenu("NearMenu");
         manipulatorNearMenu.rows = 1;
-        this.model.GUIManager.addControl(manipulatorNearMenu);
+        this.sceneManager.GUIManager.addControl(manipulatorNearMenu);
         manipulatorNearMenu.isPinned = true;
 
-        manipulatorNearMenu.parent = this.model.children.get(hologramName).hologram;
+        manipulatorNearMenu.parent = this.sceneManager.hologramRenders.get(hologramName).mesh;
         manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
 
         const controlButton = new BABYLON.GUI.HolographicButton("manipulate", false);
@@ -119,16 +115,33 @@ class RootView extends Croquet.View {
         controlButton.onPointerDownObservable.clear();
 
         controlButton.onPointerDownObservable.add(() => {
-            if(!this.hologramManipulatorView.has(hologramName)) {
-                const hologramModel = this.model.children.get(hologramName);
-                const hologramView = new ManipulatorView(hologramModel, hologramName, this.viewId);
-                this.hologramManipulatorView.set(hologramName, hologramView);
-            }
-
+            this.#log("clicked");
             this.#notifyUserStartManipulating(hologramName);
-            this.hologramManipulatorView.get(hologramName).addHologramManipulator();
+            this.publish("hologramManipulator", "showUserManipulation", {view: this.viewId, hologramName: hologramName});
+            const hologramRender = this.sceneManager.hologramRenders.get(hologramName);
+            hologramRender.addHologramManipulator();
+
+            hologramRender.getSixDofDragBehaviour().onPositionChangedObservable.add(() => {
+                this.publish("updateHologram", "positionChanged", this.#serializeDataPosition(hologramName, hologramRender));
+            });
+
+            hologramRender.getGizmo().onScaleBoxDragObservable.add(() => {
+                //this.publish("updateHologram", "showChanges", this.#serializeDataToSend());
+            });
+
             this.#setManipulatingBehaviourControlButton(hologramName, controlButton);
         });
+    }
+
+    #serializeDataPosition(hologramName, hologramRender){
+        const absolutePosition = hologramRender.boundingBox.absolutePosition;
+        return {
+            hologramName: hologramName,
+            view: this.viewId,
+            position_x: absolutePosition.x,
+            position_y: absolutePosition.y,
+            position_z: absolutePosition.z
+        }
     }
 
     #setManipulatingBehaviourControlButton(hologramName, controlButton){
@@ -139,7 +152,7 @@ class RootView extends Croquet.View {
 
         controlButton.onPointerDownObservable.clear();
         controlButton.onPointerDownObservable.add(() => {
-            this.#notifyCurrentUserReleaseControl(hologramName);
+            //this.#notifyCurrentUserReleaseControl(hologramName);
         });
     }
 
@@ -149,13 +162,8 @@ class RootView extends Croquet.View {
             const object = JSON.parse(data);
             const hologramName = object.name;
             const menuPosition = object.position;
-            let boundingBoxHigh = null;
 
-            if(typeof object.boundingBoxHigh !== undefined){
-                boundingBoxHigh = object.boundingBoxHigh;
-            }
-
-            this.#addManipulatorMenu(hologramName, menuPosition, boundingBoxHigh);
+            this.#addManipulatorMenu(hologramName, menuPosition);
         });
 
         eventEmitter.on("initialize", (data) => {
@@ -168,13 +176,16 @@ class RootView extends Croquet.View {
 
         eventEmitter.on("standardHologramShow", (data) => {
             this.sceneManager.addStandardHologram(this.model.hologramModel.holograms.get(data));
-        })
+        });
+
+        eventEmitter.on("importedHologramShow", (data) => {
+            this.sceneManager.addImportedHologram(this.model.hologramModel.holograms.get(data));
+        });
 
         eventEmitter.on("colorChange", (data) => {
+            this.#log("received color change");
             this.publish("updateHologram", "changeColor", data);
-        })
-
-        //TODO
+        });
     }
 
     #log(message){

@@ -21,6 +21,7 @@ class StandardHologram extends Hologram{
 
     set color(value) {
         this._color = value;
+        console.log("SEND: event color changed");
         eventEmitter.emit("colorChange", JSON.stringify({hologramName: this.name, color: this.color}));
     }
 

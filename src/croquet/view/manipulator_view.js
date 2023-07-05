@@ -56,7 +56,6 @@ class ManipulatorView extends Croquet.View {
         sixDofDragBehavior.onPositionChangedObservable.add(() => {
             this.publish("updateHologram", "showChanges", this.#serializeDataToSend());
         });
-        this.boundingBox.addBehavior(sixDofDragBehavior);
 
         this.gizmo.onScaleBoxDragObservable.add(() => {
             this.publish("updateHologram", "showChanges", this.#serializeDataToSend());

@@ -1,8 +1,8 @@
 import {eventEmitter} from "../../event/event_emitter.js";
 import {HologramModel} from "./hologram_model.js";
-import {ImportedHologramModel} from "../imported_hologram_model.js";
 import {CroquetStandardHologram} from "../hologram/croquet_standard_hologram.js";
 import {CroquetImportedHologram} from "../hologram/croquet_imported_hologram.js";
+import {Vector3} from "../../utility/vector3.js";
 
 const canvas = document.getElementById("renderCanvas");
 
@@ -23,43 +23,24 @@ class RootModel extends Croquet.Model {
         this.#setupViewEventHandlers();
     }
 
-    #createImportedHologramModel(data){
+    #addImportedHologram(data){
         this.#log("crateImportedHologram received");
         const object = JSON.parse(data);
         const hologram = Object.create(CroquetImportedHologram.prototype, Object.getOwnPropertyDescriptors(object));
-        const child = ImportedHologramModel.create({hologram: hologram});
 
-        this.children.set(hologramName, child);
-        //child.setScene(this.scene);
-        /*console.log(this.scene);
-        const object = JSON.parse(data);
-        const hologramObject = object.hologram;
-        const hologramName = hologramObject._name;
-        if(!this.children.has(hologramName)) {
-            this.children.set(hologramName, child);
-            child.createNewImportedHologramInstance(hologramObject);
-        }*/
+        this.hologramModel.addHologram(hologram);
     }
 
-    #createStandardHologramModel(data){
+    #addStandardHologram(data){
         this.#log("crateStandardHologram received");
         const object = JSON.parse(data);
         const hologram = Object.create(CroquetStandardHologram.prototype, Object.getOwnPropertyDescriptors(object));
 
         this.hologramModel.addHologram(hologram);
-       /* child.setScene(this.scene);
-        const object = JSON.parse(data);
-        const hologramObject = object.hologram;
-        const hologramName = hologramObject._name;
-        if(!this.children.has(hologramName)) {
-            this.children.set(hologramName, child);
-            child.createNewStandardHologramInstance(hologramObject);
-        }*/
     }
 
     updateHologramColor(data){
         this.#log("update hologram color received");
-
         const object = JSON.parse(data);
         const hologramName = object.hologramName;
         const color = object.color;
@@ -67,11 +48,16 @@ class RootModel extends Croquet.Model {
         this.hologramModel.changeColorHologram(hologramName, color);
     }
 
-    requireHologramUpdate(data){
+    requireHologramPositionUpdate(data){
         this.#log("received requireHologramUpdate");
 
+        const hologramName = data.hologramName;
+        const position = new Vector3(data.position_x, data.position_y, data.position_z);
+
+        this.hologramModel.updatePosition(hologramName, position);
+
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
-            this.publish(v, "showHologramUpdates", data);
+            this.publish(v, "showHologramUpdatedPosition", hologramName);
         });
     }
 
@@ -101,7 +87,6 @@ class RootModel extends Croquet.Model {
     viewDrop(viewId){
         this.#log("received view left");
         this.linkedViews.splice(this.linkedViews.indexOf(viewId),1);
-
         if(this.linkedViews.length === 0){
             this.destroy();
         }
@@ -136,19 +121,22 @@ class RootModel extends Croquet.Model {
     #setupBackEndEventHandlers(){
         eventEmitter.on("importedHologramCreate", (data)=>{
             this.#log("createImportedHologram model");
-            this.#createImportedHologramModel(data);
+            this.#addImportedHologram(data);
         });
 
         eventEmitter.on("standardHologramCreate", (data) => {
             this.#log("createStandardHologramModel");
-            this.#createStandardHologramModel(data);
+            this.#addStandardHologram(data);
         } );
     }
 
     #setupViewEventHandlers(){
-        this.subscribe("updateHologram", "changeColor", this.updateHologramColor)
-        /*this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
-        this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
+        this.subscribe("updateHologram", "changeColor", this.updateHologramColor);
+        this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
+        this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
+        this.subscribe("updateHologram", "positionChanged", this.requireHologramPositionUpdate);
+
+        /*his.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
         this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
         this.subscribe("updateHologram", "showChanges", this.requireHologramUpdate);*/
     }

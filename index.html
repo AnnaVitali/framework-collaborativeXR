@@ -51,12 +51,15 @@
     scene.addManipulatorMenu(hologramName2, nearMenuPositionRespectToHologram2);*/
 
     const hologramName3 = "standardShape"
-    const hologramPosition3 = new Vector3(0, 2, 0.5);
+    const hologramPosition3 = new Vector3(0, 1, 1.2);
     const hologramRotation3 = new Quaternion(0,0,0,0);
     const hologram3 = new StandardHologram(hologramName3, StandardShape.Sphere, {diameter: 0.5}, hologramPosition3, hologramRotation3)
     scene.addStandardHologramToScene(hologramName3);
 
     hologram3.color = "#fbff2b"
+
+    const nearMenuPositionRespectToHologram3 = new Vector3(-0.3, 1.2, 0.5);
+    scene.addManipulatorMenu(hologramName3, nearMenuPositionRespectToHologram3);
 
     scene.activateRenderLoop();
 
