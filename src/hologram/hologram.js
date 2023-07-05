@@ -1,17 +1,22 @@
 class Hologram{
 
-    constructor(name, position, rotation){
+    constructor(name, position, rotation, scaling){
         this._name = name;
         this._position = position;
         this._rotation = rotation;
+        this._scaling = scaling;
+    }
+
+    get scaling() {
+        return this._scaling;
+    }
+
+    set scaling(value) {
+        this._scaling = value;
     }
 
     get name() {
         return this._name;
-    }
-
-    set name(value) {
-        this._name = value;
     }
 
     get position() {
@@ -28,6 +33,18 @@ class Hologram{
 
     set rotation(value) {
         this._rotation = value;
+    }
+
+    updatePosition(position){
+        this._position = position;
+    }
+
+    updateRotation(rotation){
+        this._rotation = rotation;
+    }
+
+    updateScaling(scaling){
+        this._scaling = scaling;
     }
 }
 

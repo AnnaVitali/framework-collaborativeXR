@@ -1,9 +1,10 @@
 import {Hologram} from "./hologram.js";
 import {eventEmitter} from "../event/event_emitter.js";
+import {Vector3} from "../utility/vector3.js";
 
 class StandardHologram extends Hologram{
     constructor(name, shapeName, creationOptions, position, rotation){
-        super(name, position, rotation)
+        super(name, position, rotation, new Vector3(1, 1, 1));
         this._creationOptions = creationOptions;
         this._shapeName = shapeName;
         this._color = "#ffffff";

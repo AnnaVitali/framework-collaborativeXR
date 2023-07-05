@@ -49,7 +49,6 @@ class RootModel extends Croquet.Model {
 
     requireHologramPositionUpdate(data){
         this.#log("received requireHologramUpdate");
-
         const hologramName = data.hologramName;
         const position = new Vector3(data.position_x, data.position_y, data.position_z);
 
@@ -62,7 +61,6 @@ class RootModel extends Croquet.Model {
 
     requireHologramScaleUpdate(data){
         this.#log("received requireHologramUpdate");
-
         const hologramName = data.hologramName;
         const scale = new Vector3(data.scale_x, data.scale_y, data.scale_z);
 
@@ -110,9 +108,6 @@ class RootModel extends Croquet.Model {
      */
     manageUserHologramControl(data){
         this.#log("received manage user hologram control");
-        this.#log("data:");
-        this.#log(data);
-        this.isUserManipulating = true;
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "freezeControlButton", {hologramName: data.hologramName});
         });

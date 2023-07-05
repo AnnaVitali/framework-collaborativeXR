@@ -13,10 +13,6 @@ class RootView extends Croquet.View {
         this.model = model;
         this.sceneManager = new SceneManager();
         this.hologramsManipulatorMenu = new Map();
-        this.hologramManipulatorView = new Map();
-
-
-        this.#log("subscribed");
 
         this.#setupBackEndEventHandlers();
         this.#setupModelEventHandlers();

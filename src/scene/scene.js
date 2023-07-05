@@ -4,6 +4,7 @@ class Scene{
         if(!sessionManager.isSessionStarted()){
             throw new Error("Start a session before creating the scene.");
         }
+        this.hologramManager = new HologramManager();
         this.debug = true;
     }
 
@@ -14,12 +15,11 @@ class Scene{
         eventEmitter.emit("initialize", "");
     }
 
-    addImportedHologramToScene(hologramName){
+    addImportedHologramToScene(hologram){
         if(this.debug){
             console.log("Scene: add imported hologram");
         }
-
-        eventEmitter.emit("importedHologramShow", hologramName);
+        eventEmitter.emit("importedHologramShow", hologram.name);
 
         return new Promise((resolve) => {
             eventEmitter.on("importedHologramCreated", () => {
@@ -28,12 +28,12 @@ class Scene{
         })
     }
 
-    addStandardHologramToScene(hologramName){
+    addStandardHologramToScene(hologram){
         if(this.debug){
             console.log("Scene: add standard hologram");
         }
 
-        eventEmitter.emit("standardHologramShow", hologramName);
+        eventEmitter.emit("standardHologramShow", hologram.name);
     }
 
     addManipulatorMenu(hologramName, menuPosition){

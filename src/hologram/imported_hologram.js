@@ -4,9 +4,8 @@ import {Hologram} from "./hologram.js";
 class ImportedHologram extends Hologram{
 
     constructor(name, meshFilePath, position, rotation, scaling){
-        super(name, position, rotation)
+        super(name, position, rotation, scaling)
         this._meshFilePath = meshFilePath;
-        this._scaling = scaling;
 
         eventEmitter.emit("importedHologramCreate", JSON.stringify(this));
     }

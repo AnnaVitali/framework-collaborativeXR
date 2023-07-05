@@ -1,5 +1,6 @@
 import {StandardShape} from "../hologram/standard_shape.js";
 import {eventEmitter} from "../event/event_emitter.js";
+import {Vector3} from "../utility/vector3.js";
 
 class HologramRenderer{
     constructor(scene) {
@@ -9,12 +10,12 @@ class HologramRenderer{
 
     renderImportedHologram(hologram){
         const hologramName = hologram.name;
-        const filePath = hologram.meshFilePath;
-        const scaling = hologram.scaling;
-        const euler = new BABYLON.Quaternion(hologram.rotation.x,
-            hologram.rotation.y, hologram.rotation.z, hologram.rotation.w).toEulerAngles();
-        const position = new BABYLON.Vector3(hologram.position.x, hologram.position.y,
-            hologram.position.z);
+        const filePath = hologram._meshFilePath;
+        const scaling = hologram._scaling;
+        const euler = new BABYLON.Quaternion(hologram._rotation.x,
+            hologram._rotation.y, hologram._rotation.z, hologram._rotation.w).toEulerAngles();
+        const position = new BABYLON.Vector3(hologram._position.x, hologram._position.y,
+            hologram._position.z);
         const {stringSplit, directory} = this.#extractFileAndDirectory(filePath);
 
         BABYLON.SceneLoader.LoadAssetContainer(directory, stringSplit[stringSplit.length - 1], this.scene, (container) => {
@@ -37,8 +38,8 @@ class HologramRenderer{
                 this.mesh = container.meshes[0];
 
                 this.#log("POSITION: " + this.hologram.position);
-                this.#log("ROTATION: " + this.hologram.rotation);
-                this.#log("SCALE: " + this.hologram.scaling);
+                this.#log("ROTATION: " + this.hologram._rotation);
+                this.#log("SCALE: " + this.hologram._scaling);
 
                 eventEmitter.emit("importedHologramCreated", "");
             }catch(error){
@@ -48,11 +49,12 @@ class HologramRenderer{
     }
 
     renderStandardHologram(hologram){
+        console.log(hologram._scaling)
         const hologramName = hologram.name;
-        const euler = new BABYLON.Quaternion(hologram.rotation._x,
-        hologram.rotation._y, hologram.rotation._z, hologram.rotation._w).toEulerAngles();
-        const position = new BABYLON.Vector3(hologram.position._x, hologram.position._y,
-        hologram.position._z);
+        const euler = new BABYLON.Quaternion(hologram._rotation._x,
+        hologram._rotation._y, hologram._rotation._z, hologram._rotation._w).toEulerAngles();
+        const position = new BABYLON.Vector3(hologram._position._x, hologram._position._y,
+        hologram._position._z);
         this.#computeMesh(hologram, hologramName);
         this.mesh.position = position;
         this.mesh.rotate(BABYLON.Axis.X, euler.x);
