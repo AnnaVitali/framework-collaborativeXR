@@ -13,7 +13,6 @@ class RootModel extends Croquet.Model {
      * */
     init() {
         this.linkedViews = [];
-        this.children = new Map();
         this.hologramModel = HologramModel.create();
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
@@ -58,6 +57,19 @@ class RootModel extends Croquet.Model {
 
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "showHologramUpdatedPosition", hologramName);
+        });
+    }
+
+    requireHologramScaleUpdate(data){
+        this.#log("received requireHologramUpdate");
+
+        const hologramName = data.hologramName;
+        const scale = new Vector3(data.scale_x, data.scale_y, data.scale_z);
+
+        this.hologramModel.updateScale(hologramName, scale);
+
+        this.linkedViews.filter(v => data.view !== v).forEach(v => {
+            this.publish(v, "showHologramUpdatedScale", hologramName);
         });
     }
 
@@ -135,10 +147,9 @@ class RootModel extends Croquet.Model {
         this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
         this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
         this.subscribe("updateHologram", "positionChanged", this.requireHologramPositionUpdate);
+        this.subscribe("updateHologram", "scaleChanged", this.requireHologramScaleUpdate);
+        this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
 
-        /*his.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
-        this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
-        this.subscribe("updateHologram", "showChanges", this.requireHologramUpdate);*/
     }
 
 

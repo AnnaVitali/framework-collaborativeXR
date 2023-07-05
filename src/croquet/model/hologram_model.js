@@ -24,6 +24,12 @@ class HologramModel extends Croquet.Model {
         this.holograms.get(hologramName).position = position;
     }
 
+    updateScale(hologramName, scale){
+        this.#log("scale");
+        console.log(scale);
+        this.holograms.get(hologramName).scale = scale;
+    }
+
     changeColorHologram(hologramName, color){
         this.#log("change hologram color received");
         this.#log(hologramName)

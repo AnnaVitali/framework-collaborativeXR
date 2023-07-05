@@ -35,13 +35,18 @@ class RootView extends Croquet.View {
 
         const hologramName = data.hologramName;
         const hologramControls = this.hologramsManipulatorMenu.get(hologramName);
-        this.hologramManipulatorView.get(hologramName).removeElementHologramManipulator();
+        this.sceneManager.hologramRenders.get(hologramName).removeElementHologramManipulator();
         this.#setDefaultControlButtonBehavior(data.hologramName, hologramControls.y);
     }
 
     showHologramUpdatedPosition(data){
         const newPosition = this.model.hologramModel.holograms.get(data).position;
         this.sceneManager.hologramRenders.get(data).updatePosition(newPosition);
+    }
+
+    showHologramUpdatedScale(data){
+        const newScale = this.model.hologramModel.holograms.get(data).scale;
+        this.sceneManager.hologramRenders.get(data).updateScale(newScale);
     }
 
     showUserManipulation(data){
@@ -73,6 +78,7 @@ class RootView extends Croquet.View {
         this.subscribe(this.viewId, "restoreControlButton", this.restoreControlButton);
         this.subscribe(this.viewId, "showUserManipulation", this.showUserManipulation);
         this.subscribe(this.viewId, "showHologramUpdatedPosition", this.showHologramUpdatedPosition);
+        this.subscribe(this.viewId, "showHologramUpdatedScale", this.showHologramUpdatedScale);
 
         this.subscribe("view", "updateHologramColor", this.updateHologramColor);
     }
@@ -84,9 +90,6 @@ class RootView extends Croquet.View {
 
     #notifyCurrentUserReleaseControl(hologramName){
         this.#log("user stop manipulating");
-
-        this.hologramManipulatorView.get(hologramName).removeElementHologramManipulator();
-        this.#setDefaultControlButtonBehavior(hologramName, this.hologramsManipulatorMenu.get(hologramName).y);
         this.publish("controlButton", "released", {view: this.viewId, hologramName: hologramName});
     }
 
@@ -126,7 +129,7 @@ class RootView extends Croquet.View {
             });
 
             hologramRender.getGizmo().onScaleBoxDragObservable.add(() => {
-                //this.publish("updateHologram", "showChanges", this.#serializeDataToSend());
+                this.publish("updateHologram", "scaleChanged", this.#serializeDataScale(hologramName, hologramRender));
             });
 
             this.#setManipulatingBehaviourControlButton(hologramName, controlButton);
@@ -144,6 +147,17 @@ class RootView extends Croquet.View {
         }
     }
 
+    #serializeDataScale(hologramName, hologramRender){
+        const absoluteScaling = hologramRender.boundingBox.absoluteScaling;
+        return {
+            hologramName: hologramName,
+            view: this.viewId,
+            scale_x: absoluteScaling.x,
+            scale_y: absoluteScaling.y,
+            scale_z: absoluteScaling.z
+        }
+    }
+
     #setManipulatingBehaviourControlButton(hologramName, controlButton){
         controlButton.text = "Stop manipulating";
         controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
@@ -152,7 +166,9 @@ class RootView extends Croquet.View {
 
         controlButton.onPointerDownObservable.clear();
         controlButton.onPointerDownObservable.add(() => {
-            //this.#notifyCurrentUserReleaseControl(hologramName);
+            this.#notifyCurrentUserReleaseControl(hologramName);
+            this.sceneManager.hologramRenders.get(hologramName).removeElementHologramManipulator();
+            this.#setDefaultControlButtonBehavior(hologramName, controlButton);
         });
     }
 

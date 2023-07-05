@@ -126,6 +126,14 @@ class HologramRenderer{
 
     }
 
+    removeElementHologramManipulator(){
+        this.gizmo.attachedMesh = null;
+        this.gizmo.dispose();
+        this.boundingBox.getChildren().forEach(child => child.setParent(null));
+        this.boundingBox.dispose;
+    }
+
+
     getSixDofDragBehaviour(){
         return this.sixDofDragBehavior;
     }
@@ -137,6 +145,11 @@ class HologramRenderer{
     updatePosition(newPosition){
         this.boundingBox.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
     }
+
+    updateScale(newScale){
+        this.boundingBox.scaling = new BABYLON.Vector3(newScale._x, newScale._y, newScale._z);
+    }
+
     #extractFileAndDirectory(filePath) {
         const stringSplit = filePath.split("/");
         let directory = "";

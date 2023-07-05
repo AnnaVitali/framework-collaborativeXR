@@ -4,6 +4,15 @@ class CroquetHologram {
         this._name = name;
         this._position = position;
         this._rotation = rotation;
+        this._scale = new Vector3(1, 1, 1);
+    }
+
+    get scale() {
+        return this._scale;
+    }
+
+    set scale(value) {
+        this._scale = value;
     }
 
     get name() {
