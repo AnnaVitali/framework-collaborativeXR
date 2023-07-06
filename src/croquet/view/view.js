@@ -218,7 +218,6 @@ class RootView extends Croquet.View {
         });
 
         eventEmitter.on("addNearMenu", (data) => {
-            console.log(data);
             this.#requireToAddNearMenu(data);
         });
     }

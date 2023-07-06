@@ -19,15 +19,27 @@ class HologramModel extends Croquet.Model {
     }
 
     updatePosition(hologramName, position){
-        this.holograms.get(hologramName).position = position;
+        try {
+            this.holograms.get(hologramName).position = position;
+        }catch(error){
+            //silently ignore, if the user join the session at the same time everything works
+        }
     }
 
     updateScale(hologramName, scale){
-        this.holograms.get(hologramName).scale = scale;
+        try {
+            this.holograms.get(hologramName).scale = scale;
+        }catch(error){
+            //silently ignore, if the user join the session at the same time everything works
+        }
     }
 
     updateRotation(hologramName, rotation){
-        this.holograms.get(hologramName).rotation = rotation;
+        try {
+            this.holograms.get(hologramName).rotation = rotation;
+        }catch(error){
+            //silently ignore, if the user join the session at the same time everything works
+        }
     }
 
     updateColor(hologramName, color){
@@ -35,7 +47,11 @@ class HologramModel extends Croquet.Model {
         this.#log(hologramName)
         console.log(this.holograms);
         console.log(this.holograms.get(hologramName));
-        this.holograms.get(hologramName).color = color;
+        try {
+            this.holograms.get(hologramName).color = color;
+        }catch(error){
+            //silently ignore, if the user join the session at the same time everything works
+        }
     }
 
     #log(message){
@@ -43,7 +59,6 @@ class HologramModel extends Croquet.Model {
         if(debug){
             console.log("SH-MODEL: " + message);
         }
-
     }
 
     static types() {
