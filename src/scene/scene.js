@@ -4,21 +4,17 @@ class Scene{
         if(!sessionManager.isSessionStarted()){
             throw new Error("Start a session before creating the scene.");
         }
-        this.hologramManager = new HologramManager();
-        this.debug = true;
     }
 
     initializeScene(){
-        if(this.debug){
-            console.log("Scene: initialize scene");
-        }
+        this.#log("initialize scene");
+
         eventEmitter.emit("initialize", "");
     }
 
     addImportedHologramToScene(hologram){
-        if(this.debug){
-            console.log("Scene: add imported hologram");
-        }
+        this.#log("add imported hologram");
+
         eventEmitter.emit("importedHologramShow", hologram.name);
 
         return new Promise((resolve) => {
@@ -29,30 +25,38 @@ class Scene{
     }
 
     addStandardHologramToScene(hologram){
-        if(this.debug){
-            console.log("Scene: add standard hologram");
-        }
+        this.#log("add standard hologram");
 
         eventEmitter.emit("standardHologramShow", hologram.name);
     }
 
-    addManipulatorMenu(hologramName, menuPosition){
-        if(this.debug){
-            console.log("Scene: add manipulator menu");
-        }
+    addManipulatorMenu(hologramName, manipulatorMenu){
+        this.#log("add manipulator menu");
 
         eventEmitter.emit("addManipulatorMenu", JSON.stringify(
             {
                 name: hologramName,
-                position: menuPosition
+                position: manipulatorMenu.position
             }));
     }
 
+    addNearMenu(nearMenu){
+        this.#log("add nearMenu");
+
+        eventEmitter.emit("addNearMenu", JSON.stringify(nearMenu));
+    }
+
     activateRenderLoop(){
-        if(this.debug){
-            console.log("Scene: activate render loop");
-        }
+        this.#log("activate render loop");
+
         eventEmitter.emit("render", "");
+    }
+
+    #log(message){
+        const debug = true;
+        if(debug){
+            console.log("SCENE: " + message);
+        }
     }
 }
 

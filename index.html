@@ -19,6 +19,9 @@
     import {Quaternion} from "./src/utility/quaternion.js";
     import {StandardHologram} from "./src/hologram/standard_hologram.js";
     import {StandardShape} from "./src/hologram/standard_shape.js";
+    import {ManipulatorMenu} from "./src/menu/maniuplator_menu.js";
+    import {NearMenu} from "./src/menu/near_menu.js";
+    import {Button} from "./src/menu/button.js";
 
     const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
@@ -28,18 +31,18 @@
     const scene = new Scene(sessionManager);
     scene.initializeScene();
 
-   const hologramName = "industrialRobot";
-    /*const hologramPosition = new Vector3(0, 1, 1.2);
+    /*const hologramName = "industrialRobot";
+    const hologramPosition = new Vector3(0, 1, 1.2);
     const hologramRotation = new Quaternion(0, 0, 0, 0);
     const hologramScaling = 0.7;
     const hologramMeshFilePath = "./industrial_robot/scene.gltf";//"./high-detailed-flying-bird/Flying hummingbird.glb";
-    const hologram = new CroquetImportedHologram(hologramName, hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
+    const hologram = new ImportedHologram(hologramName, hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
     await scene.addImportedHologramToScene(hologram);
 
-    const nearMenuPositionRespectToHologram = new Vector3(0.2, 1.2, 0.5);
-    scene.addManipulatorMenu(hologramName, nearMenuPositionRespectToHologram);
+    const manipulatorMenu = new ManipulatorMenu(new Vector3(0.2, 1.2, 0.5));
+    scene.addManipulatorMenu(hologramName, manipulatorMenu);
 
-    const hologramName2 = "lion";
+   /* const hologramName2 = "lion";
     const hologramPosition2 = new Vector3(-1, 1, 1.2);
     const hologramRotation2 = new Quaternion(0, 0, 0, 0);
     const hologramScaling2 = 2;
@@ -56,10 +59,38 @@
     const hologram3 = new StandardHologram(hologramName3, StandardShape.Sphere, {diameter: 0.5}, hologramPosition3, hologramRotation3)
     scene.addStandardHologramToScene(hologram3);
 
-    hologram3.color = "#fbff2b"
+   // hologram3.color = "#fbff2b"
 
-    const nearMenuPositionRespectToHologram3 = new Vector3(-0.3, 1.2, 0.5);
-    scene.addManipulatorMenu(hologramName3, nearMenuPositionRespectToHologram3);
+    const manipulatorMenuPositionHologram3 = new Vector3(-0.3, 1.2, 0.5)
+    const manipulatorMenuHologram3 = new ManipulatorMenu(manipulatorMenuPositionHologram3);
+    scene.addManipulatorMenu(hologramName3, manipulatorMenuHologram3);
+
+    const nRowsMenu = 3
+    const nearMenuPosition = new Vector3(0.3, 1.2, 0.5);
+    const nearMenu = new NearMenu(nearMenuPosition, nRowsMenu);
+
+    const button1 = new Button("button1", "Blue");
+    button1.setOnPointerDownCallback(() =>{
+        hologram3.color = "#0000ff"
+    });
+
+    nearMenu.addButton(button1);
+
+    const button2 = new Button("button2", "Red");
+    button2.setOnPointerDownCallback(() =>{
+        hologram3.color = "#ff0000"
+    });
+
+    nearMenu.addButton(button2);
+
+    const button3 = new Button("button3", "Green");
+    button3.setOnPointerDownCallback(() =>{
+        hologram3.color = "#00ff00"
+    });
+
+    nearMenu.addButton(button3);
+
+    scene.addNearMenu(nearMenu);
 
     scene.activateRenderLoop();
 

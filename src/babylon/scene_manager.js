@@ -1,4 +1,5 @@
 import {HologramRenderer} from "./hologram_renderer.js";
+import {eventEmitter} from "../event/event_emitter.js";
 
 class SceneManager{
 
@@ -76,6 +77,25 @@ class SceneManager{
         const hologramRender = new HologramRenderer(this.scene);
         hologramRender.renderImportedHologram(hologram);
         this.hologramRenders.set(hologram.name, hologramRender);
+    }
+
+    addNearMenu(menuPosition, menuRows, buttonList){
+        const nearMenu = new BABYLON.GUI.NearMenu("NearMenu");
+        nearMenu.rows = menuRows;
+        this.GUIManager.addControl(nearMenu);
+        nearMenu.isPinned = true;
+        nearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
+
+        buttonList.forEach(b => {
+            const button = new BABYLON.GUI.TouchHolographicButton();
+            button.text = b._text;
+
+            button.onPointerDownObservable.add(() => {
+                eventEmitter.emit(b._name);
+            });
+
+            nearMenu.addButton(button);
+        })
     }
 
     #log(message){

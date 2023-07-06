@@ -1,6 +1,5 @@
 import {eventEmitter} from "../../event/event_emitter.js";
 import {Triple} from "../../utility/triple.js";
-import {ManipulatorView} from "./manipulator_view.js";
 import {SceneManager} from "../../babylon/scene_manager.js";
 class RootView extends Croquet.View {
 
@@ -54,6 +53,10 @@ class RootView extends Croquet.View {
 
     }
 
+    updateHologramColor(hologramName){
+        this.#log("received updateHologramColor");
+        this.sceneManager.hologramRenders.get(hologramName).updateColor(this.model.hologramModel.holograms.get(hologramName).color);
+    }
 
     #setOtherUserInControlBehaviorControlButton(controlButton){
         controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
@@ -62,21 +65,6 @@ class RootView extends Croquet.View {
 
         controlButton.imageUrl = "../../img/IconClose.png";
         controlButton.onPointerDownObservable.clear();
-    }
-
-    updateHologramColor(hologramName){
-        this.#log("received updateHologramColor");
-        this.sceneManager.hologramRenders.get(hologramName).updateColor(this.model.hologramModel.holograms.get(hologramName).color);
-    }
-
-    #setupModelEventHandlers(){
-        this.subscribe(this.viewId, "freezeControlButton", this.freezeControlButton);
-        this.subscribe(this.viewId, "restoreControlButton", this.restoreControlButton);
-        this.subscribe(this.viewId, "showUserManipulation", this.showUserManipulation);
-        this.subscribe(this.viewId, "showHologramUpdatedPosition", this.showHologramUpdatedPosition);
-        this.subscribe(this.viewId, "showHologramUpdatedScale", this.showHologramUpdatedScale);
-
-        this.subscribe("view", "updateHologramColor", this.updateHologramColor);
     }
 
     #notifyUserStartManipulating(hologramName){
@@ -168,6 +156,20 @@ class RootView extends Croquet.View {
         });
     }
 
+    #requireToAddNearMenu(nearMenuData){
+        const object = JSON.parse(nearMenuData);
+
+        const menuRows = object._rows;
+        const menuPosition = object._position;
+        const buttonList = object.buttonList;
+
+        console.log(menuPosition);
+        console.log(menuRows);
+        console.log(buttonList);
+
+        this.sceneManager.addNearMenu(menuPosition, menuRows, buttonList);
+    }
+
     #setupBackEndEventHandlers(){
         eventEmitter.on("addManipulatorMenu", (data) => {
             this.#log("received add manipulator menu");
@@ -198,6 +200,21 @@ class RootView extends Croquet.View {
             this.#log("received color change");
             this.publish("updateHologram", "changeColor", data);
         });
+
+        eventEmitter.on("addNearMenu", (data) => {
+            console.log(data);
+            this.#requireToAddNearMenu(data);
+        });
+    }
+
+    #setupModelEventHandlers(){
+        this.subscribe(this.viewId, "freezeControlButton", this.freezeControlButton);
+        this.subscribe(this.viewId, "restoreControlButton", this.restoreControlButton);
+        this.subscribe(this.viewId, "showUserManipulation", this.showUserManipulation);
+        this.subscribe(this.viewId, "showHologramUpdatedPosition", this.showHologramUpdatedPosition);
+        this.subscribe(this.viewId, "showHologramUpdatedScale", this.showHologramUpdatedScale);
+
+        this.subscribe("view", "updateHologramColor", this.updateHologramColor);
     }
 
     #log(message){

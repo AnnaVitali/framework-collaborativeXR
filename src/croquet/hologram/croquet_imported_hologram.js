@@ -1,4 +1,3 @@
-import {eventEmitter} from "../../event/event_emitter.js";
 import {CroquetHologram} from "./croquet_hologram.js";
 
 class CroquetImportedHologram extends CroquetHologram{
