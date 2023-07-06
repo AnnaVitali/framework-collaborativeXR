@@ -1,5 +1,6 @@
 import {HologramRenderer} from "./hologram_renderer.js";
 import {eventEmitter} from "../event/event_emitter.js";
+import {CroquetStandardHologram} from "../croquet/hologram/croquet_standard_hologram.js";
 
 class SceneManager{
 
@@ -25,7 +26,6 @@ class SceneManager{
 
         this.GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
         this.GUIManager.useRealisticScaling = true;
-        //this.hologramModel.setScene(this.scene);
     }
 
     async #createWebXRExperience() {

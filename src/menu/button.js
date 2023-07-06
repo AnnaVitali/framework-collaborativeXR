@@ -9,7 +9,6 @@ class Button {
         this._name = name;
     }
 
-
     get text() {
         return this._text;
     }
