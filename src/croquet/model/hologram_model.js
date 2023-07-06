@@ -1,5 +1,3 @@
-import {eventEmitter} from "../../event/event_emitter.js";
-import {StandardShape} from "../../hologram/standard_shape.js";
 import {CroquetStandardHologram} from "../hologram/croquet_standard_hologram.js";
 import {CroquetImportedHologram} from "../hologram/croquet_imported_hologram.js";
 
@@ -28,14 +26,16 @@ class HologramModel extends Croquet.Model {
         this.holograms.get(hologramName).scale = scale;
     }
 
-    changeColorHologram(hologramName, color){
+    updateRotation(hologramName, rotation){
+        this.holograms.get(hologramName).rotation = rotation;
+    }
+
+    updateColor(hologramName, color){
         this.#log("change hologram color received");
         this.#log(hologramName)
         console.log(this.holograms);
         console.log(this.holograms.get(hologramName));
         this.holograms.get(hologramName).color = color;
-
-        this.publish("view", "updateHologramColor", hologramName);
     }
 
     #log(message){

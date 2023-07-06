@@ -1,3 +1,5 @@
+import {eventEmitter} from "../event/event_emitter.js";
+
 class Hologram{
 
     constructor(name, position, rotation, scaling){
@@ -13,6 +15,7 @@ class Hologram{
 
     set scaling(value) {
         this._scaling = value;
+        eventEmitter.emit("scalingChange", JSON.stringify({hologramName: this.name, scaling: this.scaling}));
     }
 
     get name() {
@@ -25,6 +28,7 @@ class Hologram{
 
     set position(value) {
         this._position = value;
+        eventEmitter.emit("positionChange", JSON.stringify({hologramName: this.name, position: this.position}));
     }
 
     get rotation() {
@@ -33,18 +37,7 @@ class Hologram{
 
     set rotation(value) {
         this._rotation = value;
-    }
-
-    updatePosition(position){
-        this._position = position;
-    }
-
-    updateRotation(rotation){
-        this._rotation = rotation;
-    }
-
-    updateScaling(scaling){
-        this._scaling = scaling;
+        eventEmitter.emit("rotationChange", JSON.stringify({hologramName: this.name, rotation: this.rotation}));
     }
 }
 

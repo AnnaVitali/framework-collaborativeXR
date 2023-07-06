@@ -6,6 +6,7 @@ class HologramRenderer{
     constructor(scene) {
         this.mesh = null;
         this.scene = scene;
+        this.isUserManipulating = false;
     }
 
     renderImportedHologram(hologram){
@@ -61,34 +62,8 @@ class HologramRenderer{
         this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(colorString);
     }
 
-    #computeMesh(hologramObject, hologramName) {
-        switch (hologramObject._shapeName) {
-            case StandardShape.Cube:
-                this.mesh = BABYLON.MeshBuilder.CreateBox(hologramName, hologramObject._creationOptions, this.scene);
-                break;
-            case StandardShape.Sphere:
-                this.mesh =BABYLON.MeshBuilder.CreateSphere(hologramName, hologramObject._creationOptions, this.scene);
-                break;
-            case StandardShape.Cylinder:
-                this.mesh =BABYLON.MeshBuilder.CreateCylinder(hologramName, hologramObject._creationOptions, this.scene);
-                break;
-            case StandardShape.Plane:
-                this.mesh = BABYLON.MeshBuilder.CreatePlane(hologramName, hologramObject._creationOptions, this.scene);
-                break;
-            case StandardShape.Disc:
-                this.mesh = BABYLON.MeshBuilder.CreateDisc(hologramName, hologramObject._creationOptions, this.scene);
-                break;
-            default:
-                throw new Error("The required shape is not supported");
-        }
-
-        const material = new BABYLON.StandardMaterial("material", this.scene);
-        material.diffuseColor = BABYLON.Color3.FromHexString(hologramObject._color);
-
-        this.mesh.material = material;
-    }
-
     showOtherUserManipulation(){
+        this.isUserManipulating = true;
         this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
 
         const utilLayer = new BABYLON.UtilityLayerRenderer(this.scene);
@@ -102,9 +77,7 @@ class HologramRenderer{
     }
 
     addHologramManipulator(){
-
-        //this.publish("hologramManipulator", "showUserManipulation", {view: this.parentView, hologramName: this.hologramName});
-
+        this.isUserManipulating = true;
         this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
 
         const utilLayer = new BABYLON.UtilityLayerRenderer(this.scene)
@@ -140,12 +113,56 @@ class HologramRenderer{
     }
 
     updatePosition(newPosition){
-        this.boundingBox.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
+        if(this.isUserManipulating) {
+            this.boundingBox.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
+        }else{
+            this.mesh.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
+        }
+    }
+
+    updateRotation(newRotation){
+        const euler = new BABYLON.Quaternion(newRotation._x,
+            newRotation._y, newRotation._z, newRotation._w).toEulerAngles();
+        this.mesh.rotate(BABYLON.Axis.X, euler.x);
+        this.mesh.rotate(BABYLON.Axis.Y, euler.y);
+        this.mesh.rotate(BABYLON.Axis.Z, euler.z);
     }
 
     updateScale(newScale){
-        this.boundingBox.scaling = new BABYLON.Vector3(newScale._x, newScale._y, newScale._z);
+        if(this.isUserManipulating) {
+            this.boundingBox.scaling = new BABYLON.Vector3(newScale._x, newScale._y, newScale._z);
+        }else{
+            this.mesh.scaling = new BABYLON.Vector3(newScale._x, newScale._y, newScale._z);
+        }
     }
+
+    #computeMesh(hologramObject, hologramName) {
+        switch (hologramObject._shapeName) {
+            case StandardShape.Cube:
+                this.mesh = BABYLON.MeshBuilder.CreateBox(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            case StandardShape.Sphere:
+                this.mesh =BABYLON.MeshBuilder.CreateSphere(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            case StandardShape.Cylinder:
+                this.mesh =BABYLON.MeshBuilder.CreateCylinder(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            case StandardShape.Plane:
+                this.mesh = BABYLON.MeshBuilder.CreatePlane(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            case StandardShape.Disc:
+                this.mesh = BABYLON.MeshBuilder.CreateDisc(hologramName, hologramObject._creationOptions, this.scene);
+                break;
+            default:
+                throw new Error("The required shape is not supported");
+        }
+
+        const material = new BABYLON.StandardMaterial("material", this.scene);
+        material.diffuseColor = BABYLON.Color3.FromHexString(hologramObject._color);
+
+        this.mesh.material = material;
+    }
+
 
     #extractFileAndDirectory(filePath) {
         const stringSplit = filePath.split("/");

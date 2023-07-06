@@ -39,6 +39,11 @@ class RootView extends Croquet.View {
         this.sceneManager.hologramRenders.get(data).updatePosition(newPosition);
     }
 
+    showHologramUpdatedRotation(data){
+        const newRotation = this.model.hologramModel.holograms.get(data).rotation;
+        this.sceneManager.hologramRenders.get(data).updateRotation(newRotation);
+    }
+
     showHologramUpdatedScale(data){
         const newScale = this.model.hologramModel.holograms.get(data).scale;
         this.sceneManager.hologramRenders.get(data).updateScale(newScale);
@@ -53,7 +58,7 @@ class RootView extends Croquet.View {
 
     }
 
-    updateHologramColor(hologramName){
+    showHologramUpdatedColor(hologramName){
         this.#log("received updateHologramColor");
         this.sceneManager.hologramRenders.get(hologramName).updateColor(this.model.hologramModel.holograms.get(hologramName).color);
     }
@@ -109,11 +114,11 @@ class RootView extends Croquet.View {
             hologramRender.addHologramManipulator();
 
             hologramRender.getSixDofDragBehaviour().onPositionChangedObservable.add(() => {
-                this.publish("updateHologram", "positionChanged", this.#serializeDataPosition(hologramName, hologramRender));
+                this.publish("hologramManipulation", "positionChanged", this.#serializeDataPosition(hologramName, hologramRender));
             });
 
             hologramRender.getGizmo().onScaleBoxDragObservable.add(() => {
-                this.publish("updateHologram", "scaleChanged", this.#serializeDataScale(hologramName, hologramRender));
+                this.publish("hologramManipulation", "scaleChanged", this.#serializeDataScale(hologramName, hologramRender));
             });
 
             this.#setManipulatingBehaviourControlButton(hologramName, controlButton);
@@ -163,23 +168,10 @@ class RootView extends Croquet.View {
         const menuPosition = object._position;
         const buttonList = object.buttonList;
 
-        console.log(menuPosition);
-        console.log(menuRows);
-        console.log(buttonList);
-
         this.sceneManager.addNearMenu(menuPosition, menuRows, buttonList);
     }
 
     #setupBackEndEventHandlers(){
-        eventEmitter.on("addManipulatorMenu", (data) => {
-            this.#log("received add manipulator menu");
-            const object = JSON.parse(data);
-            const hologramName = object.name;
-            const menuPosition = object.position;
-
-            this.#addManipulatorMenu(hologramName, menuPosition);
-        });
-
         eventEmitter.on("initialize", (data) => {
             this.sceneManager.initializeScene();
         });
@@ -201,6 +193,30 @@ class RootView extends Croquet.View {
             this.publish("updateHologram", "changeColor", data);
         });
 
+        eventEmitter.on("scalingChange", (data) => {
+            this.#log("received scaling change");
+            this.publish("updateHologram", "changeScaling", data);
+        });
+
+        eventEmitter.on("positionChange", (data) => {
+            this.#log("received position change");
+            this.publish("updateHologram", "changePosition", data);
+        });
+
+        eventEmitter.on("rotationChange", (data) => {
+            this.#log("received rotation change");
+            this.publish("updateHologram", "changeRotation", data);
+        });
+
+        eventEmitter.on("addManipulatorMenu", (data) => {
+            this.#log("received add manipulator menu");
+            const object = JSON.parse(data);
+            const hologramName = object.name;
+            const menuPosition = object.position;
+
+            this.#addManipulatorMenu(hologramName, menuPosition);
+        });
+
         eventEmitter.on("addNearMenu", (data) => {
             console.log(data);
             this.#requireToAddNearMenu(data);
@@ -214,7 +230,10 @@ class RootView extends Croquet.View {
         this.subscribe(this.viewId, "showHologramUpdatedPosition", this.showHologramUpdatedPosition);
         this.subscribe(this.viewId, "showHologramUpdatedScale", this.showHologramUpdatedScale);
 
-        this.subscribe("view", "updateHologramColor", this.updateHologramColor);
+        this.subscribe("view", "updateHologramColor", this.showHologramUpdatedColor);
+        this.subscribe("view", "updateHologramScaling", this.showHologramUpdatedScale);
+        this.subscribe("view", "updateHologramPosition", this.showHologramUpdatedPosition);
+        this.subscribe("view", "updateHologramRotation", this.showHologramUpdatedRotation);
     }
 
     #log(message){
