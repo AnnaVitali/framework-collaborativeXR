@@ -1,5 +1,6 @@
 import {CroquetStandardHologram} from "../hologram/croquet_standard_hologram.js";
 import {CroquetImportedHologram} from "../hologram/croquet_imported_hologram.js";
+import {eventEmitter} from "../../event/event_emitter.js";
 
 class HologramModel extends Croquet.Model {
 
@@ -24,6 +25,9 @@ class HologramModel extends Croquet.Model {
         }catch(error){
             //silently ignore, if the user join the session at the same time everything works
         }
+
+        eventEmitter.emit("updatePosition", JSON.stringify({hologramName: hologramName, position: position}));
+        this.publish("view", "updateHologramPosition", hologramName);
     }
 
     updateScale(hologramName, scale){
@@ -32,6 +36,9 @@ class HologramModel extends Croquet.Model {
         }catch(error){
             //silently ignore, if the user join the session at the same time everything works
         }
+
+        eventEmitter.emit("updateScaling", JSON.stringify({hologramName: hologramName, scale: scale}));
+        this.publish("view", "updateHologramScaling", hologramName);
     }
 
     updateRotation(hologramName, rotation){
@@ -40,18 +47,21 @@ class HologramModel extends Croquet.Model {
         }catch(error){
             //silently ignore, if the user join the session at the same time everything works
         }
+
+        eventEmitter.emit("updateRotation", JSON.stringify({hologramName: hologramName, rotation: rotation}));
+        this.publish("view", "updateHologramRotation", hologramName);
     }
 
     updateColor(hologramName, color){
         this.#log("change hologram color received");
-        this.#log(hologramName)
-        console.log(this.holograms);
-        console.log(this.holograms.get(hologramName));
         try {
             this.holograms.get(hologramName).color = color;
         }catch(error){
             //silently ignore, if the user join the session at the same time everything works
         }
+
+        eventEmitter.emit("updateColor", JSON.stringify({hologramName: hologramName, color: color}));
+        this.publish("view", "updateHologramColor", hologramName);
     }
 
     #log(message){

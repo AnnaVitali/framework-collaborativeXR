@@ -2,7 +2,9 @@ import {eventEmitter} from "../../event/event_emitter.js";
 import {HologramModel} from "./hologram_model.js";
 import {CroquetStandardHologram} from "../hologram/croquet_standard_hologram.js";
 import {CroquetImportedHologram} from "../hologram/croquet_imported_hologram.js";
+import {CroquetSynchronizedVariable} from "../animation/croquet_synchronized_variable.js";
 import {Vector3} from "../../utility/vector3.js";
+import {SynchronizedVariableModel} from "./synchronized_variable_model.js";
 
 const canvas = document.getElementById("renderCanvas");
 
@@ -14,6 +16,8 @@ class RootModel extends Croquet.Model {
     init() {
         this.linkedViews = [];
         this.hologramModel = HologramModel.create();
+        this.synchronizedVariableModel = SynchronizedVariableModel.create();
+        this.animationModels = [];
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
         this.subscribe(this.sessionId, "view-exit", this.viewDrop);
@@ -27,7 +31,9 @@ class RootModel extends Croquet.Model {
         const object = JSON.parse(data);
         const hologram = Object.create(CroquetImportedHologram.prototype, Object.getOwnPropertyDescriptors(object));
 
-        this.hologramModel.addHologram(hologram);
+        if(!this.hologramModel.hologramsManipulatorMenu.has(hologram.name)) {
+            this.hologramModel.addHologram(hologram);
+        }
     }
 
     #addStandardHologram(data){
@@ -35,46 +41,75 @@ class RootModel extends Croquet.Model {
         const object = JSON.parse(data);
         const hologram = Object.create(CroquetStandardHologram.prototype, Object.getOwnPropertyDescriptors(object));
 
-        this.hologramModel.addHologram(hologram);
+        if(!this.hologramModel.holograms.has(hologram.name)) {
+            this.hologramModel.addHologram(hologram);
+        }
+    }
+
+    #addSynchronizedVariable(data){
+        this.#log("crateStandardHologram received");
+        const object = JSON.parse(data);
+        const variable = Object.create(CroquetSynchronizedVariable.prototype, Object.getOwnPropertyDescriptors(object));
+
+        console.log(this.synchronizedVariableModel.syncrhonizedVariables);
+
+        if(!this.synchronizedVariableModel.syncrhonizedVariables.has(variable.name)) {
+            this.synchronizedVariableModel.addVariable(variable);
+            console.log(this.synchronizedVariableModel.syncrhonizedVariables);
+        }
+    }
+
+    updateVariableValue(data){
+        this.#log("update hologram color received");
+        const variableName = data.variableName;
+        const value = data.value;
+
+        if(this.synchronizedVariableModel.syncrhonizedVariables.get(variableName).value !== value) {
+            this.synchronizedVariableModel.updateValue(variableName, value);
+        }
     }
 
     updateHologramColor(data){
         this.#log("update hologram color received");
-        const {object, hologramName} = this.#extractObjectAndName(data);
-        const color = object.color;
+        const hologramName = data.hologramName;
+        const color = data.color;
 
-        this.hologramModel.updateColor(hologramName, color);
-        this.publish("view", "updateHologramColor", hologramName);
+        if(this.hologramModel.holograms.get(hologramName).color !== color) {
+            this.hologramModel.updateColor(hologramName, color);
+        }
     }
 
     updateHologramScaling(data){
         this.#log("update hologram scaling received");
         this.#log("update hologram color received");
-        const {object, hologramName} = this.#extractObjectAndName(data);
-        const scaling = object.scaling;
+        const hologramName = data.hologramName;
+        const scaling = data.scaling;
 
-        this.hologramModel.updateScale(hologramName, scaling);
-        this.publish("view", "updateHologramScaling", hologramName);
+        if(this.hologramModel.get(hologramName).scaling !== scaling) {
+            this.hologramModel.updateScale(hologramName, scaling);
+        }
     }
 
     updateHologramPosition(data){
         this.#log("update hologram position received");
         this.#log("update hologram color received");
-        const {object, hologramName} = this.#extractObjectAndName(data);
-        const position = object.position;
+        const hologramName = data.hologramName;
+        const position = data.position;
 
-        this.hologramModel.updatePosition(hologramName, position);
-        this.publish("view", "updateHologramPosition", hologramName);
+        if(this.hologramModel.get(hologramName).position !== position){
+            this.hologramModel.updatePosition(hologramName, position);
+        }
     }
 
     updateHologramRotation(data){
         this.#log("update hologram rotation received");
         this.#log("update hologram color received");
-        const {object, hologramName} = this.#extractObjectAndName(data);
-        const rotation = object.rotation;
+        const hologramName = data.hologramName;
+        const rotation = data.rotation;
 
-        this.hologramModel.updateRotation(hologramName, rotation);
-        this.publish("view", "updateHologramRotation", hologramName);
+        if(this.hologramModel.get(hologramName).rotation !== rotation) {
+            this.hologramModel.updateRotation(hologramName, rotation);
+        }
     }
 
     requireHologramPositionUpdate(data){
@@ -83,7 +118,6 @@ class RootModel extends Croquet.Model {
         const position = new Vector3(data.position_x, data.position_y, data.position_z);
 
         this.hologramModel.updatePosition(hologramName, position);
-
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "showHologramUpdatedPosition", hologramName);
         });
@@ -95,7 +129,6 @@ class RootModel extends Croquet.Model {
         const scale = new Vector3(data.scale_x, data.scale_y, data.scale_z);
 
         this.hologramModel.updateScale(hologramName, scale);
-
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "showHologramUpdatedScale", hologramName);
         });
@@ -127,8 +160,9 @@ class RootModel extends Croquet.Model {
     viewDrop(viewId){
         this.#log("received view left");
         this.linkedViews.splice(this.linkedViews.indexOf(viewId),1);
-        if(this.linkedViews.length === 0){
-            this.destroy();
+        if(viewId === this.viewInCharge){
+            this.viewInCharge = this.linkedViews.indexOf(0);
+            this.publish(this.viewInCharge, "setUpdate");
         }
     }
 
@@ -155,12 +189,6 @@ class RootModel extends Croquet.Model {
         });
     }
 
-    #extractObjectAndName(data) {
-        const object = JSON.parse(data);
-        const hologramName = object.hologramName;
-        return {object, hologramName};
-    }
-
     #setupBackEndEventHandlers(){
         eventEmitter.on("importedHologramCreate", (data)=>{
             this.#log("createImportedHologram model");
@@ -171,6 +199,15 @@ class RootModel extends Croquet.Model {
             this.#log("createStandardHologramModel");
             this.#addStandardHologram(data);
         } );
+
+        eventEmitter.on("createSynchronizedVariable", (data)=>{
+            this.#log("create synchronized variable");
+            this.#addSynchronizedVariable(data);
+        });
+    }
+
+    setViewInCharge(data){
+        this.viewInCharge = data;
     }
 
     #setupViewEventHandlers(){
@@ -178,12 +215,17 @@ class RootModel extends Croquet.Model {
         this.subscribe("updateHologram", "changeScaling", this.updateHologramScaling);
         this.subscribe("updateHologram", "changePosition", this.updateHologramPosition);
         this.subscribe("updateHologram", "changeRotation", this.updateHologramRotation);
-        this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
+
+        this.publish("synchronizedVariable", "valueChange", this.updateVariableValue)
+
         this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
         this.subscribe("hologramManipulation", "positionChanged", this.requireHologramPositionUpdate);
         this.subscribe("hologramManipulation", "scaleChanged", this.requireHologramScaleUpdate);
-        this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
 
+        this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
+        this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
+
+        this.publish("view", "viewInCharge", this.setViewInCharge);
     }
 
 

@@ -1,6 +1,7 @@
 import {Hologram} from "./hologram.js";
 import {eventEmitter} from "../event/event_emitter.js";
 import {Vector3} from "../utility/vector3.js";
+import {synchronizedElementManager} from "../scene/synchronized_element_manager.js";
 
 class StandardHologram extends Hologram{
     constructor(name, shapeName, creationOptions, position, rotation, color){
@@ -21,9 +22,10 @@ class StandardHologram extends Hologram{
     }
 
     set color(value) {
-        this._color = value;
-        console.log("SEND: event color changed");
-        eventEmitter.emit("colorChange", JSON.stringify({hologramName: this.name, color: this.color}));
+        if(synchronizedElementManager.update) {
+            this._color = value;
+            eventEmitter.emit("colorChange", JSON.stringify({hologramName: this.name, color: this.color}));
+        }
     }
 
     get color() {

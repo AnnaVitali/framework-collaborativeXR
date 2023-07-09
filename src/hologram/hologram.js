@@ -1,4 +1,5 @@
 import {eventEmitter} from "../event/event_emitter.js";
+import {synchronizedElementManager} from "../scene/synchronized_element_manager.js";
 
 class Hologram{
 
@@ -14,8 +15,10 @@ class Hologram{
     }
 
     set scaling(value) {
-        this._scaling = value;
-        eventEmitter.emit("scalingChange", JSON.stringify({hologramName: this.name, scaling: this.scaling}));
+        if(synchronizedElementManager.update) {
+            this._scaling = value;
+            eventEmitter.emit("scalingChange", JSON.stringify({hologramName: this.name, scaling: this.scaling}));
+        }
     }
 
     get name() {
@@ -27,8 +30,10 @@ class Hologram{
     }
 
     set position(value) {
-        this._position = value;
-        eventEmitter.emit("positionChange", JSON.stringify({hologramName: this.name, position: this.position}));
+        if(synchronizedElementManager.update) {
+            this._position = value;
+            eventEmitter.emit("positionChange", JSON.stringify({hologramName: this.name, position: this.position}));
+        }
     }
 
     get rotation() {
@@ -36,8 +41,10 @@ class Hologram{
     }
 
     set rotation(value) {
-        this._rotation = value;
-        eventEmitter.emit("rotationChange", JSON.stringify({hologramName: this.name, rotation: this.rotation}));
+        if(synchronizedElementManager.update) {
+            this._rotation = value;
+            eventEmitter.emit("rotationChange", JSON.stringify({hologramName: this.name, rotation: this.rotation}));
+        }
     }
 }
 

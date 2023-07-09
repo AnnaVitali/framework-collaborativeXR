@@ -22,6 +22,8 @@
     import {ManipulatorMenu} from "./src/menu/maniuplator_menu.js";
     import {NearMenu} from "./src/menu/near_menu.js";
     import {Button} from "./src/menu/button.js";
+    import {Animation} from "./src/animation/animation.js";
+    import {SynchronizedVariable} from "./src/animation/synchronized_variable.js";
 
     const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
@@ -93,6 +95,21 @@
     nearMenu.addButton(button3);
 
     scene.addNearMenu(nearMenu);
+
+    const animationTime = 2000;
+    const animationName = "changeColor";
+    const animation = new Animation(animationName, animationTime);
+    let i = new SynchronizedVariable("i", 0);
+
+    animation.setAnimationCallback(() => {
+        i.value = i.value + 1;
+        console.log(i.value);
+        if((i.value % 2) === 0) {
+            hologram3.color = "#ff5e00"
+        }else{
+            hologram3.color = "#00fbff"
+        }
+    })
 
 </script>
 </body>

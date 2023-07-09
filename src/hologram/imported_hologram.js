@@ -13,14 +13,6 @@ class ImportedHologram extends Hologram{
     get meshFilePath() {
         return this._meshFilePath;
     }
-
-    get scaling() {
-        return this._scaling;
-    }
-
-    set scaling(value) {
-        this._scaling = value;
-    }
 }
 
 export {ImportedHologram}

@@ -19,7 +19,7 @@ class Button {
 
     setOnPointerDownCallback(onPointerDownCallback){
         eventEmitter.on(this.name, () => {
-            setTimeout(onPointerDownCallback.apply(this), 0)
+            setTimeout(onPointerDownCallback.apply(this), 0);
         });
     }
 }
