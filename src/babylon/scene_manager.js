@@ -81,6 +81,7 @@ class SceneManager{
 
     addNearMenu(menuPosition, menuRows, buttonList){
         const nearMenu = new BABYLON.GUI.NearMenu("NearMenu");
+        let holographicButtonList = [];
         nearMenu.rows = menuRows;
         this.GUIManager.addControl(nearMenu);
         nearMenu.isPinned = true;
@@ -88,14 +89,13 @@ class SceneManager{
 
         buttonList.forEach(b => {
             const button = new BABYLON.GUI.TouchHolographicButton();
+            button.name = b._name;
             button.text = b._text;
-
-            button.onPointerDownObservable.add(() => {
-                eventEmitter.emit(b._name);
-            });
-
+            holographicButtonList.push(button);
             nearMenu.addButton(button);
-        })
+        });
+
+        return holographicButtonList
     }
 
     #log(message){

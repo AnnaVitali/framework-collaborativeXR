@@ -9,8 +9,6 @@ class StandardHologram extends Hologram{
         this._creationOptions = creationOptions;
         this._shapeName = shapeName;
         this._color = color;
-
-        eventEmitter.emit("standardHologramCreate", JSON.stringify(this));
     }
 
     get shapeName() {

@@ -56,6 +56,8 @@ class HologramRenderer{
         this.mesh.rotate(BABYLON.Axis.Y, euler.y);
         this.mesh.rotate(BABYLON.Axis.Z, euler.z);
         this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(hologram._color);
+
+        eventEmitter.emit("standardHologramCreated", "");
     }
 
     updateColor(colorString){

@@ -32,7 +32,6 @@
     await sessionManager.startSession(apiKey, appId);
     const scene = new Scene(sessionManager);
     scene.initializeScene();
-    scene.activateRenderLoop();
 
     /*const hologramName = "industrialRobot";
     const hologramPosition = new Vector3(0, 1, 1.2);
@@ -62,7 +61,7 @@
     const hologramColor = "#fbff2b"
     const hologram3 = new StandardHologram(hologramName3, StandardShape.Sphere, {diameter: 0.5}, hologramPosition3,
         hologramRotation3, hologramColor)
-    scene.addStandardHologramToScene(hologram3);
+    await scene.addStandardHologramToScene(hologram3);
 
 
     const manipulatorMenuPositionHologram3 = new Vector3(-0.3, 1.2, 0.5)
@@ -96,6 +95,7 @@
 
     scene.addNearMenu(nearMenu);
 
+    /*
     const animationTime = 2000;
     const animationName = "changeColor";
     const animation = new Animation(animationName, animationTime);
@@ -109,7 +109,9 @@
         }else{
             hologram3.color = "#00fbff"
         }
-    })
+    })*/
+
+    scene.activateRenderLoop();
 
 </script>
 </body>

@@ -15,41 +15,42 @@ class RootModel extends Croquet.Model {
      * */
     init() {
         this.linkedViews = [];
+        this.hologramInUserControl = new Map();
         this.hologramModel = HologramModel.create();
         this.synchronizedVariableModel = SynchronizedVariableModel.create();
-        this.animationModels = [];
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
         this.subscribe(this.sessionId, "view-exit", this.viewDrop);
 
-        this.#setupBackEndEventHandlers();
         this.#setupViewEventHandlers();
     }
 
-    #addImportedHologram(data){
+    addImportedHologram(data){
         this.#log("crateImportedHologram received");
-        const object = JSON.parse(data);
-        const hologram = Object.create(CroquetImportedHologram.prototype, Object.getOwnPropertyDescriptors(object));
-
-        if(!this.hologramModel.hologramsManipulatorMenu.has(hologram.name)) {
-            this.hologramModel.addHologram(hologram);
-        }
-    }
-
-    #addStandardHologram(data){
-        this.#log("crateStandardHologram received");
-        const object = JSON.parse(data);
-        const hologram = Object.create(CroquetStandardHologram.prototype, Object.getOwnPropertyDescriptors(object));
+        const hologram = Object.create(CroquetImportedHologram.prototype, Object.getOwnPropertyDescriptors(data.hologram));
 
         if(!this.hologramModel.holograms.has(hologram.name)) {
             this.hologramModel.addHologram(hologram);
         }
+
+        this.publish(data.view, "showImportedHologram", hologram.name);
     }
 
-    #addSynchronizedVariable(data){
+    addStandardHologram(data){
         this.#log("crateStandardHologram received");
-        const object = JSON.parse(data);
-        const variable = Object.create(CroquetSynchronizedVariable.prototype, Object.getOwnPropertyDescriptors(object));
+        const hologram = Object.create(CroquetStandardHologram.prototype, Object.getOwnPropertyDescriptors(data.hologram));
+        this.#log("is present?" + this.hologramModel.holograms.has(hologram.name))
+
+        if(!this.hologramModel.holograms.has(hologram.name)) {
+            this.hologramModel.addHologram(hologram);
+        }
+
+        this.publish(data.view, "showStandardHologram", hologram.name);
+    }
+
+    addSynchronizedVariable(data){
+        this.#log("crateStandardHologram received");
+        const variable = Object.create(CroquetSynchronizedVariable.prototype, Object.getOwnPropertyDescriptors(data));
 
         console.log(this.synchronizedVariableModel.syncrhonizedVariables);
 
@@ -57,6 +58,7 @@ class RootModel extends Croquet.Model {
             this.synchronizedVariableModel.addVariable(variable);
             console.log(this.synchronizedVariableModel.syncrhonizedVariables);
         }
+
     }
 
     updateVariableValue(data){
@@ -64,9 +66,7 @@ class RootModel extends Croquet.Model {
         const variableName = data.variableName;
         const value = data.value;
 
-        if(this.synchronizedVariableModel.syncrhonizedVariables.get(variableName).value !== value) {
-            this.synchronizedVariableModel.updateValue(variableName, value);
-        }
+        this.synchronizedVariableModel.updateValue(variableName, value);
     }
 
     updateHologramColor(data){
@@ -74,9 +74,7 @@ class RootModel extends Croquet.Model {
         const hologramName = data.hologramName;
         const color = data.color;
 
-        if(this.hologramModel.holograms.get(hologramName).color !== color) {
-            this.hologramModel.updateColor(hologramName, color);
-        }
+        this.hologramModel.updateColor(hologramName, color);
     }
 
     updateHologramScaling(data){
@@ -85,9 +83,7 @@ class RootModel extends Croquet.Model {
         const hologramName = data.hologramName;
         const scaling = data.scaling;
 
-        if(this.hologramModel.get(hologramName).scaling !== scaling) {
-            this.hologramModel.updateScale(hologramName, scaling);
-        }
+        this.hologramModel.updateScale(hologramName, scaling);
     }
 
     updateHologramPosition(data){
@@ -96,9 +92,7 @@ class RootModel extends Croquet.Model {
         const hologramName = data.hologramName;
         const position = data.position;
 
-        if(this.hologramModel.get(hologramName).position !== position){
-            this.hologramModel.updatePosition(hologramName, position);
-        }
+        this.hologramModel.updatePosition(hologramName, position);
     }
 
     updateHologramRotation(data){
@@ -159,10 +153,20 @@ class RootModel extends Croquet.Model {
      */
     viewDrop(viewId){
         this.#log("received view left");
+        this.#log("viewId " + viewId);
+        const values = [...this.hologramInUserControl.values()]
         this.linkedViews.splice(this.linkedViews.indexOf(viewId),1);
         if(viewId === this.viewInCharge){
             this.viewInCharge = this.linkedViews.indexOf(0);
             this.publish(this.viewInCharge, "setUpdate");
+        }
+
+        if(values.includes(viewId)){
+            this.hologramInUserControl.forEach((v, k)=>{
+                if(v === viewId){
+                    this.manageUserHologramControlReleased({view: v, hologramName: k});
+                }
+            });
         }
     }
 
@@ -172,6 +176,7 @@ class RootModel extends Croquet.Model {
      */
     manageUserHologramControl(data){
         this.#log("received manage user hologram control");
+        this.hologramInUserControl.set(data.hologramName, data.view);
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "freezeControlButton", {hologramName: data.hologramName});
         });
@@ -183,26 +188,9 @@ class RootModel extends Croquet.Model {
      */
     manageUserHologramControlReleased(data){
         this.#log("received manage user hologram control released");
-
+        this.hologramInUserControl.delete(data.hologramName);
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "restoreControlButton", {hologramName: data.hologramName});
-        });
-    }
-
-    #setupBackEndEventHandlers(){
-        eventEmitter.on("importedHologramCreate", (data)=>{
-            this.#log("createImportedHologram model");
-            this.#addImportedHologram(data);
-        });
-
-        eventEmitter.on("standardHologramCreate", (data) => {
-            this.#log("createStandardHologramModel");
-            this.#addStandardHologram(data);
-        } );
-
-        eventEmitter.on("createSynchronizedVariable", (data)=>{
-            this.#log("create synchronized variable");
-            this.#addSynchronizedVariable(data);
         });
     }
 
@@ -211,6 +199,10 @@ class RootModel extends Croquet.Model {
     }
 
     #setupViewEventHandlers(){
+        this.subscribe("create", "importedHologram", this.addImportedHologram);
+        this.subscribe("create", "standardHologram", this.addStandardHologram);
+        this.subscribe("create", "synchronizedVariable", this.addSynchronizedVariable);
+
         this.subscribe("updateHologram", "changeColor", this.updateHologramColor);
         this.subscribe("updateHologram", "changeScaling", this.updateHologramScaling);
         this.subscribe("updateHologram", "changePosition", this.updateHologramPosition);

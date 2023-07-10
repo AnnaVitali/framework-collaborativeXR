@@ -20,7 +20,7 @@ class Scene{
 
         this.#verifyIfElementNotExist(hologram.name);
         synchronizedElementManager.addHologram(hologram);
-        eventEmitter.emit("importedHologramShow", hologram.name);
+        eventEmitter.emit("createImportedHologram", JSON.stringify(hologram));
 
         return new Promise((resolve) => {
             eventEmitter.on("importedHologramCreated", () => {
@@ -35,7 +35,13 @@ class Scene{
 
         this.#verifyIfElementNotExist(hologram.name);
         synchronizedElementManager.addHologram(hologram);
-        eventEmitter.emit("standardHologramShow", hologram.name);
+        eventEmitter.emit("createStandardHologram", JSON.stringify(hologram));
+
+        return new Promise((resolve) => {
+            eventEmitter.on("standardHologramCreated", () => {
+                resolve()
+            });
+        });
     }
 
     addManipulatorMenu(hologramName, manipulatorMenu){
@@ -61,7 +67,7 @@ class Scene{
 
     activateRenderLoop(){
         this.#log("activate render loop");
-
+        synchronizedElementManager.renderLoopStarted = true;
         eventEmitter.emit("render", "");
     }
 

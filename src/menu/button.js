@@ -1,4 +1,5 @@
 import {eventEmitter} from "../event/event_emitter.js";
+import {synchronizedElementManager} from "../scene/synchronized_element_manager.js";
 
 class Button {
     get name() {
@@ -19,7 +20,13 @@ class Button {
 
     setOnPointerDownCallback(onPointerDownCallback){
         eventEmitter.on(this.name, () => {
-            setTimeout(onPointerDownCallback.apply(this), 0);
+            if(!synchronizedElementManager.update) {
+                synchronizedElementManager.update = true;
+                setTimeout(onPointerDownCallback.apply(this), 0);
+                synchronizedElementManager.update = false;
+            }else{
+                setTimeout(onPointerDownCallback.apply(this), 0);
+            }
         });
     }
 }

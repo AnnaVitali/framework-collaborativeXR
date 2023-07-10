@@ -178,12 +178,34 @@ class RootView extends Croquet.View {
         const menuPosition = object._position;
         const buttonList = object.buttonList;
 
-        this.sceneManager.addNearMenu(menuPosition, menuRows, buttonList);
+        const holographicButtonList = this.sceneManager.addNearMenu(menuPosition, menuRows, buttonList);
+        console.log(holographicButtonList);
+        holographicButtonList.forEach(button => {
+            button.onPointerDownObservable.add(() => {
+                eventEmitter.emit(button.name, "");
+            });
+        })
     }
 
     setElementUpdate(){
         this.#log("received setUpdate")
         eventEmitter.emit("setUpdate", "");
+    }
+
+    showImportedHologram(data){
+        this.sceneManager.addImportedHologram(this.model.hologramModel.holograms.get(data));
+    }
+
+    showStandardHologram(data){
+        this.sceneManager.addStandardHologram(this.model.hologramModel.holograms.get(data));
+    }
+
+    #showCurrentManipulation(){
+        console.log(this.model.hologramInUserControl);
+        this.model.hologramInUserControl.forEach((v, k)=>{
+            this.sceneManager.hologramRenders.get(k).showOtherUserManipulation();
+            this.freezeControlButton({hologramName: k});
+        });
     }
 
     #setupBackEndEventHandlers(){
@@ -192,15 +214,23 @@ class RootView extends Croquet.View {
         });
 
         eventEmitter.on("render", (data) => {
+            this.#showCurrentManipulation();
             this.sceneManager.activateRenderLoop();
         });
 
-        eventEmitter.on("standardHologramShow", (data) => {
-            this.sceneManager.addStandardHologram(this.model.hologramModel.holograms.get(data));
+        eventEmitter.on("createImportedHologram", (data)=>{
+            this.#log("createImportedHologram model");
+            this.publish("create", "importedHologram", {view: this.viewId, hologram: JSON.parse(data)});
         });
 
-        eventEmitter.on("importedHologramShow", (data) => {
-            this.sceneManager.addImportedHologram(this.model.hologramModel.holograms.get(data));
+        eventEmitter.on("createStandardHologram", (data) => {
+            this.#log("createStandardHologramModel");
+            this.publish("create", "standardHologram", {view: this.viewId, hologram: JSON.parse(data)});
+        } );
+
+        eventEmitter.on("createSynchronizedVariable", (data)=>{
+            this.#log("create synchronized variable");
+            this.publish("create", "synchronizedVariable", JSON.parse(data));
         });
 
         eventEmitter.on("addManipulatorMenu", (data) => {
@@ -247,7 +277,7 @@ class RootView extends Croquet.View {
 
         eventEmitter.on("rotationChange", (data) => {
             this.#log("received rotation change");
-            this.publish.apply( "updateHologram", "changeColor", JSON.parse(data));
+            this.publish( "updateHologram", "changeColor", JSON.parse(data));
         });
     }
 
@@ -258,6 +288,8 @@ class RootView extends Croquet.View {
         this.subscribe(this.viewId, "showHologramUpdatedPosition", this.showHologramUpdatedPosition);
         this.subscribe(this.viewId, "showHologramUpdatedScale", this.showHologramUpdatedScale);
         this.subscribe(this.viewId, "setUpdate", this.setElementUpdate);
+        this.subscribe(this.viewId, "showImportedHologram", this.showImportedHologram);
+        this.subscribe(this.viewId, "showStandardHologram", this.showStandardHologram);
 
         this.subscribe("view", "updateHologramColor", this.showHologramUpdatedColor);
         this.subscribe("view", "updateHologramScaling", this.showHologramUpdatedScale);
