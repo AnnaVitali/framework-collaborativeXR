@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scaling=1.0, maximum-scaling=1.0, minimum-scaling=1.0">
     <title>Collaborative WebXR Application</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
@@ -12,18 +12,18 @@
 <body>
 <canvas id="renderCanvas"></canvas>
 <script type="module">
-    import {SessionManager} from "./src/session/sesssion_manager.js";
-    import {Scene} from "./src/scene/scene.js";
-    import {ImportedHologram} from "./src/hologram/imported_hologram.js";
+    import {SessionManager} from "./src/core/session/sesssion_manager.js";
+    import {Scene} from "./src/core/scene/scene.js";
+    import {ImportedHologram} from "./src/core/hologram/imported_hologram.js";
     import {Vector3} from "./src/utility/vector3.js";
     import {Quaternion} from "./src/utility/quaternion.js";
-    import {StandardHologram} from "./src/hologram/standard_hologram.js";
-    import {StandardShape} from "./src/hologram/standard_shape.js";
-    import {ManipulatorMenu} from "./src/menu/maniuplator_menu.js";
-    import {NearMenu} from "./src/menu/near_menu.js";
-    import {Button} from "./src/menu/button.js";
-    import {Animation} from "./src/animation/animation.js";
-    import {SynchronizedVariable} from "./src/animation/synchronized_variable.js";
+    import {StandardHologram} from "./src/core/hologram/standard_hologram.js";
+    import {StandardShape} from "./src/core/hologram/standard_shape.js";
+    import {ManipulatorMenu} from "./src/core/gui/menu/maniuplator_menu.js";
+    import {NearMenu} from "./src/core/gui/menu/near_menu.js";
+    import {Button} from "./src/core/gui/button.js";
+    import {Animation} from "./src/core/animation/animation.js";
+    import {SynchronizedVariable} from "./src/core/animation/synchronized_variable.js";
 
     const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
