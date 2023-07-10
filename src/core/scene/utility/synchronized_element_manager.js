@@ -72,7 +72,6 @@ class SynchronizedElementManager{
         eventBus.on("updatePosition", (data) =>{
             if(this.renderLoopStarted) {
                 const {object, hologramName} = this.#extractObjectAndName(data);
-                console.log(this.holograms);
                 this.holograms.get(hologramName)._position = object.position;
             }
         });

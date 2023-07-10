@@ -183,7 +183,7 @@ class HologramRenderer{
      * @param color {String} the new color to apply.
      */
     updateColor(color){
-        this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(colorString);
+        this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(color);
     }
 
     #computeMesh(hologramObject, hologramName) {
