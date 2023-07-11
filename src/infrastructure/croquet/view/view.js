@@ -100,18 +100,18 @@ class RootView extends Croquet.View {
 
     /**
      * Require to show the imported hologram.
-     * @param data {Object} object containing the data of the hologram.
+     * @param hologramName {String} object containing the data of the hologram.
      */
-    showImportedHologram(data){
-        this.sceneManager.addImportedHologram(this.model.hologramModel.holograms.get(data));
+    showImportedHologram(hologramName){
+        this.sceneManager.addImportedHologram(this.model.hologramModel.holograms.get(hologramName));
     }
 
     /**
      * Require to show the standard hologram.
-     * @param data {Object} object containing the data of the hologram.
+     * @param hologramName {String} object containing the data of the hologram.
      */
-    showStandardHologram(data){
-        this.sceneManager.addStandardHologram(this.model.hologramModel.holograms.get(data));
+    showStandardHologram(hologramName){
+        this.sceneManager.addStandardHologram(this.model.hologramModel.holograms.get(hologramName));
     }
 
     /**

@@ -61,6 +61,7 @@ class SynchronizedElementManager{
         eventBus.on("setUpdate", ()=> this.update = true);
 
         eventBus.on("updateValue", (data) =>{
+            console.log("SYNCHRONIZED-ELEMENT: received update value")
             if(this.renderLoopStarted) {
                 const object = JSON.parse(data);
                 const variableName = object.variableName;

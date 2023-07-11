@@ -31,6 +31,7 @@ class RootModel extends Croquet.Model {
      */
     viewJoin(viewId){
         this.#log("received view join");
+        console.log(this.linkedViews);
         this.linkedViews.push(viewId);
     }
 
@@ -40,11 +41,11 @@ class RootModel extends Croquet.Model {
      */
     viewDrop(viewId){
         this.#log("received view left");
-        this.#log("viewId " + viewId);
         const values = [...this.hologramInUserControl.values()]
         this.linkedViews.splice(this.linkedViews.indexOf(viewId),1);
         if(viewId === this.viewInCharge){
-            this.viewInCharge = this.linkedViews.indexOf(0);
+            this.viewInCharge = this.linkedViews[0];
+            console.log(this.viewInCharge)
             this.publish(this.viewInCharge, "setUpdate");
         }
 
@@ -110,7 +111,7 @@ class RootModel extends Croquet.Model {
      * @param data {Object} object containing the data of the variable.
      */
     updateVariableValue(data){
-        this.#log("update hologram color received");
+        this.#log("update synchronized variable received");
         const variableName = data.variableName;
         const value = data.value;
 
@@ -256,7 +257,7 @@ class RootModel extends Croquet.Model {
         this.subscribe("updateHologram", "changePosition", this.updateHologramPosition);
         this.subscribe("updateHologram", "changeRotation", this.updateHologramRotation);
 
-        this.publish("synchronizedVariable", "valueChange", this.updateVariableValue)
+        this.subscribe("synchronizedVariable", "valueChange", this.updateVariableValue)
 
         this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
         this.subscribe("hologramManipulation", "positionChanged", this.requireHologramPositionUpdate);
@@ -265,7 +266,7 @@ class RootModel extends Croquet.Model {
         this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
         this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
 
-        this.publish("view", "viewInCharge", this.setViewInCharge);
+        this.subscribe("view", "viewInCharge", this.setViewInCharge);
     }
 
 
