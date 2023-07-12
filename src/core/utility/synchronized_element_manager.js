@@ -1,4 +1,4 @@
-import {eventBus} from "../../../event/event_emitter.js";
+import {eventBus} from "../../event/event_emitter.js";
 
 /**
  * Utility class, used to made element consistent.

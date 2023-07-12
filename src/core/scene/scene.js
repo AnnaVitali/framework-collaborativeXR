@@ -1,6 +1,6 @@
 import {eventBus} from "../../event/event_emitter.js";
-import {ElementChecker} from "./utility/element_checker.js";
-import {synchronizedElementManager} from "./utility/synchronized_element_manager.js";
+import {elementChecker} from "../utility/element_checker.js";
+import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
 
 /**
  * Class that represents the XR scene in which the element are visible.
@@ -14,7 +14,6 @@ class Scene{
         if(!sessionManager.isSessionStarted()){
             throw new Error("Start a session before creating the scene.");
         }
-        this.elementChecker = new ElementChecker();
     }
 
     /**
@@ -105,13 +104,13 @@ class Scene{
     }
 
     #verifyIfElementNotExist(name){
-        if(this.elementChecker.verifyNameAlreadyExist(name)){
+        if(elementChecker.verifyNameAlreadyExist(name)){
             throw new Error("Element with this name already exist!");
         }
     }
 
     #verifyIfElementExist(name){
-        if(!this.elementChecker.verifyNameAlreadyExist(name)){
+        if(!elementChecker.verifyNameAlreadyExist(name)){
             throw new Error("No element exist with this name!");
         }
     }

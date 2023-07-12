@@ -1,5 +1,5 @@
 import {eventBus} from "../../event/event_emitter.js";
-import {synchronizedElementManager} from "../scene/utility/synchronized_element_manager.js";
+import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
 
 /**
  * Class representing a Button that can be added to a menu.

@@ -24,4 +24,6 @@ class ElementChecker{
     }
 }
 
-export {ElementChecker}
+const elementChecker = new ElementChecker();
+
+export {elementChecker}

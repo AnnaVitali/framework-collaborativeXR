@@ -1,7 +1,7 @@
 import {Hologram} from "./hologram.js";
 import {eventBus} from "../../event/event_emitter.js";
 import {Vector3} from "../../utility/vector3.js";
-import {synchronizedElementManager} from "../scene/utility/synchronized_element_manager.js";
+import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
 
 /**
  * Class representing a standard hologram created from a specific shape.

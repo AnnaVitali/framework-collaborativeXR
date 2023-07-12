@@ -1,5 +1,6 @@
 import {eventBus} from "../../event/event_emitter.js";
-import {synchronizedElementManager} from "../scene/utility/synchronized_element_manager.js";
+import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
+import {elementChecker} from "../utility/element_checker.js";
 
 /**
  * Class representing an animation that can be associated with an element.
@@ -11,6 +12,10 @@ class Animation{
      * @param time {Number} the time scheduling of the animation in ms.
      */
     constructor(name, time){
+        if(elementChecker.verifyNameAlreadyExist(name)){
+            throw new Error("This name was already used!")
+        }
+
         this._name = name;
         this._time = time;
     }
