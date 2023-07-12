@@ -1,4 +1,5 @@
 import {eventBus} from "../../event/event_emitter.js";
+import {synchronizedElementManager} from "../scene/utility/synchronized_element_manager.js";
 
 /**
  * Class representing an animation that can be associated with an element.
@@ -12,8 +13,6 @@ class Animation{
     constructor(name, time){
         this._name = name;
         this._time = time;
-
-        eventBus.emit("newAnimation", JSON.stringify(this));
     }
 
     /**
@@ -37,9 +36,28 @@ class Animation{
      * @param callback the callback to apply.
      */
     setAnimationCallback(callback){
-        eventBus.on(this.name, () =>{
+        this.animationCallback = () =>{
             setTimeout(callback.apply(this), 0);
-        })
+        }
+        eventBus.on(this.name, this.animationCallback);
+    }
+
+    /**
+     * Start the animation specified.
+     */
+    startAnimation(){
+        if(synchronizedElementManager.update) {
+            eventBus.emit("newAnimation", JSON.stringify(this));
+        }
+    }
+
+    /**
+     * Stop the animation specified.
+     */
+    stopAnimation(){
+        if(synchronizedElementManager.update) {
+            eventBus.emit("stopAnimation", JSON.stringify(this.name));
+        }
     }
 }
 

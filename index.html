@@ -111,6 +111,28 @@
         }
     })
 
+    const nRowsMenu2 = 2
+    const nearMenuPosition2 = new Vector3(-0.5, 1.2, 0.5);
+    const nearMenu2 = new NearMenu(nearMenuPosition2, nRowsMenu2);
+
+    const buttonStart = new Button("buttonStart", "Start");
+    buttonStart.setOnPointerDownCallback(() =>{
+        console.log("start");
+        animation.startAnimation();
+    });
+
+    nearMenu2.addButton(buttonStart);
+
+    const buttonStop = new Button("buttonStop", "Stop");
+    buttonStop.setOnPointerDownCallback(() =>{
+        console.log("stop");
+        animation.stopAnimation();
+    });
+
+    nearMenu2.addButton(buttonStop);
+
+    scene.addNearMenu(nearMenu2);
+
     scene.activateRenderLoop();
 
 </script>

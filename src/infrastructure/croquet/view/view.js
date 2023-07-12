@@ -1,7 +1,6 @@
 import {eventBus} from "../../../event/event_emitter.js";
 import {Triple} from "../../../utility/triple.js";
-import {SceneManager} from "../../babylon/scene_manager.js";
-import {AnimationView} from "./animation_view.js";
+import {SceneManager} from "../../babylon/scene_manager.js"
 
 /**
  * Class that represents the root view of the application
@@ -33,7 +32,6 @@ class RootView extends Croquet.View {
 
         const hologramRender = this.sceneManager.hologramRenders.get(hologramName);
         hologramRender.showOtherUserManipulation();
-
     }
 
     /**
@@ -112,6 +110,14 @@ class RootView extends Croquet.View {
      */
     showStandardHologram(hologramName){
         this.sceneManager.addStandardHologram(this.model.hologramModel.holograms.get(hologramName));
+    }
+
+    /**
+     * Propagate the tick received form the model.
+     * @param animationName {String} the name of the animation to be updated.
+     */
+    propagateTick(animationName){
+        eventBus.emit(animationName, "");
     }
 
     /**
@@ -292,12 +298,12 @@ class RootView extends Croquet.View {
         });
 
         eventBus.on("newAnimation", (data) =>{
-            const object = JSON.parse(data);
-            const animationName = object._name;
-            const animationTime = object._time;
-
-            new AnimationView(this.model, animationName, animationTime)
+            this.publish("animation", "createAnimation", JSON.parse(data));
         });
+
+        eventBus.on("stopAnimation", (data) => {
+            this.publish("animation", "stopAnimation", JSON.parse(data));
+        })
 
         eventBus.on("valueChange", (data) => {
             this.#log("received value change");
@@ -335,6 +341,7 @@ class RootView extends Croquet.View {
         this.subscribe(this.viewId, "showImportedHologram", this.showImportedHologram);
         this.subscribe(this.viewId, "showStandardHologram", this.showStandardHologram);
 
+        this.subscribe("view", "animationTick", this.propagateTick);
         this.subscribe("view", "updateHologramColor", this.showHologramUpdatedColor);
         this.subscribe("view", "updateHologramScaling", this.showHologramUpdatedScale);
         this.subscribe("view", "updateHologramPosition", this.showHologramUpdatedPosition);

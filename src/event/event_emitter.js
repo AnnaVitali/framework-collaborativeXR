@@ -39,6 +39,18 @@ class EventEmitter {
     }
 
     /**
+     * Unsubscribe the relative callback to the event.
+     * @param eventName {String} name of the event.
+     * @param callback the callback to remove.
+     */
+    off(eventName, callback) {
+        this.listeners = this.listeners.filter(
+            listener => !(listener.name === eventName &&
+                listener.callback === callback)
+        );
+    }
+
+    /**
      * Destroy the event bus.
      */
     destroy() {

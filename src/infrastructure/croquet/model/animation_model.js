@@ -3,18 +3,13 @@ import {eventBus} from "../../../event/event_emitter.js";
 /**
  * Class that represents a View in charge of handling a specific animation.
  */
-class AnimationView extends Croquet.View{
+class AnimationModel extends Croquet.Model{
 
-    /**
-     * Constructor of the class.
-     * @param model {Croquet.Model} the Croquet model of reference.
-     * @param name {String} the name of the animation.
-     * @param time {Number} the scheduling time for the animation.
-     */
-    constructor(model, name, time) {
-        super(model);
-        this.name = name;
-        this.time = time;
+
+    init(options = {}) {
+        super.init();
+        this.name = options.name;
+        this.time = options.time;
 
         this.future(this.time).tick();
     }
@@ -24,7 +19,7 @@ class AnimationView extends Croquet.View{
      */
     tick(){
         this.#log("model emit" + this.name);
-        eventBus.emit(this.name, "");
+        this.publish("view", "animationTick", this.name);
         this.future(this.time).tick();
     }
 
@@ -36,4 +31,6 @@ class AnimationView extends Croquet.View{
     }
 }
 
-export {AnimationView}
+AnimationModel.register("AnimationModel");
+
+export {AnimationModel}

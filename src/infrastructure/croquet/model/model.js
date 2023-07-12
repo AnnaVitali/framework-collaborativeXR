@@ -4,6 +4,7 @@ import {CroquetImportedHologram} from "../hologram/croquet_imported_hologram.js"
 import {CroquetSynchronizedVariable} from "../animation/croquet_synchronized_variable.js";
 import {Vector3} from "../../../utility/vector3.js";
 import {SynchronizedVariableModel} from "./synchronized_variable_model.js";
+import {AnimationModel} from "./animation_model.js";
 
 /**
  * Class representing the root model of the application.
@@ -15,6 +16,7 @@ class RootModel extends Croquet.Model {
      * */
     init() {
         this.linkedViews = [];
+        this.animationModels = new Map();
         this.hologramInUserControl = new Map();
         this.hologramModel = HologramModel.create();
         this.synchronizedVariableModel = SynchronizedVariableModel.create();
@@ -217,7 +219,7 @@ class RootModel extends Croquet.Model {
 
     /**
      * Manage the control of the hologram from the user.
-     * @param {any} data object that contains the id of the view in control.
+     * @param data {Object} object that contains the id of the view in control.
      */
     manageUserHologramControl(data){
         this.#log("received manage user hologram control");
@@ -229,7 +231,7 @@ class RootModel extends Croquet.Model {
 
     /**
      * Manage the relase of the control from the user who had it.
-     * @param {any} data object that contains the id of the view where the user released the control.
+     * @param data {Object} object that contains the id of the view where the user released the control.
      */
     manageUserHologramControlReleased(data){
         this.#log("received manage user hologram control released");
@@ -237,6 +239,32 @@ class RootModel extends Croquet.Model {
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "restoreControlButton", {hologramName: data.hologramName});
         });
+    }
+
+    /**
+     * Create a new animation model.
+     * @param data {Object} object containing the information about the animation.
+     */
+    createNewAnimation(data){
+        this.#log("received create new Animation");
+        const animationName = data._name;
+        const animationTime = data._time;
+
+        if(!this.animationModels.has(animationName)){
+            this.animationModels.set(animationName, AnimationModel.create({name: animationName, time: animationTime}));
+        }
+    }
+
+    /**
+     * Destroy the animation associated to a specific animation model.
+     * @param animationName {String} the name of the animation
+     */
+    destroyAnimation(animationName){
+        this.#log("received stop animation");
+        if(this.animationModels.has(animationName)){
+            this.animationModels.get(animationName).destroy();
+            this.animationModels.delete(animationName);
+        }
     }
 
     /**
@@ -265,6 +293,9 @@ class RootModel extends Croquet.Model {
 
         this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
         this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
+
+        this.subscribe("animation", "createAnimation", this.createNewAnimation);
+        this.subscribe("animation", "stopAnimation", this.destroyAnimation);
 
         this.subscribe("view", "viewInCharge", this.setViewInCharge);
     }
