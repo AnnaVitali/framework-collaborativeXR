@@ -1,4 +1,4 @@
-import {eventBus} from "../../../event/event_emitter.js";
+import {eventBus} from "../../../eventBus/event_bus.js";
 import {Triple} from "../../../utility/triple.js";
 import {SceneManager} from "../../babylon/scene_manager.js"
 

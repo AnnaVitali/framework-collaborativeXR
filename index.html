@@ -18,7 +18,7 @@
     import {Vector3} from "./src/utility/vector3.js";
     import {Quaternion} from "./src/utility/quaternion.js";
     import {StandardHologram} from "./src/core/hologram/standard_hologram.js";
-    import {StandardShape} from "./src/core/hologram/standard_shape.js";
+    import {StandardShape} from "./src/core/hologram/enum/standard_shape.js";
     import {ManipulatorMenu} from "./src/core/gui/menu/maniuplator_menu.js";
     import {NearMenu} from "./src/core/gui/menu/near_menu.js";
     import {Button} from "./src/core/gui/button.js";
@@ -39,7 +39,7 @@
     const hologramScaling = 0.7;
     const hologramMeshFilePath = "./industrial_robot/scene.gltf";//"./high-detailed-flying-bird/Flying hummingbird.glb";
     const hologram = new ImportedHologram(hologramName, hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
-    await scene.addImportedHologramToScene(hologram);
+    await scene.addImportedHologram(hologram);
 
     const manipulatorMenu = new ManipulatorMenu(new Vector3(0.2, 1.2, 0.5));
     scene.addManipulatorMenu(hologramName, manipulatorMenu);
@@ -50,7 +50,7 @@
     const hologramScaling2 = 2;
     const hologramMeshFilePath2 = "/lion/lion.glb";
     const hologram2 = new CroquetImportedHologram(hologramName, hologramMeshFilePath2, hologramPosition2, hologramRotation2, hologramScaling2);
-    await scene.addImportedHologramToScene(hologram2);
+    await scene.addImportedHologram(hologram2);
 
     const nearMenuPositionRespectToHologram2 = new Vector3(-0.3, 1.2, 0.5);
     scene.addManipulatorMenu(hologramName2, nearMenuPositionRespectToHologram2);*/
@@ -61,7 +61,7 @@
     const hologramColor = "#fbff2b"
     const hologram3 = new StandardHologram(hologramName3, StandardShape.Sphere, {diameter: 0.5}, hologramPosition3,
         hologramRotation3, hologramColor)
-    await scene.addStandardHologramToScene(hologram3);
+    await scene.addStandardHologram(hologram3);
 
 
     const manipulatorMenuPositionHologram3 = new Vector3(-0.3, 1.2, 0.5)

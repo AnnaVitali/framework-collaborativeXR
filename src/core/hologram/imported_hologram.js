@@ -1,4 +1,3 @@
-import {eventBus} from "../../event/event_emitter.js";
 import {Hologram} from "./hologram.js";
 
 /**

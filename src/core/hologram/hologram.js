@@ -1,5 +1,5 @@
-import {eventBus} from "../../event/event_emitter.js";
-import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
+import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
+import {coreEventManager} from "../utility/core_event_manager.js";
 
 /**
  * Class that represent a Hologram that can be rendered.
@@ -57,9 +57,12 @@ class Hologram{
      * @param value the new scaling.
      */
     set scaling(value) {
-        if(synchronizedElementManager.update) {
+        if(synchronizedElementUpdater.update) {
             this._scaling = value;
-            eventBus.emit("scalingChange", JSON.stringify({hologramName: this.name, scaling: this.scaling}));
+            coreEventManager.sendEvent("scalingChange", JSON.stringify({
+                hologramName: this.name,
+                scaling: this.scaling
+            }));
         }
     }
 
@@ -68,9 +71,12 @@ class Hologram{
      * @param value the new position.
      */
     set position(value) {
-        if(synchronizedElementManager.update) {
+        if(synchronizedElementUpdater.update) {
             this._position = value;
-            eventBus.emit("positionChange", JSON.stringify({hologramName: this.name, position: this.position}));
+            coreEventManager.sendEvent("positionChange", JSON.stringify({
+                hologramName: this.name,
+                position: this.position
+            }));
         }
     }
 
@@ -79,9 +85,12 @@ class Hologram{
      * @param value the new rotation.
      */
     set rotation(value) {
-        if(synchronizedElementManager.update) {
+        if(synchronizedElementUpdater.update) {
             this._rotation = value;
-            eventBus.emit("rotationChange", JSON.stringify({hologramName: this.name, rotation: this.rotation}));
+            coreEventManager.sendEvent("rotationChange", JSON.stringify({
+                hologramName: this.name,
+                rotation: this.rotation
+            }));
         }
     }
 }

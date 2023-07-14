@@ -1,5 +1,3 @@
-import {eventBus} from "../../../event/event_emitter.js";
-
 /**
  * Class that represents a View in charge of handling a specific animation.
  */

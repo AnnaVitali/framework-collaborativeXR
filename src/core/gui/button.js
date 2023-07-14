@@ -1,5 +1,5 @@
-import {eventBus} from "../../event/event_emitter.js";
-import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
+import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
+import {coreEventManager} from "../utility/core_event_manager.js";
 
 /**
  * Class representing a Button that can be added to a menu.
@@ -41,16 +41,16 @@ class Button {
 
     /**
      * Set the callback to call when the button is clicked.
-     * @param onPointerDownCallback the callback to apply.
+     * @param callback the callback to apply.
      */
-    setOnPointerDownCallback(onPointerDownCallback){
-        eventBus.on(this.name, () => {
-            if(!synchronizedElementManager.update) {
-                synchronizedElementManager.update = true;
-                setTimeout(onPointerDownCallback.apply(this), 0);
-                synchronizedElementManager.update = false;
+    setOnPointerDownCallback(callback){
+        coreEventManager.listenForInfrastructureEvent(this.name, () => {
+            if(!synchronizedElementUpdater.update) {
+                synchronizedElementUpdater.update = true;
+                setTimeout(callback.apply(this), 0);
+                synchronizedElementUpdater.update = false;
             }else{
-                setTimeout(onPointerDownCallback.apply(this), 0);
+                setTimeout(callback.apply(this), 0);
             }
         });
     }

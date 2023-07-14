@@ -168,16 +168,14 @@ class RootModel extends Croquet.Model {
         const hologramName = data.hologramName;
         const rotation = data.rotation;
 
-        if(this.hologramModel.get(hologramName).rotation !== rotation) {
-            this.hologramModel.updateRotation(hologramName, rotation);
-        }
+        this.hologramModel.updateRotation(hologramName, rotation);
     }
 
     /**
      * Require to update the position of the hologram due to manipulation.
      * @param data {Object} object containing the data of the hologram.
      */
-    requireHologramPositionUpdate(data){
+    requireUpdateHologramPosition(data){
         this.#log("received requireHologramUpdate");
         const hologramName = data.hologramName;
         const position = new Vector3(data.position_x, data.position_y, data.position_z);
@@ -192,7 +190,7 @@ class RootModel extends Croquet.Model {
      * Require to update the rotation of the hologram due to manipulation.
      * @param data {Object} object containing the data of the hologram.
      */
-    requireHologramScaleUpdate(data){
+    requireUpdateHologramScale(data){
         this.#log("received requireHologramUpdate");
         const hologramName = data.hologramName;
         const scale = new Vector3(data.scale_x, data.scale_y, data.scale_z);
@@ -221,7 +219,7 @@ class RootModel extends Croquet.Model {
      * Manage the control of the hologram from the user.
      * @param data {Object} object that contains the id of the view in control.
      */
-    manageUserHologramControl(data){
+    manageUserHologramControlRequired(data){
         this.#log("received manage user hologram control");
         this.hologramInUserControl.set(data.hologramName, data.view);
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
@@ -269,10 +267,10 @@ class RootModel extends Croquet.Model {
 
     /**
      * Set the view in charge of sending the update.
-     * @param data the view id.
+     * @param viewId the view id.
      */
-    setViewInCharge(data){
-        this.viewInCharge = data;
+    setViewInCharge(viewId){
+        this.viewInCharge = viewId;
     }
 
     #setupViewEventHandlers(){
@@ -288,11 +286,11 @@ class RootModel extends Croquet.Model {
         this.subscribe("synchronizedVariable", "valueChange", this.updateVariableValue)
 
         this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
-        this.subscribe("hologramManipulation", "positionChanged", this.requireHologramPositionUpdate);
-        this.subscribe("hologramManipulation", "scaleChanged", this.requireHologramScaleUpdate);
+        this.subscribe("hologramManipulation", "positionChanged", this.requireUpdateHologramPosition);
+        this.subscribe("hologramManipulation", "scaleChanged", this.requireUpdateHologramScale);
 
         this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
-        this.subscribe("controlButton", "clicked", this.manageUserHologramControl);
+        this.subscribe("controlButton", "clicked", this.manageUserHologramControlRequired);
 
         this.subscribe("animation", "createAnimation", this.createNewAnimation);
         this.subscribe("animation", "stopAnimation", this.destroyAnimation);

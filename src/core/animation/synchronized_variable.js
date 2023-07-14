@@ -1,6 +1,6 @@
-import {eventBus} from "../../event/event_emitter.js";
-import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
 import {elementChecker} from "../utility/element_checker.js";
+import {coreEventManager} from "../utility/core_event_manager.js";
+import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
 
 /**
  * Class representing a synchronized variable for the application.
@@ -19,8 +19,8 @@ class SynchronizedVariable{
         this._name = name;
         this._value = value;
 
-        synchronizedElementManager.addSynchronizedVariable(this);
-        eventBus.emit("createSynchronizedVariable", JSON.stringify(this));
+        synchronizedElementUpdater.addSynchronizedVariable(this);
+        coreEventManager.sendEvent("createSynchronizedVariable", JSON.stringify(this));
     }
 
     /**
@@ -28,9 +28,12 @@ class SynchronizedVariable{
      * @param value
      */
     set value(value) {
-        if(synchronizedElementManager.update) {
+        if(synchronizedElementUpdater.update) {
             this._value = value;
-            eventBus.emit("valueChange", JSON.stringify({variableName: this.name, value: this.value}));
+            coreEventManager.sendEvent("valueChange", JSON.stringify({
+                variableName: this.name,
+                value: this.value
+            }));
         }
     }
 

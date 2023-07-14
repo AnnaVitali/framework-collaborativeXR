@@ -1,7 +1,7 @@
 import {Hologram} from "./hologram.js";
-import {eventBus} from "../../event/event_emitter.js";
 import {Vector3} from "../../utility/vector3.js";
-import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
+import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
+import {coreEventManager} from "../utility/core_event_manager.js";
 
 /**
  * Class representing a standard hologram created from a specific shape.
@@ -53,9 +53,12 @@ class StandardHologram extends Hologram{
      * @param value the new color.
      */
     set color(value) {
-        if(synchronizedElementManager.update) {
+        if(synchronizedElementUpdater.update) {
             this._color = value;
-            eventBus.emit("colorChange", JSON.stringify({hologramName: this.name, color: this.color}));
+            coreEventManager.sendEvent("colorChange", JSON.stringify({
+                hologramName: this.name,
+                color: this.color
+            }));
         }
     }
 }

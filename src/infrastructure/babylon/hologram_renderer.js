@@ -1,5 +1,5 @@
-import {StandardShape} from "../../core/hologram/standard_shape.js";
-import {eventBus} from "../../event/event_emitter.js";
+import {StandardShape} from "../../core/hologram/enum/standard_shape.js";
+import {eventBus} from "../../eventBus/event_bus.js";
 import {Vector3} from "../../utility/vector3.js";
 
 /**

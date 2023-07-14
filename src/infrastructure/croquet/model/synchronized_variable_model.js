@@ -1,5 +1,5 @@
 import {CroquetSynchronizedVariable} from "../animation/croquet_synchronized_variable.js";
-import {eventBus} from "../../../event/event_emitter.js";
+import {eventBus} from "../../../eventBus/event_bus.js";
 
 /**
  * Class that represents a model for the synchronized variable.

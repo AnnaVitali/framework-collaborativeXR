@@ -1,6 +1,6 @@
 import {CroquetStandardHologram} from "../hologram/croquet_standard_hologram.js";
 import {CroquetImportedHologram} from "../hologram/croquet_imported_hologram.js";
-import {eventBus} from "../../../event/event_emitter.js";
+import {eventBus} from "../../../eventBus/event_bus.js";
 
 /**
  * Class that represents a model for the holograms in the scene.

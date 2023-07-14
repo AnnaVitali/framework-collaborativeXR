@@ -1,6 +1,6 @@
-import {eventBus} from "../../event/event_emitter.js";
-import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
+import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
 import {elementChecker} from "../utility/element_checker.js";
+import {coreEventManager} from "../utility/core_event_manager.js";
 
 /**
  * Class representing an animation that can be associated with an element.
@@ -44,15 +44,15 @@ class Animation{
         this.animationCallback = () =>{
             setTimeout(callback.apply(this), 0);
         }
-        eventBus.on(this.name, this.animationCallback);
+        coreEventManager.listenForInfrastructureEvent(this.name, this.animationCallback);
     }
 
     /**
      * Start the animation specified.
      */
     startAnimation(){
-        if(synchronizedElementManager.update) {
-            eventBus.emit("newAnimation", JSON.stringify(this));
+        if(synchronizedElementUpdater.update) {
+            coreEventManager.sendEvent("newAnimation", JSON.stringify(this));
         }
     }
 
@@ -60,8 +60,8 @@ class Animation{
      * Stop the animation specified.
      */
     stopAnimation(){
-        if(synchronizedElementManager.update) {
-            eventBus.emit("stopAnimation", JSON.stringify(this.name));
+        if(synchronizedElementUpdater.update) {
+            coreEventManager.sendEvent("stopAnimation", JSON.stringify(this.name));
         }
     }
 }

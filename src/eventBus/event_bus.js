@@ -1,7 +1,7 @@
 /**
  * Class that represents an event bus, by which send and receive event specifying an handler.
  */
-class EventEmitter {
+class EventBus {
 
     /**
      * Empty constructor of the class.
@@ -58,6 +58,6 @@ class EventEmitter {
     }
 }
 
-const eventBus = new EventEmitter();
+const eventBus = new EventBus();
 
 export {eventBus}

@@ -9,7 +9,6 @@ class SessionManager {
      * Constructor of the class.
      */
     constructor(){
-        this.debug = true;
         this._sessionStarted = false;
     }
 

@@ -1,6 +1,6 @@
-import {eventBus} from "../../event/event_emitter.js";
 import {elementChecker} from "../utility/element_checker.js";
-import {synchronizedElementManager} from "../utility/synchronized_element_manager.js";
+import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
+import {coreEventManager} from "../utility/core_event_manager.js";
 
 /**
  * Class that represents the XR scene in which the element are visible.
@@ -22,7 +22,7 @@ class Scene{
     initializeScene(){
         this.#log("initialize scene");
 
-        eventBus.emit("initialize", "");
+        coreEventManager.sendEvent("initialize", "");
     }
 
     /**
@@ -30,15 +30,15 @@ class Scene{
      * @param hologram {ImportedHologram} the new hologram to add.
      * @returns {Promise<boolean>} representing the insertion made.
      */
-    addImportedHologramToScene(hologram){
+    addImportedHologram(hologram){
         this.#log("add imported hologram");
 
         this.#verifyIfElementNotExist(hologram.name);
-        synchronizedElementManager.addHologram(hologram);
-        eventBus.emit("createImportedHologram", JSON.stringify(hologram));
+        synchronizedElementUpdater.addHologram(hologram);
+        coreEventManager.sendEvent("createImportedHologram", JSON.stringify(hologram));
 
         return new Promise((resolve) => {
-            eventBus.on("importedHologramCreated", () => {
+            coreEventManager.listenForInfrastructureEvent("importedHologramCreated", () => {
                 resolve(true)
             });
         });
@@ -50,15 +50,15 @@ class Scene{
      * @param hologram {StandardHologram} the new hologram to add.
      * @returns {Promise<boolean>} representing the insertion made.
      */
-    addStandardHologramToScene(hologram){
+    addStandardHologram(hologram){
         this.#log("add standard hologram");
 
         this.#verifyIfElementNotExist(hologram.name);
-        synchronizedElementManager.addHologram(hologram);
-        eventBus.emit("createStandardHologram", JSON.stringify(hologram));
+        synchronizedElementUpdater.addHologram(hologram);
+        coreEventManager.sendEvent("createStandardHologram", JSON.stringify(hologram));
 
         return new Promise((resolve) => {
-            eventBus.on("standardHologramCreated", () => {
+            coreEventManager.listenForInfrastructureEvent("standardHologramCreated", () => {
                 resolve(true)
             });
         });
@@ -73,7 +73,7 @@ class Scene{
         this.#log("add manipulator menu");
 
         this.#verifyIfElementExist(hologramName);
-        eventBus.emit("addManipulatorMenu", JSON.stringify(
+        coreEventManager.sendEvent("addManipulatorMenu", JSON.stringify(
             {
                 name: hologramName,
                 position: manipulatorMenu.position
@@ -88,7 +88,7 @@ class Scene{
         this.#log("add nearMenu");
 
         if(nearMenu.buttonList.length !== 0) {
-            eventBus.emit("addNearMenu", JSON.stringify(nearMenu));
+            coreEventManager.sendEvent("addNearMenu", JSON.stringify(nearMenu));
         }else{
             throw new Error("Can't add a menu without button!");
         }
@@ -99,8 +99,8 @@ class Scene{
      */
     activateRenderLoop(){
         this.#log("activate render loop");
-        synchronizedElementManager.setRenderLoopStarted(true);
-        eventBus.emit("render", "");
+        coreEventManager.listenForSynchronizedElementUpdateEvents();
+        coreEventManager.sendEvent("render", "");
     }
 
     #verifyIfElementNotExist(name){
