@@ -1,10 +1,10 @@
-import {CroquetHologram} from "./croquet_hologram.js";
+import {HologramClone} from "./hologram_clone.js";
 
 /**
  * Class that represents an imported hologram associated with a file that adjusts its
  * graphical rendering, that can be used in Croquet model.
  */
-class CroquetImportedHologram extends CroquetHologram{
+class ImportedHologramClone extends HologramClone{
 
     /**
      * Constructor of the class.
@@ -28,4 +28,4 @@ class CroquetImportedHologram extends CroquetHologram{
     }
 }
 
-export {CroquetImportedHologram}
+export {ImportedHologramClone}

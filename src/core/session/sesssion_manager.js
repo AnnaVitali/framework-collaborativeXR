@@ -1,4 +1,7 @@
 import {CroquetSession} from "../../infrastructure/croquet/croquet_session.js";
+import {elementChecker} from "../utility/element_checker.js";
+import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
+import {coreEventManager} from "../utility/core_event_manager.js";
 
 /**
  * Class used to start or join a session.
@@ -34,6 +37,19 @@ class SessionManager {
             this._sessionStarted = true;
             resolve(true);
         });
+    }
+
+    /**
+     * Add a new  synchronized variable to the session
+     * @param variable {SynchronizedVariable}
+     */
+    addSynchronizedVariable(variable){
+        if(elementChecker.verifyNameAlreadyExist(name)){
+            throw new Error("This name was already used!")
+        }
+
+        synchronizedElementUpdater.addSynchronizedVariable(variable);
+        coreEventManager.sendEvent("createSynchronizedVariable", JSON.stringify(variable));
     }
 
     /**

@@ -1,9 +1,9 @@
-import {CroquetHologram} from "./croquet_hologram.js";
+import {HologramClone} from "./hologram_clone.js";
 
 /**
  * Class representing a standard hologram created from a specific shape, that can be used in Croquet model.
  */
-class CroquetStandardHologram extends CroquetHologram{
+class StandardHologramClone extends HologramClone{
     /**
      * Constructor of the class.
      * @param name {String} the name of the class.
@@ -53,4 +53,4 @@ class CroquetStandardHologram extends CroquetHologram{
     }
 }
 
-export{ CroquetStandardHologram }
+export{ StandardHologramClone }

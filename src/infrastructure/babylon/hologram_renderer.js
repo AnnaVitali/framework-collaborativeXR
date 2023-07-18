@@ -1,6 +1,6 @@
 import {StandardShape} from "../../core/hologram/enum/standard_shape.js";
-import {eventBus} from "../../eventBus/event_bus.js";
 import {Vector3} from "../../utility/vector3.js";
+import {infrastructureEventManager} from "../utility/infrastructure_event_manager.js";
 
 /**
  * Class in charge of the graphic rendering of the hologram
@@ -49,7 +49,7 @@ class HologramRenderer{
 
                 this.mesh = container.meshes[0];
 
-                eventBus.emit("importedHologramCreated", "");
+                infrastructureEventManager.sendEvent("importedHologramCreated", "");
             }catch(error){
                 this.#log("ERROR " + error);
             }
@@ -73,7 +73,7 @@ class HologramRenderer{
         this.mesh.rotate(BABYLON.Axis.Z, euler.z);
         this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(hologram._color);
 
-        eventBus.emit("standardHologramCreated", "");
+        infrastructureEventManager.sendEvent("standardHologramCreated", "");
     }
 
     /**

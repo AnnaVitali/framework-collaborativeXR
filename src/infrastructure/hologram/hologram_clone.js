@@ -1,7 +1,9 @@
+import {Hologram} from "../../core/hologram/hologram.js";
+
 /**
  * Class that represent a Hologram that can be used in the croquet model.
  */
-class CroquetHologram {
+class HologramClone{
 
     /**
      * Constructor of the class.
@@ -18,14 +20,6 @@ class CroquetHologram {
     }
 
     /**
-     * Get the scaling of the hologram.
-     * @returns {Vector3}
-     */
-    get scaling() {
-        return this._scaling;
-    }
-
-    /**
      * Get the name of the hologram.
      * @returns {String}
      */
@@ -34,19 +28,27 @@ class CroquetHologram {
     }
 
     /**
+     * Get the position of the hologram.
+     * @returns {Vector3}
+     */
+    get position() {
+        return this._position;
+    }
+
+    /**
      * Get the rotation of the hologram.
-     * @returns {Quaternion} the new rotation.
+     * @returns {Quaternion}
      */
     get rotation() {
         return this._rotation;
     }
 
     /**
-     * Get the position of the hologram.
+     * Get the scaling of the hologram.
      * @returns {Vector3}
      */
-    get position() {
-        return this._position;
+    get scaling() {
+        return this._scaling;
     }
 
     /**
@@ -82,4 +84,4 @@ class CroquetHologram {
     }
 }
 
-export { CroquetHologram };
+export { HologramClone };

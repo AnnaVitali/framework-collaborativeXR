@@ -14,6 +14,7 @@ class Scene{
         if(!sessionManager.isSessionStarted()){
             throw new Error("Start a session before creating the scene.");
         }
+        this.isSceneInitialized = false;
     }
 
     /**
@@ -21,7 +22,7 @@ class Scene{
      */
     initializeScene(){
         this.#log("initialize scene");
-
+        this.isSceneInitialized = true;
         coreEventManager.sendEvent("initialize", "");
     }
 
@@ -32,7 +33,7 @@ class Scene{
      */
     addImportedHologram(hologram){
         this.#log("add imported hologram");
-
+        this.#verifyIfSceneIsInitialized();
         this.#verifyIfElementNotExist(hologram.name);
         synchronizedElementUpdater.addHologram(hologram);
         coreEventManager.sendEvent("createImportedHologram", JSON.stringify(hologram));
@@ -52,7 +53,7 @@ class Scene{
      */
     addStandardHologram(hologram){
         this.#log("add standard hologram");
-
+        this.#verifyIfSceneIsInitialized();
         this.#verifyIfElementNotExist(hologram.name);
         synchronizedElementUpdater.addHologram(hologram);
         coreEventManager.sendEvent("createStandardHologram", JSON.stringify(hologram));
@@ -71,7 +72,7 @@ class Scene{
      */
     addManipulatorMenu(hologramName, manipulatorMenu){
         this.#log("add manipulator menu");
-
+        this.#verifyIfSceneIsInitialized();
         this.#verifyIfElementExist(hologramName);
         coreEventManager.sendEvent("addManipulatorMenu", JSON.stringify(
             {
@@ -86,7 +87,7 @@ class Scene{
      */
     addNearMenu(nearMenu){
         this.#log("add nearMenu");
-
+        this.#verifyIfSceneIsInitialized();
         if(nearMenu.buttonList.length !== 0) {
             coreEventManager.sendEvent("addNearMenu", JSON.stringify(nearMenu));
         }else{
@@ -99,8 +100,15 @@ class Scene{
      */
     activateRenderLoop(){
         this.#log("activate render loop");
+        this.#verifyIfSceneIsInitialized();
         coreEventManager.listenForSynchronizedElementUpdateEvents();
         coreEventManager.sendEvent("render", "");
+    }
+
+    #verifyIfSceneIsInitialized(){
+        if(!this.isSceneInitialized){
+            throw new Error("Scene need to be initialized before adding element or activate render loop!");
+        }
     }
 
     #verifyIfElementNotExist(name){

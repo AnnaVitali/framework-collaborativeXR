@@ -44,6 +44,12 @@ class SynchronizedElementUpdater{
         this.synchronizedVariables.set(variable.name, variable);
     }
 
+    /**
+     * Update the hologram.
+     * @param hologramName {String} the name of the hologram.
+     * @param property {HologramProperty} the property to update.
+     * @param value the new value to assign.
+     */
     updateHologram(hologramName, property, value){
         switch (property){
             case HologramProperty.Position:
@@ -61,6 +67,11 @@ class SynchronizedElementUpdater{
         }
     }
 
+    /**
+     * Update the value of a synchronized variable.
+     * @param variableName {String} the name of the variable.
+     * @param value the value of the variable.
+     */
     updateSynchronizedVariable(variableName, value){
         this.synchronizedVariables.get(variableName)._value = value;
     }

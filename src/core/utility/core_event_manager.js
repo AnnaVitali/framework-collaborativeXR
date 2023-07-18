@@ -11,34 +11,29 @@ class CoreEventManager{
      * Empty constructor of the class.
      */
     constructor(){
-        this.holograms = new Map();
-        this.synchronizedVariables = new Map();
     }
 
     /**
-     * Add a hologram to the synchronized element.
-     * @param hologram {Hologram} the hologram to add.
+     * Send a new event to the infrastructure part.
+     * @param event {String} the name of the event.
+     * @param data {String} the data to send.
      */
-    addHologram(hologram){
-        this.holograms.set(hologram.name, hologram);
-    }
-
-    /**
-     * Add a synchronized variable to the synchronized element.
-     * @param variable {SynchronizedVariable} the variable to add
-     */
-    addSynchronizedVariable(variable){
-        this.synchronizedVariables.set(variable.name, variable);
-    }
-
     sendEvent(event, data){
         eventBus.emit(event, data);
     }
 
+    /**
+     * Listen for a specific infrastructure event.
+     * @param event {String} the name of the event.
+     * @param callback the callback to apply when the event is received.
+     */
     listenForInfrastructureEvent(event, callback){
         eventBus.on(event, callback)
     }
 
+    /**
+     * Listen for the update event related to synchronized elements.
+     */
     listenForSynchronizedElementUpdateEvents(){
         eventBus.on("updateValue", (data) =>{
             const object = JSON.parse(data);

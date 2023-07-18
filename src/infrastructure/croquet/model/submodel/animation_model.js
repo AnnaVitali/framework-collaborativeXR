@@ -3,7 +3,10 @@
  */
 class AnimationModel extends Croquet.Model{
 
-
+    /**
+     * Initialize the Model.
+     * @param options {Object} creation options.
+     */
     init(options = {}) {
         super.init();
         this.name = options.name;

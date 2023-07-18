@@ -48,18 +48,20 @@ class SceneManager{
 
     /**
      * Add a standard hologram to the scene.
-     * @param hologram {CroquetStandardHologram} the hologram to add.
+     * @param hologram {StandardHologramClone} the hologram to add.
      */
     addStandardHologram(hologram){
         this.#log("addStandardHologram");
+        console.log(hologram)
         const hologramRender = new HologramRenderer(this.scene);
         hologramRender.renderStandardHologram(hologram);
         this.hologramRenders.set(hologram.name, hologramRender);
+        console.log(this.hologramRenders)
     }
 
     /**
      * Add an imported hologram to the scene.
-     * @param hologram the hologram to add.
+     * @param hologram {ImportedHologramClone} the hologram to add.
      */
     addImportedHologram(hologram){
         this.#log("addImportedHologram");

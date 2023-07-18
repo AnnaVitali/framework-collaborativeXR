@@ -1,10 +1,10 @@
-import {HologramModel} from "./hologram_model.js";
-import {CroquetStandardHologram} from "../hologram/croquet_standard_hologram.js";
-import {CroquetImportedHologram} from "../hologram/croquet_imported_hologram.js";
-import {CroquetSynchronizedVariable} from "../animation/croquet_synchronized_variable.js";
+import {HologramModel} from "./submodel/hologram_model.js";
+import {StandardHologramClone} from "../../hologram/standard_hologram_clone.js";
+import {ImportedHologramClone} from "../../hologram/imported_hologram_clone.js";
+import {SynchronizedVariableClone} from "../../synchronizedVariable/synchronized_variable_clone.js";
 import {Vector3} from "../../../utility/vector3.js";
-import {SynchronizedVariableModel} from "./synchronized_variable_model.js";
-import {AnimationModel} from "./animation_model.js";
+import {SynchronizedVariableModel} from "./submodel/synchronized_variable_model.js";
+import {AnimationModel} from "./submodel/animation_model.js";
 
 /**
  * Class representing the root model of the application.
@@ -61,117 +61,6 @@ class RootModel extends Croquet.Model {
     }
 
     /**
-     * Add a new imported hologram
-     * @param data {Object} object containing the data of the hologram.
-     */
-    addImportedHologram(data){
-        this.#log("crateImportedHologram received");
-        const hologram = Object.create(CroquetImportedHologram.prototype, Object.getOwnPropertyDescriptors(data.hologram));
-
-        if(!this.hologramModel.holograms.has(hologram.name)) {
-            this.hologramModel.addHologram(hologram);
-        }
-
-        this.publish(data.view, "showImportedHologram", hologram.name);
-    }
-
-    /**
-     * Add a new standard hologram.
-     * @param data {Object} object containing the data of the hologram.
-     */
-    addStandardHologram(data){
-        this.#log("crateStandardHologram received");
-        const hologram = Object.create(CroquetStandardHologram.prototype, Object.getOwnPropertyDescriptors(data.hologram));
-        this.#log("is present?" + this.hologramModel.holograms.has(hologram.name))
-
-        if(!this.hologramModel.holograms.has(hologram.name)) {
-            this.hologramModel.addHologram(hologram);
-        }
-
-        this.publish(data.view, "showStandardHologram", hologram.name);
-    }
-
-    /**
-     * Add a synchronized variable.
-     * @param data {Object} object containing the data of the variable.
-     */
-    addSynchronizedVariable(data){
-        this.#log("crateStandardHologram received");
-        const variable = Object.create(CroquetSynchronizedVariable.prototype, Object.getOwnPropertyDescriptors(data));
-
-        console.log(this.synchronizedVariableModel.syncrhonizedVariables);
-
-        if(!this.synchronizedVariableModel.syncrhonizedVariables.has(variable.name)) {
-            this.synchronizedVariableModel.addVariable(variable);
-            console.log(this.synchronizedVariableModel.syncrhonizedVariables);
-        }
-
-    }
-
-    /**
-     * Update the value of a synchronized variable.
-     * @param data {Object} object containing the data of the variable.
-     */
-    updateVariableValue(data){
-        this.#log("update synchronized variable received");
-        const variableName = data.variableName;
-        const value = data.value;
-
-        this.synchronizedVariableModel.updateValue(variableName, value);
-    }
-
-    /**
-     * Update the color of the hologram.
-     * @param data {Object} object containing the data of the hologram.
-     */
-    updateHologramColor(data){
-        this.#log("update hologram color received");
-        const hologramName = data.hologramName;
-        const color = data.color;
-
-        this.hologramModel.updateColor(hologramName, color);
-    }
-
-    /**
-     * Update the scaling of the hologram.
-     * @param data {Object} object containing the data of the hologram.
-     */
-    updateHologramScaling(data){
-        this.#log("update hologram scaling received");
-        this.#log("update hologram color received");
-        const hologramName = data.hologramName;
-        const scaling = data.scaling;
-
-        this.hologramModel.updateScale(hologramName, scaling);
-    }
-
-    /**
-     * Update the position of the hologram.
-     * @param data {Object} object containing the data of the hologram.
-     */
-    updateHologramPosition(data){
-        this.#log("update hologram position received");
-        this.#log("update hologram color received");
-        const hologramName = data.hologramName;
-        const position = data.position;
-
-        this.hologramModel.updatePosition(hologramName, position);
-    }
-
-    /**
-     * Update the rotation of the hologram.
-     * @param data {Object} object containing the data of the hologram.
-     */
-    updateHologramRotation(data){
-        this.#log("update hologram rotation received");
-        this.#log("update hologram color received");
-        const hologramName = data.hologramName;
-        const rotation = data.rotation;
-
-        this.hologramModel.updateRotation(hologramName, rotation);
-    }
-
-    /**
      * Require to update the position of the hologram due to manipulation.
      * @param data {Object} object containing the data of the hologram.
      */
@@ -180,7 +69,7 @@ class RootModel extends Croquet.Model {
         const hologramName = data.hologramName;
         const position = new Vector3(data.position_x, data.position_y, data.position_z);
 
-        this.hologramModel.updatePosition(hologramName, position);
+        this.hologramModel.updateHologramPositionManipulation(hologramName, position);
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "showHologramUpdatedPosition", hologramName);
         });
@@ -190,12 +79,12 @@ class RootModel extends Croquet.Model {
      * Require to update the rotation of the hologram due to manipulation.
      * @param data {Object} object containing the data of the hologram.
      */
-    requireUpdateHologramScale(data){
+    requireUpdateHologramScaling(data){
         this.#log("received requireHologramUpdate");
         const hologramName = data.hologramName;
         const scale = new Vector3(data.scale_x, data.scale_y, data.scale_z);
 
-        this.hologramModel.updateScale(hologramName, scale);
+        this.hologramModel.updateHologramScalingManipulation(hologramName, scale);
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
             this.publish(v, "showHologramUpdatedScale", hologramName);
         });
@@ -228,7 +117,7 @@ class RootModel extends Croquet.Model {
     }
 
     /**
-     * Manage the relase of the control from the user who had it.
+     * Manage the release of the control from the user who had it.
      * @param data {Object} object that contains the id of the view where the user released the control.
      */
     manageUserHologramControlReleased(data){
@@ -274,20 +163,9 @@ class RootModel extends Croquet.Model {
     }
 
     #setupViewEventHandlers(){
-        this.subscribe("create", "importedHologram", this.addImportedHologram);
-        this.subscribe("create", "standardHologram", this.addStandardHologram);
-        this.subscribe("create", "synchronizedVariable", this.addSynchronizedVariable);
-
-        this.subscribe("updateHologram", "changeColor", this.updateHologramColor);
-        this.subscribe("updateHologram", "changeScaling", this.updateHologramScaling);
-        this.subscribe("updateHologram", "changePosition", this.updateHologramPosition);
-        this.subscribe("updateHologram", "changeRotation", this.updateHologramRotation);
-
-        this.subscribe("synchronizedVariable", "valueChange", this.updateVariableValue)
-
         this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
         this.subscribe("hologramManipulation", "positionChanged", this.requireUpdateHologramPosition);
-        this.subscribe("hologramManipulation", "scaleChanged", this.requireUpdateHologramScale);
+        this.subscribe("hologramManipulation", "scaleChanged", this.requireUpdateHologramScaling);
 
         this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
         this.subscribe("controlButton", "clicked", this.manageUserHologramControlRequired);

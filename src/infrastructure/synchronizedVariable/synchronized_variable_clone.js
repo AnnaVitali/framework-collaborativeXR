@@ -1,7 +1,9 @@
+import {SynchronizedVariable} from "../../core/synchronizedVariable/synchronized_variable.js";
+
 /**
  * Class representing a synchronized variable to use in the Croquet Model.
  */
-class CroquetSynchronizedVariable{
+class SynchronizedVariableClone{
     /**
      * Constructor of the class.
      * @param name {String} the name of the variable.
@@ -9,14 +11,6 @@ class CroquetSynchronizedVariable{
      */
     constructor(name, value) {
         this._name = name;
-        this._value = value;
-    }
-
-    /**
-     * Set the value of the variable.
-     * @param value
-     */
-    set value(value) {
         this._value = value;
     }
 
@@ -35,6 +29,14 @@ class CroquetSynchronizedVariable{
     get value() {
         return this._value;
     }
+
+    /**
+     * Set the value of the variable.
+     * @param value
+     */
+    set value(value) {
+        this._value = value;
+    }
 }
 
-export {CroquetSynchronizedVariable}
+export {SynchronizedVariableClone}

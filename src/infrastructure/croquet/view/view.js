@@ -1,6 +1,7 @@
 import {eventBus} from "../../../eventBus/event_bus.js";
 import {Triple} from "../../../utility/triple.js";
 import {SceneManager} from "../../babylon/scene_manager.js"
+import {infrastructureEventManager} from "../../utility/infrastructure_event_manager.js";
 
 /**
  * Class that represents the root view of the application
@@ -17,9 +18,75 @@ class RootView extends Croquet.View {
         this.sceneManager = new SceneManager();
         this.hologramsManipulatorMenu = new Map();
 
+        infrastructureEventManager.setRootView(this);
+
         this.#setupUpdate()
-        this.#setupBackEndEventHandlers();
         this.#setupModelEventHandlers();
+
+        infrastructureEventManager.listenForCoreEvents();
+    }
+
+    /**
+     * Initialize the WebXR scene.
+     */
+    initializeScene(){
+        this.sceneManager.initializeScene();
+    }
+
+    /**
+     * Run the render loop.
+     */
+    runRenderLoop(){
+        this.#showCurrentManipulation();
+        this.sceneManager.activateRenderLoop();
+    }
+
+    /**
+     * Notify a specific event to the Model.
+     * @param event {String} the name of the event.
+     * @param message {String} the message to send.
+     * @param data {Object} the data to send.
+     */
+    notifyEventToModel(event, message, data){
+        this.publish(event, message, data);
+    }
+
+    /**
+     * Add a near menu to the scene.
+     * @param menuRows {Number} the number of rows in which the menu is organized.
+     * @param menuPosition {Vector3} the position of the menu in space.
+     * @param buttonList {[Button]} the list of button that compose the menu.
+     */
+    addNearMenu(menuRows, menuPosition, buttonList){
+        const holographicButtonList = this.sceneManager.addNearMenu(menuPosition, menuRows, buttonList);
+        console.log(holographicButtonList);
+        holographicButtonList.forEach(button => {
+            button.onPointerDownObservable.add(() => {
+                eventBus.emit(button.name, "");
+            });
+        })
+    }
+
+    /**
+     * Add a menu that allow the user to manipulate a hologram.
+     * @param hologramName {String} the name of the hologram.
+     * @param menuPosition {Vector3} the position of the menu in space.
+     */
+    addManipulatorMenu(hologramName, menuPosition) {
+        console.log()
+        const manipulatorNearMenu = new BABYLON.GUI.NearMenu("NearMenu");
+        manipulatorNearMenu.rows = 1;
+        this.sceneManager.GUIManager.addControl(manipulatorNearMenu);
+        manipulatorNearMenu.isPinned = true;
+
+        manipulatorNearMenu.parent = this.sceneManager.hologramRenders.get(hologramName).mesh;
+        manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
+
+        const controlButton = new BABYLON.GUI.HolographicButton("manipulate", false);
+        manipulatorNearMenu.addButton(controlButton);
+
+        this.#setDefaultControlButtonBehavior(hologramName, controlButton);
+        this.hologramsManipulatorMenu.set(hologramName, new Triple(manipulatorNearMenu, controlButton));
     }
 
     /**
@@ -155,22 +222,6 @@ class RootView extends Croquet.View {
         this.publish("controlButton", "released", {view: this.viewId, hologramName: hologramName});
     }
 
-    #addManipulatorMenu(hologramName, menuPosition, boundingBoxHigh) {
-        const manipulatorNearMenu = new BABYLON.GUI.NearMenu("NearMenu");
-        manipulatorNearMenu.rows = 1;
-        this.sceneManager.GUIManager.addControl(manipulatorNearMenu);
-        manipulatorNearMenu.isPinned = true;
-
-        manipulatorNearMenu.parent = this.sceneManager.hologramRenders.get(hologramName).mesh;
-        manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
-
-        const controlButton = new BABYLON.GUI.HolographicButton("manipulate", false);
-        manipulatorNearMenu.addButton(controlButton);
-
-        this.#setDefaultControlButtonBehavior(hologramName, controlButton, boundingBoxHigh);
-        this.hologramsManipulatorMenu.set(hologramName, new Triple(manipulatorNearMenu, controlButton));
-    }
-
     #setDefaultControlButtonBehavior(hologramName, controlButton) {
         controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
         controlButton.frontMaterial.albedoColor = BABYLON.Color3.Blue();
@@ -234,100 +285,11 @@ class RootView extends Croquet.View {
         });
     }
 
-    #requireToAddNearMenu(nearMenuData){
-        const object = JSON.parse(nearMenuData);
-
-        const menuRows = object._rows;
-        const menuPosition = object._position;
-        const buttonList = object.buttonList;
-
-        const holographicButtonList = this.sceneManager.addNearMenu(menuPosition, menuRows, buttonList);
-        console.log(holographicButtonList);
-        holographicButtonList.forEach(button => {
-            button.onPointerDownObservable.add(() => {
-                eventBus.emit(button.name, "");
-            });
-        })
-    }
-
     #showCurrentManipulation(){
         console.log(this.model.hologramInUserControl);
         this.model.hologramInUserControl.forEach((v, k)=>{
             this.sceneManager.hologramRenders.get(k).showOtherUserManipulation();
             this.freezeControlButton({hologramName: k});
-        });
-    }
-
-    #setupBackEndEventHandlers(){
-        eventBus.on("initialize", (data) => {
-            this.sceneManager.initializeScene();
-        });
-
-        eventBus.on("render", (data) => {
-            this.#showCurrentManipulation();
-            this.sceneManager.activateRenderLoop();
-        });
-
-        eventBus.on("createImportedHologram", (data)=>{
-            this.#log("createImportedHologram model");
-            this.publish("create", "importedHologram", {view: this.viewId, hologram: JSON.parse(data)});
-        });
-
-        eventBus.on("createStandardHologram", (data) => {
-            this.#log("createStandardHologramModel");
-            this.publish("create", "standardHologram", {view: this.viewId, hologram: JSON.parse(data)});
-        } );
-
-        eventBus.on("createSynchronizedVariable", (data)=>{
-            this.#log("create synchronized variable");
-            this.publish("create", "synchronizedVariable", JSON.parse(data));
-        });
-
-        eventBus.on("addManipulatorMenu", (data) => {
-            this.#log("received add manipulator menu");
-            const object = JSON.parse(data);
-            const hologramName = object.name;
-            const menuPosition = object.position;
-
-            this.#addManipulatorMenu(hologramName, menuPosition);
-        });
-
-        eventBus.on("addNearMenu", (data) => {
-            this.#log("received add near menu");
-            this.#requireToAddNearMenu(data);
-        });
-
-        eventBus.on("newAnimation", (data) =>{
-            this.publish("animation", "createAnimation", JSON.parse(data));
-        });
-
-        eventBus.on("stopAnimation", (data) => {
-            this.publish("animation", "stopAnimation", JSON.parse(data));
-        })
-
-        eventBus.on("valueChange", (data) => {
-            this.#log("received value change");
-            this.publish("synchronizedVariable", "valueChange",JSON.parse(data));
-        });
-
-        eventBus.on("colorChange", (data) => {
-            this.#log("received color change");
-            this.publish( "updateHologram", "changeColor", JSON.parse(data));
-        });
-
-        eventBus.on("scalingChange", (data) => {
-            this.#log("received scaling change");
-            this.publish( "updateHologram", "changeScaling", JSON.parse(data));
-        });
-
-        eventBus.on("positionChange", (data) => {
-            this.#log("received position change");
-            this.publish( "updateHologram", "changePosition", JSON.parse(data));
-        });
-
-        eventBus.on("rotationChange", (data) => {
-            this.#log("received rotation change");
-            this.publish( "updateHologram", "changeColor", JSON.parse(data));
         });
     }
 

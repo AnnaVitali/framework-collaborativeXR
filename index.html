@@ -23,7 +23,7 @@
     import {NearMenu} from "./src/core/gui/menu/near_menu.js";
     import {Button} from "./src/core/gui/button.js";
     import {Animation} from "./src/core/animation/animation.js";
-    import {SynchronizedVariable} from "./src/core/animation/synchronized_variable.js";
+    import {SynchronizedVariable} from "./src/core/synchronizedVariable/synchronized_variable.js";
 
     const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
@@ -49,7 +49,7 @@
     const hologramRotation2 = new Quaternion(0, 0, 0, 0);
     const hologramScaling2 = 2;
     const hologramMeshFilePath2 = "/lion/lion.glb";
-    const hologram2 = new CroquetImportedHologram(hologramName, hologramMeshFilePath2, hologramPosition2, hologramRotation2, hologramScaling2);
+    const hologram2 = new ImportedHologramClone(hologramName, hologramMeshFilePath2, hologramPosition2, hologramRotation2, hologramScaling2);
     await scene.addImportedHologram(hologram2);
 
     const nearMenuPositionRespectToHologram2 = new Vector3(-0.3, 1.2, 0.5);
@@ -100,6 +100,7 @@
     const animationName = "changeColor";
     const animation = new Animation(animationName, animationTime);
     let i = new SynchronizedVariable("i", 0);
+    sessionManager.addSynchronizedVariable(i);
 
     animation.setAnimationCallback(() => {
         i.value = i.value + 1;
