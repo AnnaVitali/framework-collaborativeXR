@@ -1,4 +1,3 @@
-import {elementChecker} from "../utility/element_checker.js";
 import {coreEventManager} from "../utility/core_event_manager.js";
 import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
 
@@ -12,15 +11,8 @@ class SynchronizedVariable{
      * @param value the value to assign.
      */
     constructor(name, value) {
-        if(elementChecker.verifyNameAlreadyExist(name)){
-            throw new Error("This name was already used!")
-        }
-
         this._name = name;
         this._value = value;
-
-        synchronizedElementUpdater.addSynchronizedVariable(this);
-        coreEventManager.sendEvent("createSynchronizedVariable", JSON.stringify(this));
     }
 
     /**
@@ -28,13 +20,12 @@ class SynchronizedVariable{
      * @param value
      */
     set value(value) {
-        if(synchronizedElementUpdater.update) {
-            this._value = value;
-            coreEventManager.sendEvent("valueChange", JSON.stringify({
-                variableName: this.name,
-                value: this.value
-            }));
-        }
+        this._value = value;
+        coreEventManager.sendEvent("valueChange", JSON.stringify({
+            variableName: this.name,
+            value: this.value
+        }));
+
     }
 
     /**
