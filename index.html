@@ -14,125 +14,16 @@
 <script type="module">
     import {SessionManager} from "./src/core/session/sesssion_manager.js";
     import {Scene} from "./src/core/scene/scene.js";
-    import {ImportedHologram} from "./src/core/hologram/imported_hologram.js";
-    import {Vector3} from "./src/utility/vector3.js";
-    import {Quaternion} from "./src/utility/quaternion.js";
-    import {StandardHologram} from "./src/core/hologram/standard_hologram.js";
-    import {StandardShape} from "./src/core/hologram/enum/standard_shape.js";
-    import {ManipulatorMenu} from "./src/core/gui/menu/maniuplator_menu.js";
-    import {NearMenu} from "./src/core/gui/menu/near_menu.js";
-    import {Button} from "./src/core/gui/button.js";
-    import {Animation} from "./src/core/animation/animation.js";
-    import {SynchronizedVariable} from "./src/core/synchronizedVariable/synchronized_variable.js";
 
-    const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
-    const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
+    const apiKey =  'yourApiKey';
+    const appId = 'yourAppId';
 
     const sessionManager = new SessionManager();
     await sessionManager.startSession(apiKey, appId);
     const scene = new Scene(sessionManager);
     scene.initializeScene();
 
-    const hologramName = "industrialRobot";
-    const hologramPosition = new Vector3(0, 1, 1.2);
-    const hologramRotation = new Quaternion(0, 1, 0, 0);
-    const hologramScaling = new Vector3(0.7, 0.7, 0.7);
-    const hologramMeshFilePath = "./industrial_robot/scene.gltf";//"./high-detailed-flying-bird/Flying hummingbird.glb";
-    const hologram = new ImportedHologram(hologramName, hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
-    await scene.addImportedHologram(hologram);
-
-    const manipulatorMenu = new ManipulatorMenu(new Vector3(0.2, 1.2, 0.5), hologramName);
-    scene.addManipulatorMenu(manipulatorMenu);
-
-   /* const hologramName2 = "lion";
-    const hologramPosition2 = new Vector3(-1, 1, 1.2);
-    const hologramRotation2 = new Quaternion(0, 0, 0, 0);
-    const hologramScaling2 = 2;
-    const hologramMeshFilePath2 = "/lion/lion.glb";
-    const hologram2 = new ImportedHologramClone(hologramName, hologramMeshFilePath2, hologramPosition2, hologramRotation2, hologramScaling2);
-    await scene.addImportedHologram(hologram2);
-
-    const nearMenuPositionRespectToHologram2 = new Vector3(-0.3, 1.2, 0.5);
-    scene.addManipulatorMenu(hologramName2, nearMenuPositionRespectToHologram2);*/
-/*
-    const hologramName3 = "standardShape"
-    const hologramPosition3 = new Vector3(0, 1, 1.2);
-    const hologramRotation3 = new Quaternion(0,0,0,0);
-    const hologramColor = "#fbff2b"
-    const hologram3 = new StandardHologram(hologramName3, StandardShape.Sphere, {diameter: 0.5}, hologramPosition3,
-        hologramRotation3, hologramColor)
-    await scene.addStandardHologram(hologram3);
-
-
-    const manipulatorMenuPositionHologram3 = new Vector3(-0.3, 1.2, 0.5)
-    const manipulatorMenuHologram3 = new ManipulatorMenu(manipulatorMenuPositionHologram3, hologramName3);
-    scene.addManipulatorMenu(manipulatorMenuHologram3);
-
-    const nRowsMenu = 3
-    const nearMenuPosition = new Vector3(0.3, 1.2, 0.5);
-    const nearMenu = new NearMenu(nearMenuPosition, nRowsMenu);
-
-    const button1 = new Button("button1", "Blue");
-    button1.setOnPointerDownCallback(() =>{
-        hologram3.color = "#0000ff"
-    });
-
-    nearMenu.addButton(button1);
-
-    const button2 = new Button("button2", "Red");
-    button2.setOnPointerDownCallback(() =>{
-        hologram3.color = "#ff0000"
-    });
-
-    nearMenu.addButton(button2);
-
-    const button3 = new Button("button3", "Green");
-    button3.setOnPointerDownCallback(() =>{
-        hologram3.color = "#00ff00"
-    });
-
-    nearMenu.addButton(button3);
-
-    scene.addNearMenu(nearMenu);
-
-
-    const animationTime = 1000;
-    const animationName = "changeColor";
-    const animation = new Animation(animationName, animationTime);
-    let i = new SynchronizedVariable("i", 0);
-    sessionManager.addSynchronizedVariable(i);
-
-    animation.setAnimationCallback(() => {
-        i.value = i.value + 1;
-        console.log(i.value);
-        if((i.value % 2) === 0) {
-            hologram3.color = "#ff5e00"
-        }else{
-            hologram3.color = "#00fbff"
-        }
-    });
-
-    const nRowsMenu2 = 2
-    const nearMenuPosition2 = new Vector3(-0.5, 1.2, 0.5);
-    const nearMenu2 = new NearMenu(nearMenuPosition2, nRowsMenu2);
-
-    const buttonStart = new Button("buttonStart", "Start");
-    buttonStart.setOnPointerDownCallback(() =>{
-        console.log("start");
-        animation.startAnimation();
-    });
-
-    nearMenu2.addButton(buttonStart);
-
-    const buttonStop = new Button("buttonStop", "Stop");
-    buttonStop.setOnPointerDownCallback(() =>{
-        console.log("stop");
-        animation.stopAnimation();
-    });
-
-    nearMenu2.addButton(buttonStop);
-
-    scene.addNearMenu(nearMenu2);*/
+    //here the code of your application
 
     scene.activateRenderLoop();
 
