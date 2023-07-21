@@ -33,16 +33,16 @@
     const scene = new Scene(sessionManager);
     scene.initializeScene();
 
-    /*const hologramName = "industrialRobot";
+    const hologramName = "industrialRobot";
     const hologramPosition = new Vector3(0, 1, 1.2);
-    const hologramRotation = new Quaternion(0, 0, 0, 0);
-    const hologramScaling = 0.7;
+    const hologramRotation = new Quaternion(0, 1, 0, 0);
+    const hologramScaling = new Vector3(0.7, 0.7, 0.7);
     const hologramMeshFilePath = "./industrial_robot/scene.gltf";//"./high-detailed-flying-bird/Flying hummingbird.glb";
     const hologram = new ImportedHologram(hologramName, hologramMeshFilePath, hologramPosition, hologramRotation, hologramScaling);
     await scene.addImportedHologram(hologram);
 
-    const manipulatorMenu = new ManipulatorMenu(new Vector3(0.2, 1.2, 0.5));
-    scene.addManipulatorMenu(hologramName, manipulatorMenu);
+    const manipulatorMenu = new ManipulatorMenu(new Vector3(0.2, 1.2, 0.5), hologramName);
+    scene.addManipulatorMenu(manipulatorMenu);
 
    /* const hologramName2 = "lion";
     const hologramPosition2 = new Vector3(-1, 1, 1.2);
@@ -54,7 +54,7 @@
 
     const nearMenuPositionRespectToHologram2 = new Vector3(-0.3, 1.2, 0.5);
     scene.addManipulatorMenu(hologramName2, nearMenuPositionRespectToHologram2);*/
-
+/*
     const hologramName3 = "standardShape"
     const hologramPosition3 = new Vector3(0, 1, 1.2);
     const hologramRotation3 = new Quaternion(0,0,0,0);
@@ -65,8 +65,8 @@
 
 
     const manipulatorMenuPositionHologram3 = new Vector3(-0.3, 1.2, 0.5)
-    const manipulatorMenuHologram3 = new ManipulatorMenu(manipulatorMenuPositionHologram3);
-    scene.addManipulatorMenu(hologramName3, manipulatorMenuHologram3);
+    const manipulatorMenuHologram3 = new ManipulatorMenu(manipulatorMenuPositionHologram3, hologramName3);
+    scene.addManipulatorMenu(manipulatorMenuHologram3);
 
     const nRowsMenu = 3
     const nearMenuPosition = new Vector3(0.3, 1.2, 0.5);
@@ -110,7 +110,7 @@
         }else{
             hologram3.color = "#00fbff"
         }
-    })
+    });
 
     const nRowsMenu2 = 2
     const nearMenuPosition2 = new Vector3(-0.5, 1.2, 0.5);
@@ -132,7 +132,7 @@
 
     nearMenu2.addButton(buttonStop);
 
-    scene.addNearMenu(nearMenu2);
+    scene.addNearMenu(nearMenu2);*/
 
     scene.activateRenderLoop();
 

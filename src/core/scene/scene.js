@@ -67,23 +67,22 @@ class Scene{
 
     /**
      * Add a menu that allows to manipulate a hologram.
-     * @param hologramName {String} the name of the hologram.
      * @param manipulatorMenu {ManipulatorMenu} the menu to add
      */
-    addManipulatorMenu(hologramName, manipulatorMenu){
+    addManipulatorMenu(manipulatorMenu){
         this.#log("add manipulator menu");
         this.#verifyIfSceneIsInitialized();
-        this.#verifyIfElementExist(hologramName);
+        this.#verifyIfElementExist(manipulatorMenu.hologramName);
         coreEventManager.sendEvent("addManipulatorMenu", JSON.stringify(
             {
-                name: hologramName,
+                name: manipulatorMenu.hologramName,
                 position: manipulatorMenu.position
             }));
     }
 
     /**
      * Add a nearMenu.
-     * @param nearMenu {nearMenu} the menu to add.
+     * @param nearMenu {NearMenu} the menu to add.
      */
     addNearMenu(nearMenu){
         this.#log("add nearMenu");

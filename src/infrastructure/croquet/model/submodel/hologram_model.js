@@ -1,6 +1,7 @@
 import {StandardHologramClone} from "../../../hologram/standard_hologram_clone.js";
 import {ImportedHologramClone} from "../../../hologram/imported_hologram_clone.js";
 import {infrastructureEventManager} from "../../../utility/infrastructure_event_manager.js";
+import {Vector3} from "../../../../utility/vector3.js";
 
 /**
  * Class that represents a model for the holograms in the scene.
@@ -14,8 +15,42 @@ class HologramModel extends Croquet.Model {
     init(options = {}){
         super.init();
         this.holograms = new Map();
+        this.linkedViews = [];
+        this.hologramInUserControl = new Map();
+
+        this.subscribe(this.sessionId, "view-join", this.viewJoin);
+        this.subscribe(this.sessionId, "view-exit", this.viewDrop);
 
         this.#setupViewEventHandlers();
+    }
+
+    /**
+     * Handle a new connected view.
+     * @param {any} viewId the id of the new view connected.
+     */
+    viewJoin(viewId){
+        this.#log("received view join");
+        console.log(this.linkedViews);
+        this.linkedViews.push(viewId);
+    }
+
+    /**
+     * Handle the view left event.
+     * @param {any} viewId the id of the outgoing view.
+     */
+    viewDrop(viewId){
+        this.#log("received view left");
+        const values = [...this.hologramInUserControl.values()]
+        this.linkedViews.splice(this.linkedViews.indexOf(viewId),1);
+        console.log(this.linkedViews);
+
+        if(values.includes(viewId)){
+            this.hologramInUserControl.forEach((v, k)=>{
+                if(v === viewId){
+                    this.manageUserHologramControlReleased({view: v, hologramName: k});
+                }
+            });
+        }
     }
 
     /**
@@ -94,21 +129,73 @@ class HologramModel extends Croquet.Model {
     }
 
     /**
-     * Update the hologram position due to a manipulation.
-     * @param hologramName {String} the name of the hologram.
-     * @param position {Vector3} the new position.
+     * Require to show user manipulation.
+     * @param data {Object} object containing the data of the hologram and the view.
      */
-    updateHologramPositionManipulation(hologramName, position){
+    requireShowUserManipulation(data){
+        this.#log("received showUserManipulation");
+
+        this.linkedViews.filter(v => data.view !== v).forEach(v => {
+            this.publish(v, "showUserManipulation", {hologramName: data.hologramName});
+        });
+
+    }
+
+    /**
+     * Manage the control of the hologram from the user.
+     * @param data {Object} object that contains the id of the view in control.
+     */
+    manageUserHologramControlRequired(data){
+        this.#log("received manage user hologram control");
+        this.hologramInUserControl.set(data.hologramName, data.view);
+        this.linkedViews.filter(v => data.view !== v).forEach(v => {
+            this.publish(v, "freezeControlButton", {hologramName: data.hologramName});
+        });
+    }
+
+    /**
+     * Manage the release of the control from the user who had it.
+     * @param data {Object} object that contains the id of the view where the user released the control.
+     */
+    manageUserHologramControlReleased(data){
+        this.#log("received manage user hologram control released");
+        this.hologramInUserControl.delete(data.hologramName);
+        this.linkedViews.filter(v => data.view !== v).forEach(v => {
+            this.publish(v, "restoreControlButton", {hologramName: data.hologramName});
+        });
+    }
+
+
+    /**
+     * Update the hologram position due to a manipulation.
+     * @param data {Object} object containing the data of the hologram.
+     */
+    updateHologramPositionAfterManipulation(data){
+        this.#log("received requireHologramUpdate");
+        const hologramName = data.hologramName;
+        const position = new Vector3(data.position_x, data.position_y, data.position_z)
         this.holograms.get(hologramName).position = position;
+
+        infrastructureEventManager.sendEvent("updatePosition", JSON.stringify({hologramName: hologramName, position: position}));
+        this.linkedViews.filter(v => data.view !== v).forEach(v => {
+            this.publish(v, "showHologramUpdatedPosition", hologramName);
+        });
     }
 
     /**
      * Update the scaling of the hologram due to a manipulation.
-     * @param hologramName {String} the name of the hologram.
-     * @param scaling {Vector3} the new scaling.
+     * @param data {Object} object containing the data of the hologram.
      */
-    updateHologramScalingManipulation(hologramName, scaling){
+    updateHologramScalingAfterManipulation(data){
+        this.#log("received requireHologramUpdate");
+        const hologramName = data.hologramName;
+        const scaling = new Vector3(data.scale_x, data.scale_y, data.scale_z)
         this.holograms.get(hologramName).scaling = scaling;
+
+        infrastructureEventManager.sendEvent("updateScaling", JSON.stringify({hologramName: hologramName, scale: scaling}));
+        this.linkedViews.filter(v => data.view !== v).forEach(v => {
+            this.publish(v, "showHologramUpdatedScaling", hologramName);
+        });
     }
 
     #addHologram(hologram){
@@ -125,12 +212,19 @@ class HologramModel extends Croquet.Model {
         this.subscribe("updateHologram", "changeScaling", this.updateScaling);
         this.subscribe("updateHologram", "changePosition", this.updatePosition);
         this.subscribe("updateHologram", "changeRotation", this.updateRotation);
+
+        this.subscribe("hologramManipulator", "showUserManipulation", this.requireShowUserManipulation);
+        this.subscribe("hologramManipulation", "positionChanged", this.updateHologramPositionAfterManipulation);
+        this.subscribe("hologramManipulation", "scaleChanged", this.updateHologramScalingAfterManipulation);
+
+        this.subscribe("controlButton", "released", this.manageUserHologramControlReleased);
+        this.subscribe("controlButton", "clicked", this.manageUserHologramControlRequired);
     }
 
     #log(message){
         const debug = true;
         if(debug){
-            console.log("SH-MODEL: " + message);
+            console.log("H-MODEL: " + message);
         }
     }
 

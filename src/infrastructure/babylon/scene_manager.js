@@ -74,7 +74,7 @@ class SceneManager{
      * Add a near menu to the scene
      * @param menuPosition {Vector3} the position of the menu.
      * @param menuRows {Number} the number of rows in which the menu is organized.
-     * @param buttonList list of button to add at the menu.
+     * @param buttonList {[Button]} list of button to add at the menu.
      * @returns {[BABYLON.GUI.TouchHolographicButton]} the list of button of the menu
      */
     addNearMenu(menuPosition, menuRows, buttonList){

@@ -19,11 +19,11 @@ class HologramRenderer{
 
     /**
      * Render an imported hologram.
-     * @param hologram {CroquetImportedHologram} the hologram to render.
+     * @param hologram {ImportedHologramClone} the hologram to render.
      */
     renderImportedHologram(hologram){
         const filePath = hologram._meshFilePath;
-        const scaling = hologram._scaling;
+        const scaling = new BABYLON.Vector3(hologram._scaling._x, hologram._scaling._y, hologram._scaling._z);
         const euler = new BABYLON.Quaternion(hologram._rotation._x,
             hologram._rotation._y, hologram._rotation._z, hologram._rotation._w).toEulerAngles();
         const position = new BABYLON.Vector3(hologram._position._x, hologram._position._y,
@@ -35,17 +35,13 @@ class HologramRenderer{
                 container.addAllToScene();
                 container.meshes[0].rotationQuaternion = null;
 
-                const box = BABYLON.MeshBuilder.CreateBox("box", {size: 1});
-                box.isVisible = false;
-                box.position = position;
-                box.rotate(BABYLON.Axis.X, euler.x);
-                box.rotate(BABYLON.Axis.Y, euler.y);
-                box.rotate(BABYLON.Axis.Z, euler.z);
+                container.meshes[0].rotate(BABYLON.Axis.X, euler.x);
+                container.meshes[0].rotate(BABYLON.Axis.Y, euler.y);
+                container.meshes[0].rotate(BABYLON.Axis.Z, euler.z);
 
-                container.meshes[0].parent = box;
-                container.meshes[0].position = new BABYLON.Vector3(0, 0, 0)
+                container.meshes[0].position = position
 
-                container.meshes[0].scaling.scaleInPlace(scaling);
+                container.meshes[0].scaling = scaling;
 
                 this.mesh = container.meshes[0];
 
@@ -58,7 +54,7 @@ class HologramRenderer{
 
     /**
      * Render a standard hologram.
-     * @param hologram {CroquetStandardHologram} the hologram to render.
+     * @param hologram {StandardHologramClone} the hologram to render.
      */
     renderStandardHologram(hologram){
         const hologramName = hologram.name;
@@ -113,33 +109,16 @@ class HologramRenderer{
         this.sixDofDragBehavior.zDragFactor = 1;
 
         this.boundingBox.addBehavior(this.sixDofDragBehavior);
-
     }
 
     /**
      * Remove the element of the hologram manipulator.
      */
-    removeElementHologramManipulator(){
+    removeHologramManipulator(){
         this.gizmo.attachedMesh = null;
         this.gizmo.dispose();
         this.boundingBox.getChildren().forEach(child => child.setParent(null));
         this.boundingBox.dispose;
-    }
-
-    /**
-     * Get the SixDofDragBehaviour associated to the element.
-     * @returns {BABYLON.SixDofDragBehavior}
-     */
-    getSixDofDragBehaviour(){
-        return this.sixDofDragBehavior;
-    }
-
-    /**
-     * Get the gizmo associated to the element.
-     * @returns {BABYLON.BoundingBoxGizmo}
-     */
-    getGizmo(){
-        return this.gizmo
     }
 
     /**
@@ -168,13 +147,13 @@ class HologramRenderer{
 
     /**
      * Update the scale of the hologram.
-     * @param newScale {Vector3} the new scale to assign.
+     * @param newScaling {Vector3} the new scale to assign.
      */
-    updateScale(newScale){
+    updateScaling(newScaling){
         if(this.isUserManipulating) {
-            this.boundingBox.scaling = new BABYLON.Vector3(newScale._x, newScale._y, newScale._z);
+            this.boundingBox.scaling = new BABYLON.Vector3(newScaling._x, newScaling._y, newScaling._z);
         }else{
-            this.mesh.scaling = new BABYLON.Vector3(newScale._x, newScale._y, newScale._z);
+            this.mesh.scaling = new BABYLON.Vector3(newScaling._x, newScaling._y, newScaling._z);
         }
     }
 

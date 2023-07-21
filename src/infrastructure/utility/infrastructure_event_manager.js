@@ -66,7 +66,7 @@ class InfrastructureEventManager{
 
             console.log(hologramName);
 
-            this.view.addManipulatorMenu(hologramName, menuPosition);
+            this.view.hologramView.addManipulatorMenu(hologramName, menuPosition);
         });
 
         eventBus.on("addNearMenu", (data) => {
