@@ -21,7 +21,7 @@ class HologramView extends Croquet.View{
     /**
      * Add a menu that allow the user to manipulate a hologram.
      * @param hologramName {String} the name of the hologram.
-     * @param menuPosition {Vector3} the position of the menu in space.
+     * @param menuPosition {Vector3} the positionSphere1 of the menu in space.
      */
     addManipulatorMenu(hologramName, menuPosition) {
         console.log()
@@ -69,7 +69,7 @@ class HologramView extends Croquet.View{
     }
 
     /**
-     * Require to show the updated position of the hologram.
+     * Require to show the updated positionSphere1 of the hologram.
      * @param hologramName {String} the hologram name.
      */
     showHologramUpdatedPosition(hologramName){
@@ -78,7 +78,7 @@ class HologramView extends Croquet.View{
     }
 
     /**
-     * Require to show the updated rotation of the hologram.
+     * Require to show the updated rotationSphere1 of the hologram.
      * @param hologramName {String} the hologram name.
      */
     showHologramUpdatedRotation(hologramName){
@@ -96,7 +96,7 @@ class HologramView extends Croquet.View{
     }
 
     /**
-     * Require to show the updated color of the hologram.
+     * Require to show the updated colorSphere of the hologram.
      * @param hologramName {String} the hologram name.
      */
     showHologramUpdatedColor(hologramName){

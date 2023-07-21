@@ -9,8 +9,8 @@ class Hologram{
     /**
      * Constructor of the class.
      * @param name {String} the name of the hologram.
-     * @param position {Vector3} the position of the hologram in the world.
-     * @param rotation {Quaternion} the rotation of the hologram.
+     * @param position {Vector3} the positionSphere1 of the hologram in the world.
+     * @param rotation {Quaternion} the rotationSphere1 of the hologram.
      * @param scaling {Vector3} the scaling of the hologram.
      */
     constructor(name, position, rotation, scaling){
@@ -29,8 +29,8 @@ class Hologram{
     }
 
     /**
-     * Get the rotation of the hologram.
-     * @returns {Quaternion} the new rotation.
+     * Get the rotationSphere1 of the hologram.
+     * @returns {Quaternion} the new rotationSphere1.
      */
     get rotation() {
         return this._rotation;
@@ -45,7 +45,7 @@ class Hologram{
     }
 
     /**
-     * Get the position of the hologram.
+     * Get the positionSphere1 of the hologram.
      * @returns {Vector3}
      */
     get position() {
@@ -67,8 +67,8 @@ class Hologram{
     }
 
     /**
-     * Set the position of the hologram.
-     * @param value the new position.
+     * Set the positionSphere1 of the hologram.
+     * @param value the new positionSphere1.
      */
     set position(value) {
         if(synchronizedElementUpdater.update) {
@@ -81,8 +81,8 @@ class Hologram{
     }
 
     /**
-     * Set the rotation of the hologram.
-     * @param value the new rotation.
+     * Set the rotationSphere1 of the hologram.
+     * @param value the new rotationSphere1.
      */
     set rotation(value) {
         if(synchronizedElementUpdater.update) {

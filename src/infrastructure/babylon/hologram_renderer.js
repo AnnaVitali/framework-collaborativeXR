@@ -122,7 +122,7 @@ class HologramRenderer{
     }
 
     /**
-     * Update the position of the hologram.
+     * Update the positionSphere1 of the hologram.
      * @param newPosition {Vector3} the new Position to assign.
      */
     updatePosition(newPosition){
@@ -134,8 +134,8 @@ class HologramRenderer{
     }
 
     /**
-     * Update the rotation of the hologram
-     * @param newRotation {Quaternion} the new rotation to assign.
+     * Update the rotationSphere1 of the hologram
+     * @param newRotation {Quaternion} the new rotationSphere1 to assign.
      */
     updateRotation(newRotation){
         const euler = new BABYLON.Quaternion(newRotation._x,
@@ -158,8 +158,8 @@ class HologramRenderer{
     }
 
     /**
-     * Update the hologram color.
-     * @param color {String} the new color to apply.
+     * Update the hologram colorSphere.
+     * @param color {String} the new colorSphere to apply.
      */
     updateColor(color){
         this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(color);

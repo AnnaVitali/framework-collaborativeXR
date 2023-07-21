@@ -9,8 +9,8 @@ class StandardHologramClone extends HologramClone{
      * @param name {String} the name of the class.
      * @param shapeName {StandardShape} the shape of reference.
      * @param creationOptions {Object} the creation options related to the shape.
-     * @param position {Vector3} the hologram position.
-     * @param rotation {Quaternion} the hologram rotation.
+     * @param position {Vector3} the hologram positionSphere1.
+     * @param rotation {Quaternion} the hologram rotationSphere1.
      * @param color {String} the hologramColor.
      */
     constructor(name, shapeName, creationOptions, position, rotation, color){
@@ -37,7 +37,7 @@ class StandardHologramClone extends HologramClone{
     }
 
     /**
-     * Get the color of the hologram.
+     * Get the colorSphere of the hologram.
      * @returns {String}
      */
     get color() {
@@ -45,8 +45,8 @@ class StandardHologramClone extends HologramClone{
     }
 
     /**
-     * Set the color of the hologram.
-     * @param value the new color.
+     * Set the colorSphere of the hologram.
+     * @param value the new colorSphere.
      */
     set color(value) {
         this._color = value;

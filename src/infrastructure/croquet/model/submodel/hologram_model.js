@@ -76,7 +76,7 @@ class HologramModel extends Croquet.Model {
     }
 
     /**
-     * Update the position of the hologram.
+     * Update the positionSphere1 of the hologram.
      * @param data {Object} object containing the data of the hologram.
      */
     updatePosition(data){
@@ -102,7 +102,7 @@ class HologramModel extends Croquet.Model {
     }
 
     /**
-     * Update the rotation of the hologram.
+     * Update the rotationSphere1 of the hologram.
      * @param data {Object} object containing the data of the hologram.
      */
     updateRotation(data){
@@ -115,7 +115,7 @@ class HologramModel extends Croquet.Model {
     }
 
     /**
-     * Update the color of the hologram.
+     * Update the colorSphere of the hologram.
      * @param data {Object} object containing the data of the hologram.
      */
     updateColor(data){
@@ -167,7 +167,7 @@ class HologramModel extends Croquet.Model {
 
 
     /**
-     * Update the hologram position due to a manipulation.
+     * Update the hologram positionSphere1 due to a manipulation.
      * @param data {Object} object containing the data of the hologram.
      */
     updateHologramPositionAfterManipulation(data){

@@ -6,7 +6,7 @@ import {Menu} from "./menu.js";
 class ManipulatorMenu extends Menu{
     /**
      * Constructor of the class.
-     * @param position {Vector3} the position of the menu
+     * @param position {Vector3} the positionSphere1 of the menu
      * @param hologramName {String} the name of the hologram to manipulate.
      */
     constructor(position, hologramName) {

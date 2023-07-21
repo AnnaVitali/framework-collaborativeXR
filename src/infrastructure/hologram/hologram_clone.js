@@ -8,8 +8,8 @@ class HologramClone{
     /**
      * Constructor of the class.
      * @param name {String} the name of the hologram.
-     * @param position {Vector3} the position of the hologram in the world.
-     * @param rotation {Quaternion} the rotation of the hologram.
+     * @param position {Vector3} the positionSphere1 of the hologram in the world.
+     * @param rotation {Quaternion} the rotationSphere1 of the hologram.
      * @param scaling {Vector3} the scal eof the hologram.
      */
     constructor(name, position, rotation, scaling){
@@ -28,7 +28,7 @@ class HologramClone{
     }
 
     /**
-     * Get the position of the hologram.
+     * Get the positionSphere1 of the hologram.
      * @returns {Vector3}
      */
     get position() {
@@ -36,7 +36,7 @@ class HologramClone{
     }
 
     /**
-     * Get the rotation of the hologram.
+     * Get the rotationSphere1 of the hologram.
      * @returns {Quaternion}
      */
     get rotation() {
@@ -60,16 +60,16 @@ class HologramClone{
     }
 
     /**
-     * Set the position of the hologram.
-     * @param value the new position.
+     * Set the positionSphere1 of the hologram.
+     * @param value the new positionSphere1.
      */
     set position(value) {
         this._position = value;
     }
 
     /**
-     * Set the rotation of the hologram.
-     * @param value the new rotation.
+     * Set the rotationSphere1 of the hologram.
+     * @param value the new rotationSphere1.
      */
     set rotation(value) {
         this._rotation = value;
