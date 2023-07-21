@@ -7,10 +7,9 @@
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.0.5"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
 </head>
 <body>
-<canvas id="renderCanvas"></canvas>
 <script type="module">
     import {SessionManager} from "./src/core/session/sesssion_manager.js";
     import {Scene} from "./src/core/scene/scene.js";
@@ -103,6 +102,19 @@
     scene.addNearMenu(nearMenu);
 
     scene.activateRenderLoop();
+
+    const qrCode = document.createElement('div')
+    qrCode.setAttribute("id", "qrcode");
+    document.body.appendChild(qrCode);
+
+    new QRCode(document.getElementById("qrcode"), {
+        text: "https://192.168.1.132:3000/?q=ybqe2dl392#pw=3Lorw052reSxGO6QaqLWwg",
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
 
 </script>
 </body>

@@ -30,6 +30,11 @@ class RootView extends Croquet.View {
      * Initialize the WebXR scene.
      */
     initializeScene(){
+        const renderCanvas = document.createElement('canvas')
+        renderCanvas.setAttribute("id", "renderCanvas");
+        renderCanvas.setAttribute("style", "width: 100%; height: 100%");
+        document.body.appendChild(renderCanvas);
+
         this.sceneManager.initializeScene();
     }
 
