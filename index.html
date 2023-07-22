@@ -7,114 +7,23 @@
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.0.5"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
 </head>
 <body>
 <script type="module">
     import {SessionManager} from "./src/core/session/sesssion_manager.js";
     import {Scene} from "./src/core/scene/scene.js";
-    import {StandardHologram} from "./src/core/hologram/standard_hologram.js";
-    import {StandardShape} from "./src/core/hologram/enum/standard_shape.js";
-    import {Vector3} from "./src/utility/vector3.js";
-    import {Quaternion} from "./src/utility/quaternion.js";
-    import {Animation} from "./src/core/animation/animation.js";
-    import {Button} from "./src/core/gui/button.js";
-    import {NearMenu} from "./src/core/gui/menu/near_menu.js";
-    import {SynchronizedVariable} from "./src/core/synchronizedVariable/synchronized_variable.js";
 
-    const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
-    const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
+    const apiKey =  'yourApiKey';
+    const appId = 'yourAppId';
 
     const sessionManager = new SessionManager();
     await sessionManager.startSession(apiKey, appId);
     const scene = new Scene(sessionManager);
     scene.initializeScene();
 
-    const rotationSphere = new Quaternion(0,0,0,0);
-    const creationOptionsSphere = {diameter: 0.5}
-    const propagateColor1 = "#ff0000";
-    const propagateColor2 = "#00ff00";
-    const propagateColor3 = "#0000ff"
-    const standardColor = "#ffffff";
-
-    const positionSphere1 = new Vector3(-1, 1, 1.2);
-    const sphere1 = new StandardHologram("Sphere1",
-        StandardShape.Sphere, creationOptionsSphere, positionSphere1,
-        rotationSphere, propagateColor1);
-    await scene.addStandardHologram(sphere1);
-
-    const positionSphere2 = new Vector3(0, 1, 1.2);
-    const sphere2 = new StandardHologram("Sphere2",
-        StandardShape.Sphere, creationOptionsSphere, positionSphere2,
-        rotationSphere, standardColor);
-    await scene.addStandardHologram(sphere2);
-
-    const positionSphere3 = new Vector3(1, 1, 1.2);
-    const sphere3 = new StandardHologram("Sphere3",
-        StandardShape.Sphere, creationOptionsSphere, positionSphere3,
-        rotationSphere, standardColor);
-    await scene.addStandardHologram(sphere3);
-
-    const animationTime1 =  1000;
-    const changeColor = new Animation("changeColor", animationTime1);
-
-    const counter = new SynchronizedVariable("counter", 1);
-    sessionManager.addSynchronizedVariable(counter);
-
-    changeColor.setAnimationCallback(() => {
-        counter.value = (counter.value + 1) % 5;
-        if(counter.value === 1){
-            sphere3.color = standardColor;
-            sphere1.color = propagateColor1;
-        }else if(counter.value === 2){
-            sphere2.color = propagateColor1;
-            sphere1.color = propagateColor2;
-        }else if(counter.value === 3){
-            sphere3.color = propagateColor1;
-            sphere2.color = propagateColor2;
-            sphere1.color = propagateColor3;
-        }else if(counter.value === 4){
-            sphere3.color = propagateColor2;
-            sphere2.color = propagateColor3;
-            sphere1.color = standardColor;
-        }else {
-            sphere3.color = propagateColor3;
-            sphere2.color = standardColor;
-        }
-    });
-
-    const nRowsMenu = 1;
-    const nearMenuPosition = new Vector3(0, 1.5, 0.5);
-    const nearMenu = new NearMenu(nearMenuPosition, nRowsMenu);
-
-    const buttonStart = new Button("buttonStart", "START");
-    buttonStart.setOnPointerDownCallback(() => {
-        changeColor.startAnimation();
-    });
-    nearMenu.addButton(buttonStart);
-
-    const buttonStop = new Button("buttonStop", "STOP");
-    buttonStop.setOnPointerDownCallback(() => {
-        changeColor.stopAnimation();
-    });
-    nearMenu.addButton(buttonStop);
-
-    scene.addNearMenu(nearMenu);
+    //here the code of your application
 
     scene.activateRenderLoop();
-
-    const qrCode = document.createElement('div')
-    qrCode.setAttribute("id", "qrcode");
-    document.body.appendChild(qrCode);
-
-    new QRCode(document.getElementById("qrcode"), {
-        text: "https://192.168.1.132:3000/?q=ybqe2dl392#pw=3Lorw052reSxGO6QaqLWwg",
-        width: 128,
-        height: 128,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
-    });
 
 </script>
 </body>
