@@ -9,8 +9,8 @@ class ImportedHologram extends Hologram{
      * Constructor of the class.
      * @param name {String} the name of the hologram.
      * @param meshFilePath {String} the file path for the rendering process.
-     * @param position {Vector3} the position of the hologram.
-     * @param rotation {Quaternion} the rotation of the hologram.
+     * @param position {Vector3} the positionSphere1 of the hologram.
+     * @param rotation {Quaternion} the rotationSphere1 of the hologram.
      * @param scaling {Vector3} the scaling of the hologram
      */
     constructor(name, meshFilePath, position, rotation, scaling){

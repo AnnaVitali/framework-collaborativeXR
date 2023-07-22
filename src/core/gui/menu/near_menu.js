@@ -6,7 +6,7 @@ import {Menu} from "./menu.js";
 class NearMenu extends Menu{
     /**
      * Constructor of the class.
-     * @param position {Vector3} the position of the menu.
+     * @param position {Vector3} the positionSphere1 of the menu.
      * @param rows {Number} the number of rows in which the button are organized.
      */
     constructor(position, rows) {

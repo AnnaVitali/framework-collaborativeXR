@@ -59,7 +59,7 @@ class RootView extends Croquet.View {
     /**
      * Add a near menu to the scene.
      * @param menuRows {Number} the number of rows in which the menu is organized.
-     * @param menuPosition {Vector3} the position of the menu in space.
+     * @param menuPosition {Vector3} the positionSphere1 of the menu in space.
      * @param buttonList {[Button]} the list of button that compose the menu.
      */
     addNearMenu(menuRows, menuPosition, buttonList){
