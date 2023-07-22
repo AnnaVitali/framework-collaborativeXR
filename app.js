@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const https = require("https");
 const fs = require("fs");
 const express = require("express");
@@ -25,4 +26,8 @@ app.get("/", function (req, res) {
 
 app.get("/exampleRobot", function (req, res) {
     res.sendFile(path.join(__dirname, 'example_robot.html'));
+})
+
+app.get("/qrCode", function (req, res) {
+    res.sendFile(path.join(__dirname, 'qrCode.html'));
 })

@@ -39,7 +39,7 @@ class Scene{
         coreEventManager.sendEvent("createImportedHologram", JSON.stringify(hologram));
 
         return new Promise((resolve) => {
-            coreEventManager.listenForInfrastructureEvent("importedHologramCreated", () => {
+            coreEventManager.listenForInfrastructureEvent("importedHologramCreated" + hologram.name, () => {
                 resolve(true)
             });
         });
@@ -59,7 +59,7 @@ class Scene{
         coreEventManager.sendEvent("createStandardHologram", JSON.stringify(hologram));
 
         return new Promise((resolve) => {
-            coreEventManager.listenForInfrastructureEvent("standardHologramCreated", () => {
+            coreEventManager.listenForInfrastructureEvent("standardHologramCreated" + hologram.name, () => {
                 resolve(true)
             });
         });

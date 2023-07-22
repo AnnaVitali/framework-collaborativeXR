@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scaling=1.0, maximum-scaling=1.0, minimum-scaling=1.0">
+    <title>Collaborative WebXR Application</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
+</head>
+<body>
+<script type="module">
+    const qrCode = document.createElement('div')
+    qrCode.setAttribute("id", "qrcode");
+    document.body.appendChild(qrCode);
+
+    new QRCode(document.getElementById("qrcode"), {
+        text: "https://192.168.162.233:3000/?q=4nqleporfn#pw=hIr_sUSptbpN2Ttyv5I-wQ",
+        width: 300,
+        height: 300,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+</script>
+</body>
+</html>
