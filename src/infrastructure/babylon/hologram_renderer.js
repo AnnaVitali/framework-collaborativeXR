@@ -45,7 +45,7 @@ class HologramRenderer{
 
                 this.mesh = container.meshes[0];
 
-                infrastructureEventManager.sendEvent("importedHologramCreated", "");
+                infrastructureEventManager.sendEvent("importedHologramCreated" + hologram.name, "");
             }catch(error){
                 this.#log("ERROR " + error);
             }
@@ -69,7 +69,7 @@ class HologramRenderer{
         this.mesh.rotate(BABYLON.Axis.Z, euler.z);
         this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(hologram._color);
 
-        infrastructureEventManager.sendEvent("standardHologramCreated", "");
+        infrastructureEventManager.sendEvent("standardHologramCreated" + hologram.name, "");
     }
 
     /**

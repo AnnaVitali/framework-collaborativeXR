@@ -4,7 +4,7 @@ const express = require("express");
 var path = require("path");
 const app = express();
 const port = 3000;
-const host = '192.168.1.132'//webXR works only on https connection
+const host = '192.168.162.233'//webXR works only on https connection
 
 https.createServer(
     {
@@ -21,4 +21,8 @@ console.log("static path: " + path.join(__dirname));
 
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, 'index.html'));
+})
+
+app.get("/qrCode", function (req, res) {
+    res.sendFile(path.join(__dirname, 'qrCode.html'));
 })

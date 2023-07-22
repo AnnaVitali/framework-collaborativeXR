@@ -11,7 +11,7 @@ class StandardHologram extends Hologram{
     /**
      * Constructor of the class.
      * @param name {String} the name of the class.
-     * @param shapeName {StandardShape} the shape of reference.
+     * @param shapeName {string} the shape of reference.
      * @param creationOptions {Object} the creation options related to the shape.
      * @param position {Vector3} the hologram position.
      * @param rotation {Quaternion} the hologram rotation.
