@@ -112,7 +112,7 @@ class Scene{
 
     #verifyIfElementNotExist(name){
         if(elementChecker.verifyNameAlreadyExist(name)){
-            throw new Error("Element with this name already exist!");
+            throw new Error("Element with this name "+ name +" already exist!");
         }
     }
 

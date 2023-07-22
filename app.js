@@ -22,3 +22,7 @@ console.log("static path: " + path.join(__dirname));
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, 'index.html'));
 })
+
+app.get("/exampleRobot", function (req, res) {
+    res.sendFile(path.join(__dirname, 'example_robot.html'));
+})
