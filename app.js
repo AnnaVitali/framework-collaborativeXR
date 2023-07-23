@@ -4,7 +4,7 @@ const express = require("express");
 var path = require("path");
 const app = express();
 const port = 3000;
-const host = '192.168.162.233'//webXR works only on https connection
+const host = '192.168.1.132'//webXR works only on https connection
 
 https.createServer(
     {
@@ -20,21 +20,21 @@ app.use("/", express.static(path.join(__dirname)));
 console.log("static path: " + path.join(__dirname));
 
 app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, '/html/template.html'));
 })
 
 app.get("/exampleAnimation", function (req, res) {
-    res.sendFile(path.join(__dirname, 'example_animation.html'));
+    res.sendFile(path.join(__dirname, '/html/example/example_animation.html'));
 })
 
 app.get("/exampleRobot", function (req, res) {
-    res.sendFile(path.join(__dirname, 'example_robot.html'));
+    res.sendFile(path.join(__dirname, '/html/example/example_robot.html'));
 })
 
 app.get("/exampleAnimal", function (req, res) {
-    res.sendFile(path.join(__dirname, 'example_animal.html'));
+    res.sendFile(path.join(__dirname, '/html/example/example_animal.html'));
 })
 
 app.get("/qrCode", function (req, res) {
-    res.sendFile(path.join(__dirname, 'qrCode.html'));
+    res.sendFile(path.join(__dirname, '/html/qrCode.html'));
 })
