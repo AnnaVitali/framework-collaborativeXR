@@ -144,7 +144,7 @@ class HologramView extends Croquet.View{
         controlButton.frontMaterial.albedoColor = BABYLON.Color3.Red();
         controlButton.backMaterial.albedoColor = new BABYLON.Color3(0.67, 0.29, 0.29);
 
-        controlButton.imageUrl = "https://github.com/AnnaVitali/framework-collaborativeXR/blob/master/img/IconClose.png";
+        controlButton.imageUrl = "https://raw.githubusercontent.com/AnnaVitali/framework-collaborativeXR/master/img/IconClose.png";
         controlButton.onPointerDownObservable.clear();
     }
 
@@ -163,7 +163,7 @@ class HologramView extends Croquet.View{
         controlButton.frontMaterial.albedoColor = BABYLON.Color3.Blue();
         controlButton.backMaterial.albedoColor = new BABYLON.Color3(0.29, 0.37, 0.67);
         controlButton.text = "Manipulate";
-        controlButton.imageUrl = "https://github.com/AnnaVitali/framework-collaborativeXR/blob/master/img/IconAdjust.png";
+        controlButton.imageUrl = "https://raw.githubusercontent.com/AnnaVitali/framework-collaborativeXR/master/img/IconAdjust.png";
         controlButton.onPointerDownObservable.clear();
 
         controlButton.onPointerDownObservable.add(() => {

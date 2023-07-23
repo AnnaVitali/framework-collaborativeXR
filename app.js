@@ -2,6 +2,7 @@ const https = require("https");
 const fs = require("fs");
 const express = require("express");
 var path = require("path");
+const cors = require('cors');
 const app = express();
 const port = 3000;
 const host = '192.168.1.132'//webXR works only on https connection
@@ -16,6 +17,7 @@ https.createServer(
         console.log('Server started at https://' + host + ':' + port);
     });
 
+app.use(cors());
 app.use("/", express.static(path.join(__dirname)));
 console.log("static path: " + path.join(__dirname));
 

@@ -10,17 +10,36 @@
 </head>
 <body>
 <script type="module">
-    import * as CollaborativeXR from "../collaborativeXR.min.js"
+    import {SessionManager} from "../src/core/session/sesssion_manager.js";
+    import {Quaternion} from "../src/utility/quaternion.js";
+    import {Vector3} from "../src/utility/vector3.js";
+    import {StandardHologram} from "../src/core/hologram/standard_hologram.js";
+    import {ManipulatorMenu} from "../src/core/gui/menu/maniuplator_menu.js";
+    import {StandardShape} from "../src/core/hologram/enum/standard_shape.js";
+    import {Scene} from "../src/core/scene/scene.js";
 
-    const apiKey =  'yourApiKey';
-    const appId = 'yourAppId';
+    const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
+    const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
 
-    const sessionManager = new CollaborativeXR.SessionManager();
+    const sessionManager = new SessionManager();
     await sessionManager.startSession(apiKey, appId);
-    const scene = new CollaborativeXR.Scene(sessionManager);
+    const scene = new Scene(sessionManager);
     scene.initializeScene();
 
-    //here the code of your application
+    const rotationSphere = new Quaternion(0,0,0,0);
+    const creationOptionsSphere = {diameter: 0.5}
+    const propagateColor1 = "#ff0000";
+
+    const positionSphere1 = new Vector3(0, 1, 1.2);
+    const sphere1 = new StandardHologram("Sphere1",
+        StandardShape.Sphere, creationOptionsSphere, positionSphere1,
+        rotationSphere, propagateColor1);
+    await scene.addStandardHologram(sphere1);
+
+    const manipulatorMenuPosition= new Vector3(0.5, 1, 1);
+    const manipulatorMenu = new ManipulatorMenu(manipulatorMenuPosition, "Sphere1");
+
+    scene.addManipulatorMenu(manipulatorMenu);
 
     scene.activateRenderLoop();
 
