@@ -102,20 +102,6 @@
   scene.addNearMenu(nearMenu);
 
   scene.activateRenderLoop();
-
-  const qrCode = document.createElement('div')
-  qrCode.setAttribute("id", "qrcode");
-  document.body.appendChild(qrCode);
-
-  new QRCode(document.getElementById("qrcode"), {
-    text: "https://192.168.1.132:3000/?q=ybqe2dl392#pw=3Lorw052reSxGO6QaqLWwg",
-    width: 128,
-    height: 128,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.H
-  });
-
 </script>
 </body>
 </html>

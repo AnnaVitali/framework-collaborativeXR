@@ -64,19 +64,19 @@
     const backgroundTreeScaling = new Vector3(0.5,0.5,0.5);
 
     const backGroundTreePosition1 = new Vector3(0.4, 0.2, 2.5);
-    const backGroundTree1 = new ImportedHologram("tree1", "./gltfMeshes/old_tree/scene.gltf", backGroundTreePosition1, backGroundTreeRotation,
+    const backGroundTree1 = new ImportedHologram("tree1", "./importedMesh/old_tree/scene.gltf", backGroundTreePosition1, backGroundTreeRotation,
         backgroundTreeScaling);
     scene.addImportedHologram(backGroundTree1);
 
     const backGroundTreePosition2 = new Vector3(-0.8, 0.2, 2.5);
-    const backGroundTree2 = new ImportedHologram("tree2", "./gltfMeshes/old_tree/scene.gltf", backGroundTreePosition2, backGroundTreeRotation,
+    const backGroundTree2 = new ImportedHologram("tree2", "./importedMesh/old_tree/scene.gltf", backGroundTreePosition2, backGroundTreeRotation,
         backgroundTreeScaling);
     scene.addImportedHologram(backGroundTree2);
 
     const lionRotation = new Quaternion(0, 1, 0, 0);
     const lionScaling = new Vector3(3,3,3);
     const lionPosition = new Vector3(0.2, 0, 1.2);
-    const lion = new ImportedHologram("lion", "./gltfMeshes/lion/scene.gltf", lionPosition, lionRotation, lionScaling);
+    const lion = new ImportedHologram("lion", "./importedMesh/lion/scene.gltf", lionPosition, lionRotation, lionScaling);
     await scene.addImportedHologram(lion);
 
     const lionManipulatorPosition = new Vector3(0.2, 0.8, 1.2)
@@ -87,7 +87,7 @@
     const tigerRotation = new Quaternion(0, 1, 0, 0);
     const tigerScaling = new Vector3(0.3,0.3,0.3);
     const tigerPosition = new Vector3(-0.6, 0, 1.2);
-    const tiger = new ImportedHologram("tiger", "./gltfMeshes/tiger/scene.gltf", tigerPosition, tigerRotation, tigerScaling);
+    const tiger = new ImportedHologram("tiger", "./importedMesh/tiger/scene.gltf", tigerPosition, tigerRotation, tigerScaling);
     await scene.addImportedHologram(tiger);
 
     const tigerManipulatorPosition = new Vector3(-0.6, 0.8, 1.2)
@@ -96,10 +96,6 @@
     scene.addManipulatorMenu(tigerManipulatorMenu);
 
     scene.activateRenderLoop();
-
-    const qrCode = document.createElement('div')
-    qrCode.setAttribute("id", "qrcode");
-    document.body.appendChild(qrCode);
 </script>
 </body>
 </html>
