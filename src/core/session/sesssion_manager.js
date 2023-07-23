@@ -66,6 +66,6 @@ class SessionManager {
             console.log(message);
         }
     }
-}
+} 
 
 export {SessionManager}

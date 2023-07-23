@@ -40,5 +40,4 @@ class Triple {
     }
 }
 
-
 export {Triple}

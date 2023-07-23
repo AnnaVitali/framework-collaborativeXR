@@ -22,7 +22,7 @@ class ElementChecker{
             return false;
         }
     }
-}
+} 
 
 const elementChecker = new ElementChecker();
 

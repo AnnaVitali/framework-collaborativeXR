@@ -61,6 +61,6 @@ class StandardHologram extends Hologram{
             }));
         }
     }
-}
+} 
 
 export{ StandardHologram }

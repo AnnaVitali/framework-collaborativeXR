@@ -30,6 +30,6 @@ class NearMenu extends Menu{
     addButton(button){
         this.buttonList.push(button);
     }
-}
+} 
 
 export {NearMenu}

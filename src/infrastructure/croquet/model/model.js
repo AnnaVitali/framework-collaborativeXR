@@ -107,6 +107,6 @@ class RootModel extends Croquet.Model {
 
 
 RootModel.register("RootModel");
-
+ 
 
 export {RootModel};

@@ -17,6 +17,6 @@ class Menu{
     get position() {
         return this._position;
     }
-}
+} 
 
 export {Menu}

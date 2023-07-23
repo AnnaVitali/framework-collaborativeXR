@@ -75,7 +75,7 @@ class SynchronizedElementUpdater{
     updateSynchronizedVariable(variableName, value){
         this.synchronizedVariables.get(variableName)._value = value;
     }
-
+ 
     #updateColor(hologramName, value) {
         this.holograms.get(hologramName)._color = value;
     }

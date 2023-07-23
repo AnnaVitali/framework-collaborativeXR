@@ -10,15 +10,14 @@
 </head>
 <body>
 <script type="module">
-    import {SessionManager} from "../src/core/session/sesssion_manager.js";
-    import {Scene} from "../src/core/scene/scene.js";
+    import * as CollaborativeXR from "../collaborativeXR.min.js"
 
     const apiKey =  'yourApiKey';
     const appId = 'yourAppId';
 
-    const sessionManager = new SessionManager();
+    const sessionManager = new CollaborativeXR.SessionManager();
     await sessionManager.startSession(apiKey, appId);
-    const scene = new Scene(sessionManager);
+    const scene = new CollaborativeXR.Scene(sessionManager);
     scene.initializeScene();
 
     //here the code of your application

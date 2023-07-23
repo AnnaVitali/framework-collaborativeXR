@@ -209,6 +209,6 @@ class HologramRenderer{
             console.log("H-RENDERER: " + message);
         }
     }
-}
+} 
 
 export {HologramRenderer}

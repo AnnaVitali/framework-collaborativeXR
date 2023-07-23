@@ -56,7 +56,7 @@ class EventBus {
     destroy() {
         this.listeners.length = 0;
     }
-}
+} 
 
 const eventBus = new EventBus();
 

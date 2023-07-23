@@ -25,6 +25,6 @@ class ImportedHologram extends Hologram{
     get meshFilePath() {
         return this._meshFilePath;
     }
-}
+} 
 
 export {ImportedHologram}

@@ -234,7 +234,7 @@ class HologramModel extends Croquet.Model {
             "CroquetImportedHologram": ImportedHologramClone,
         };
     }
-}
+} 
 
 HologramModel.register("HologramModel");
 

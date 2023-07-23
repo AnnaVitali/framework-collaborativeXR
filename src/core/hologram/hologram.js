@@ -95,4 +95,4 @@ class Hologram{
     }
 }
 
-export { Hologram };
+export { Hologram }

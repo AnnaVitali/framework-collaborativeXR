@@ -7,6 +7,6 @@ const HologramProperty = Object.freeze({
     Rotation: "rotation",
     Scaling: "scaling",
     Color: "color",
-});
+}); 
 
 export {HologramProperty}

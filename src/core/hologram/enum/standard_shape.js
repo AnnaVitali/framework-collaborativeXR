@@ -8,6 +8,6 @@ const StandardShape = Object.freeze({
     Cylinder: "cylinder",
     Plane: "plane",
     Disc: "disc"
-});
+}); 
 
 export {StandardShape}

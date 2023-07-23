@@ -128,6 +128,6 @@ class Scene{
             console.log("SCENE: " + message);
         }
     }
-}
+} 
 
 export {Scene}
