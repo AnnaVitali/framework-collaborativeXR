@@ -22,19 +22,3 @@ console.log("static path: " + path.join(__dirname));
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, '/html/template.html'));
 })
-
-app.get("/exampleAnimation", function (req, res) {
-    res.sendFile(path.join(__dirname, '/html/example/example_animation.html'));
-})
-
-app.get("/exampleRobot", function (req, res) {
-    res.sendFile(path.join(__dirname, '/html/example/example_robot.html'));
-})
-
-app.get("/exampleAnimal", function (req, res) {
-    res.sendFile(path.join(__dirname, '/html/example/example_animal.html'));
-})
-
-app.get("/qrCode", function (req, res) {
-    res.sendFile(path.join(__dirname, '/html/qrCode.html'));
-})
