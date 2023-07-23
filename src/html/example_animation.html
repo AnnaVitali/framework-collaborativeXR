@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scaling=1.0, maximum-scaling=1.0, minimum-scaling=1.0">
+  <title>Collaborative WebXR Application</title>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.0.5"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
+</head>
+<body>
+<script type="module">
+  import * as CollaborativeXR from "../../collaborativeXR.min.js"
+
+  const apiKey =  '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
+  const appId = 'it.unibo.studio.anna_2evitali4.collaborativeXR';
+
+  const sessionManager = new CollaborativeXR.SessionManager();
+  await sessionManager.startSession(apiKey, appId);
+  const scene = new CollaborativeXR.Scene(sessionManager);
+  scene.initializeScene();
+
+  const rotationSphere = new CollaborativeXR.Quaternion(0,0,0,0);
+  const creationOptionsSphere = {diameter: 0.5}
+  const propagateColor1 = "#ff0000";
+  const propagateColor2 = "#00ff00";
+  const propagateColor3 = "#0000ff"
+  const standardColor = "#ffffff";
+
+  const positionSphere1 = new CollaborativeXR.Vector3(-1, 1, 1.2);
+  const sphere1 = new CollaborativeXR.StandardHologram("Sphere1",
+          CollaborativeXR.StandardShape.Sphere, creationOptionsSphere, positionSphere1,
+          rotationSphere, propagateColor1);
+  await scene.addStandardHologram(sphere1);
+
+  const positionSphere2 = new CollaborativeXR.Vector3(0, 1, 1.2);
+  const sphere2 = new CollaborativeXR.StandardHologram("Sphere2",
+          CollaborativeXR.StandardShape.Sphere, creationOptionsSphere, positionSphere2,
+          rotationSphere, standardColor);
+  await scene.addStandardHologram(sphere2);
+
+  const positionSphere3 = new CollaborativeXR.Vector3(1, 1, 1.2);
+  const sphere3 = new CollaborativeXR.StandardHologram("Sphere3",
+          CollaborativeXR.StandardShape.Sphere, creationOptionsSphere, positionSphere3,
+          rotationSphere, standardColor);
+  await scene.addStandardHologram(sphere3);
+
+  const animationTime1 =  1000;
+  const changeColor = new CollaborativeXR.Animation("changeColor", animationTime1);
+
+  const counter = new CollaborativeXR.SynchronizedVariable("counter", 1);
+  sessionManager.addSynchronizedVariable(counter);
+
+  changeColor.setAnimationCallback(() => {
+    counter.value = (counter.value + 1) % 5;
+    if(counter.value === 1){
+      sphere3.color = standardColor;
+      sphere1.color = propagateColor1;
+    }else if(counter.value === 2){
+      sphere2.color = propagateColor1;
+      sphere1.color = propagateColor2;
+    }else if(counter.value === 3){
+      sphere3.color = propagateColor1;
+      sphere2.color = propagateColor2;
+      sphere1.color = propagateColor3;
+    }else if(counter.value === 4){
+      sphere3.color = propagateColor2;
+      sphere2.color = propagateColor3;
+      sphere1.color = standardColor;
+    }else {
+      sphere3.color = propagateColor3;
+      sphere2.color = standardColor;
+    }
+  });
+
+  const nRowsMenu = 1;
+  const nearMenuPosition = new CollaborativeXR.Vector3(0, 1.5, 0.5);
+  const nearMenu = new CollaborativeXR.NearMenu(nearMenuPosition, nRowsMenu);
+
+  const buttonStart = new CollaborativeXR.Button("buttonStart", "START");
+  buttonStart.setOnPointerDownCallback(() => {
+    changeColor.startAnimation();
+  });
+  nearMenu.addButton(buttonStart);
+
+  const buttonStop = new CollaborativeXR.Button("buttonStop", "STOP");
+  buttonStop.setOnPointerDownCallback(() => {
+    changeColor.stopAnimation();
+  });
+  nearMenu.addButton(buttonStop);
+
+  scene.addNearMenu(nearMenu);
+
+  scene.activateRenderLoop();
+</script>
+</body>
+</html>

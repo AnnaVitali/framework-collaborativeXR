@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scaling=1.0, maximum-scaling=1.0, minimum-scaling=1.0">
+  <title>Collaborative WebXR Application</title>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.0.5"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
+</head>
+<body>
+<script type="module">
+  import * as CollaborativeXR from "../../collaborativeXR.min.js"
+
+  const apiKey = '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
+  const appId = 'it.unibo.studio.anna_2evitali4.microverse';
+
+  const sessionManager = new CollaborativeXR.SessionManager();
+  await sessionManager.startSession(apiKey, appId);
+  const scene = new CollaborativeXR.Scene(sessionManager);
+  scene.initializeScene();
+
+  const sunPosition = new CollaborativeXR.Vector3(0, 2.2, 1.2);
+  const sunRotation = new CollaborativeXR.Quaternion(0,0,0,0);
+  const color = "#fbff2b";
+  const creationOptions = {diameter: 0.5}
+  const sun = new CollaborativeXR.StandardHologram("sun",
+          CollaborativeXR.StandardShape.Sphere, creationOptions, sunPosition,
+          sunRotation, color);
+  await scene.addStandardHologram(sun);
+
+  const nRowsMenu = 1
+  const nearMenuPosition = new CollaborativeXR.Vector3(-1.2, 0.4, 1.2);
+  const nearMenu = new CollaborativeXR.NearMenu(nearMenuPosition, nRowsMenu);
+  const button1 = new CollaborativeXR.Button("button1", "Morning");
+  button1.setOnPointerDownCallback(() =>{
+    sun.color = "#ffff00"
+  });
+  const button2 = new CollaborativeXR.Button("button2", "Evening");
+  button2.setOnPointerDownCallback(() =>{
+    sun.color = "#ff8c00"
+  });
+  const button3 = new CollaborativeXR.Button("button3", "Sunset");
+  button3.setOnPointerDownCallback(() =>{
+    sun.color = "#ff4400"
+  });
+
+  nearMenu.addButton(button1);
+  nearMenu.addButton(button2);
+  nearMenu.addButton(button3);
+  scene.addNearMenu(nearMenu);
+
+  const backGroundTreeRotation = new CollaborativeXR.Quaternion(0,0,0,0);
+  const backgroundTreeScaling = new CollaborativeXR.Vector3(0.5,0.5,0.5);
+
+  const backGroundTreePosition1 = new CollaborativeXR.Vector3(0.4, 0.2, 2.5);
+  const backGroundTree1 = new CollaborativeXR.ImportedHologram("tree1", "./importedMesh/old_tree/scene.gltf", backGroundTreePosition1, backGroundTreeRotation,
+          backgroundTreeScaling);
+  //await scene.addImportedHologram(backGroundTree1);
+
+  const backGroundTreePosition2 = new CollaborativeXR.Vector3(-0.8, 0.2, 2.5);
+  const backGroundTree2 = new CollaborativeXR.ImportedHologram("tree2", "./importedMesh/old_tree/scene.gltf", backGroundTreePosition2, backGroundTreeRotation,
+          backgroundTreeScaling);
+  //await scene.addImportedHologram(backGroundTree2);
+
+  const lionRotation = new CollaborativeXR.Quaternion(0, 1, 0, 0);
+  const lionScaling = new CollaborativeXR.Vector3(3,3,3);
+  const lionPosition = new CollaborativeXR.Vector3(0.2, 0, 1.2);
+  const lion = new CollaborativeXR.ImportedHologram("lion", "./importedMesh/lion/scene.gltf", lionPosition, lionRotation, lionScaling);
+  await scene.addImportedHologram(lion);
+
+  const lionManipulatorPosition = new CollaborativeXR.Vector3(0.2, 0.8, 1.2)
+  const lionManipulatorMenu = new CollaborativeXR.ManipulatorMenu(lionManipulatorPosition,
+          "lion");
+  scene.addManipulatorMenu(lionManipulatorMenu);
+
+  const tigerRotation = new CollaborativeXR.Quaternion(0, 1, 0, 0);
+  const tigerScaling = new CollaborativeXR.Vector3(0.3,0.3,0.3);
+  const tigerPosition = new CollaborativeXR.Vector3(-0.6, 0, 1.2);
+  const tiger = new CollaborativeXR.ImportedHologram("tiger", "./importedMesh/tiger/scene.gltf", tigerPosition, tigerRotation, tigerScaling);
+  await scene.addImportedHologram(tiger);
+
+  const tigerManipulatorPosition = new CollaborativeXR.Vector3(-0.6, 0.8, 1.2)
+  const tigerManipulatorMenu = new CollaborativeXR.ManipulatorMenu(tigerManipulatorPosition,
+          "tiger");
+  scene.addManipulatorMenu(tigerManipulatorMenu);
+
+  scene.activateRenderLoop();
+</script>
+</body>
+</html>
