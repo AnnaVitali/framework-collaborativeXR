@@ -1624,6 +1624,7 @@ class SynchronizedVariableModel extends Croquet.Model {
 }
 SynchronizedVariableModel.register("SynchronizedVariableModel");
 export { SynchronizedVariableModel };
+
 const MAX_EVENT_FOR_SECOND = 20;
 const REFERENCE_TIME_EVENT = 1000;
 
@@ -1656,6 +1657,7 @@ class HologramView extends Croquet.View{
     this.sceneManager.GUIManager.addControl(manipulatorNearMenu);
     manipulatorNearMenu.isPinned = true;
 
+    this.sceneManager.hologramRenders.get(hologramName).initializeElementManipulation();
     manipulatorNearMenu.parent = this.sceneManager.hologramRenders.get(hologramName).mesh;
     manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
 

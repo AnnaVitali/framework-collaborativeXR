@@ -15,10 +15,12 @@ class HologramRenderer{
         this.mesh = null;
         this.scene = scene;
         this.isUserManipulating = false;
-        this.#initializeElementManipulation();
     }
 
-    #initializeElementManipulation(){
+    /**
+     * Initialize the element to allow the user to manipulate the hologram.
+     */
+    initializeElementManipulation(){
         this.utilityLayer = new BABYLON.UtilityLayerRenderer(this.scene);
         this.utilityLayer.utilityLayerScene.autoClearDepthAndStencil = false;
 
