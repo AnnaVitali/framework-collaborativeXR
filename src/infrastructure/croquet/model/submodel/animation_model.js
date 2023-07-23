@@ -30,7 +30,7 @@ class AnimationModel extends Croquet.Model{
             console.log("A-MODEL: " + message);
         }
     }
-}
+} 
 
 AnimationModel.register("AnimationModel");
 

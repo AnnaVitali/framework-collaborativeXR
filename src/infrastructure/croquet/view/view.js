@@ -109,6 +109,4 @@ class RootView extends Croquet.View {
     }
 }
 
-
-
-export { RootView };
+export { RootView }

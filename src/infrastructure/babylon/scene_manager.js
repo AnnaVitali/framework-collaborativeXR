@@ -134,4 +134,4 @@ class SceneManager{
     }
 }
 
-export {SceneManager}
+export {SceneManager} 

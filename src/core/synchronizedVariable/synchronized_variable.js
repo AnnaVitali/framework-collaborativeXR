@@ -43,6 +43,6 @@ class SynchronizedVariable{
     get value() {
         return this._value;
     }
-}
+} 
 
 export {SynchronizedVariable}

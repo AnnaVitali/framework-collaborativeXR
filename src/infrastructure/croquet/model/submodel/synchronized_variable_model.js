@@ -57,7 +57,7 @@ class SynchronizedVariableModel extends Croquet.Model{
             "CroquetSynchronizedVariable": SynchronizedVariableClone,
         };
     }
-}
+} 
 
 SynchronizedVariableModel.register("SynchronizedVariableModel");
 

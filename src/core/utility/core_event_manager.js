@@ -62,7 +62,7 @@ class CoreEventManager{
         });
 
     }
-}
+} 
 
 const coreEventManager = new CoreEventManager();
 
