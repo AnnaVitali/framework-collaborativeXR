@@ -131,12 +131,19 @@ class HologramView extends Croquet.View{
         this.#setDefaultControlButtonBehavior(data.hologramName, hologramControls.y);
     }
 
+    /**
+     * Set a tick for sending event. Is better to send only 20 events for seconds.
+     */
+    clockEventTick(){
+        this.timeElapsed = true;
+    }
+
     #setOtherUserInControlBehaviorControlButton(controlButton){
         controlButton.frontMaterial.alphaMode = BABYLON.Engine.ALPHA_ONEONE;
         controlButton.frontMaterial.albedoColor = BABYLON.Color3.Red();
         controlButton.backMaterial.albedoColor = new BABYLON.Color3(0.67, 0.29, 0.29);
 
-        controlButton.imageUrl = "../../img/IconClose.png";
+        controlButton.imageUrl = "https://github.com/AnnaVitali/framework-collaborativeXR/blob/master/img/IconClose.png";
         controlButton.onPointerDownObservable.clear();
     }
 
@@ -155,7 +162,7 @@ class HologramView extends Croquet.View{
         controlButton.frontMaterial.albedoColor = BABYLON.Color3.Blue();
         controlButton.backMaterial.albedoColor = new BABYLON.Color3(0.29, 0.37, 0.67);
         controlButton.text = "Manipulate";
-        controlButton.imageUrl = "../../img/IconAdjust.png";
+        controlButton.imageUrl = "https://github.com/AnnaVitali/framework-collaborativeXR/blob/master/img/IconAdjust.png";
         controlButton.onPointerDownObservable.clear();
 
         controlButton.onPointerDownObservable.add(() => {
@@ -189,13 +196,6 @@ class HologramView extends Croquet.View{
             this.#setManipulatingBehaviourControlButton(hologramName, controlButton);
             this.publish("hologramManipulator", "showUserManipulation", {view: this.viewId, hologramName: hologramName})
         });
-    }
-
-    /**
-     * Set a tick for sending event. Is better to send only 20 events for seconds.
-     */
-    clockEventTick(){
-        this.timeElapsed = true;
     }
 
     #serializeDataPosition(hologramName, hologramRender){
