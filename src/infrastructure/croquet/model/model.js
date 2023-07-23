@@ -29,7 +29,6 @@ class RootModel extends Croquet.Model {
      */
     viewJoin(viewId){
         this.#log("received view join");
-        console.log(this.linkedViews);
         this.linkedViews.push(viewId);
     }
 
@@ -43,7 +42,6 @@ class RootModel extends Croquet.Model {
 
         if(viewId === this.viewInCharge){
             this.viewInCharge = this.linkedViews[0];
-            console.log(this.viewInCharge)
             this.publish(this.viewInCharge, "setUpdate");
         }
     }
@@ -91,7 +89,7 @@ class RootModel extends Croquet.Model {
 
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("MODEL: " + message);
         }

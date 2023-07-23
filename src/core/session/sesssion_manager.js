@@ -61,9 +61,9 @@ class SessionManager {
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
-            console.log(message);
+            console.log("SESSION-MANAGER:" + message);
         }
     }
 } 

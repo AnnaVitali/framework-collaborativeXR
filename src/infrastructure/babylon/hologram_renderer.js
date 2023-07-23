@@ -15,6 +15,16 @@ class HologramRenderer{
         this.mesh = null;
         this.scene = scene;
         this.isUserManipulating = false;
+        this.#initializeElementManipulation();
+    }
+
+    #initializeElementManipulation(){
+        this.utilityLayer = new BABYLON.UtilityLayerRenderer(this.scene);
+        this.utilityLayer.utilityLayerScene.autoClearDepthAndStencil = false;
+
+        this.sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
+        this.sixDofDragBehavior.dragDeltaRatio = 1;
+        this.sixDofDragBehavior.zDragFactor = 1;
     }
 
     /**
@@ -44,7 +54,7 @@ class HologramRenderer{
                 container.meshes[0].scaling = scaling;
 
                 this.mesh = container.meshes[0];
-
+                this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
                 infrastructureEventManager.sendEvent("importedHologramCreated" + hologram.name, "");
             }catch(error){
                 this.#log("ERROR " + error);
@@ -68,6 +78,7 @@ class HologramRenderer{
         this.mesh.rotate(BABYLON.Axis.Y, euler.y);
         this.mesh.rotate(BABYLON.Axis.Z, euler.z);
         this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(hologram._color);
+        this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
 
         infrastructureEventManager.sendEvent("standardHologramCreated" + hologram.name, "");
     }
@@ -77,16 +88,12 @@ class HologramRenderer{
      */
     showOtherUserManipulation(){
         this.isUserManipulating = true;
-        this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
+        //this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
 
-        const utilLayer = new BABYLON.UtilityLayerRenderer(this.scene);
-        utilLayer.utilityLayerScene.autoClearDepthAndStencil = false;
-
-        this.gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FF0000"), utilLayer);
+        this.gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FF0000"), this.utilityLayer);
         this.gizmo.rotationSphereSize = 0;
         this.gizmo.scaleBoxSize = 0;
         this.gizmo.attachedMesh = this.boundingBox;
-
     }
 
     /**
@@ -94,19 +101,11 @@ class HologramRenderer{
      */
     addHologramManipulator(){
         this.isUserManipulating = true;
-        this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
 
-        const utilLayer = new BABYLON.UtilityLayerRenderer(this.scene)
-        utilLayer.utilityLayerScene.autoClearDepthAndStencil = false;
-
-        this.gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FBFF00"), utilLayer)
+        this.gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FBFF00"), this.utilityLayer)
         this.gizmo.rotationSphereSize = 0;
         this.gizmo.scaleBoxSize = 0.03;
         this.gizmo.attachedMesh = this.boundingBox;
-
-        this.sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
-        this.sixDofDragBehavior.dragDeltaRatio = 1;
-        this.sixDofDragBehavior.zDragFactor = 1;
 
         this.boundingBox.addBehavior(this.sixDofDragBehavior);
     }
@@ -117,8 +116,8 @@ class HologramRenderer{
     removeHologramManipulator(){
         this.gizmo.attachedMesh = null;
         this.gizmo.dispose();
-        this.boundingBox.getChildren().forEach(child => child.setParent(null));
-        this.boundingBox.dispose;
+        this.gizmo = null;
+        this.boundingBox.removeBehavior(this.sixDofDragBehavior);
     }
 
     /**
@@ -204,7 +203,7 @@ class HologramRenderer{
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("H-RENDERER: " + message);
         }

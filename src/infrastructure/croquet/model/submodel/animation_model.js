@@ -25,7 +25,7 @@ class AnimationModel extends Croquet.Model{
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("A-MODEL: " + message);
         }

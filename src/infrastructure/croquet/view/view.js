@@ -64,7 +64,6 @@ class RootView extends Croquet.View {
      */
     addNearMenu(menuRows, menuPosition, buttonList){
         const holographicButtonList = this.sceneManager.addNearMenu(menuPosition, menuRows, buttonList);
-        console.log(holographicButtonList);
         holographicButtonList.forEach(button => {
             button.onPointerDownObservable.add(() => {
                 eventBus.emit(button.name, "");
@@ -102,7 +101,7 @@ class RootView extends Croquet.View {
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("VIEW: " + message);
         }

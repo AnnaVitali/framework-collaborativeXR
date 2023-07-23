@@ -123,7 +123,7 @@ class Scene{
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("SCENE: " + message);
         }

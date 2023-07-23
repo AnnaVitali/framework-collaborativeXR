@@ -27,10 +27,8 @@ class SceneManager{
         camera.attachControl(canvas, true);
         camera.inputs.addMouseWheel();
 
-
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
         light.intensity = 1;
-
 
         this.GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
         this.GUIManager.useRealisticScaling = true;
@@ -52,11 +50,9 @@ class SceneManager{
      */
     addStandardHologram(hologram){
         this.#log("addStandardHologram");
-        console.log(hologram)
         const hologramRender = new HologramRenderer(this.scene);
         hologramRender.renderStandardHologram(hologram);
         this.hologramRenders.set(hologram.name, hologramRender);
-        console.log(this.hologramRenders)
     }
 
     /**
@@ -127,7 +123,7 @@ class SceneManager{
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("SCENE MANAGER: " + message);
         }

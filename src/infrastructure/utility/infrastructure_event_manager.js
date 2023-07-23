@@ -54,7 +54,6 @@ class InfrastructureEventManager{
 
         eventBus.on("createSynchronizedVariable", (data)=>{
             this.#log("create synchronized variable")
-            console.log(data);
            this.view.notifyEventToModel("create", "synchronizedVariable", JSON.parse(data));
         });
 
@@ -63,8 +62,6 @@ class InfrastructureEventManager{
             const object = JSON.parse(data);
             const hologramName = object.name;
             const menuPosition = object.position;
-
-            console.log(hologramName);
 
             this.view.hologramView.addManipulatorMenu(hologramName, menuPosition);
         });
@@ -111,7 +108,7 @@ class InfrastructureEventManager{
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("I-EVENT: " + message);
         }

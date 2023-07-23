@@ -1,5 +1,8 @@
 import {Triple} from "../../../utility/triple.js";
 
+const MAX_EVENT_FOR_SECOND = 20;
+const REFERENCE_TIME_EVENT = 1000;
+
 /**
  * Class that represents a View in charge of handling the rendering aspects of the holograms.
  */
@@ -24,7 +27,6 @@ class HologramView extends Croquet.View{
      * @param menuPosition {Vector3} the positionSphere1 of the menu in space.
      */
     addManipulatorMenu(hologramName, menuPosition) {
-        console.log()
         const manipulatorNearMenu = new BABYLON.GUI.NearMenu("NearMenu");
         manipulatorNearMenu.rows = 1;
         this.sceneManager.GUIManager.addControl(manipulatorNearMenu);
@@ -159,12 +161,25 @@ class HologramView extends Croquet.View{
         controlButton.onPointerDownObservable.add(() => {
             this.#log("clicked");
             this.#notifyUserStartManipulating(hologramName);
-            this.publish("hologramManipulator", "showUserManipulation", {view: this.viewId, hologramName: hologramName});
             const hologramRender = this.sceneManager.hologramRenders.get(hologramName);
             hologramRender.addHologramManipulator();
+            let eventCount = 0;
+            this.timeElapsed = false;
+            let isClockSet = false;
 
             hologramRender.sixDofDragBehavior.onPositionChangedObservable.add(() => {
-                this.publish("hologramManipulation", "positionChanged", this.#serializeDataPosition(hologramName, hologramRender));
+                eventCount += 1;
+                if(!isClockSet){
+                    this.future(REFERENCE_TIME_EVENT).clockEventTick();
+                    isClockSet = true;
+                }
+                if(eventCount < MAX_EVENT_FOR_SECOND && !this.timeElapsed) {
+                    this.publish("hologramManipulation", "positionChanged", this.#serializeDataPosition(hologramName, hologramRender));
+                }else if(this.timeElapsed){
+                    isClockSet = false;
+                    this.timeElapsed = false;
+                    eventCount = 0;
+                }
             });
 
             hologramRender.gizmo.onScaleBoxDragObservable.add(() => {
@@ -172,7 +187,15 @@ class HologramView extends Croquet.View{
             });
 
             this.#setManipulatingBehaviourControlButton(hologramName, controlButton);
+            this.publish("hologramManipulator", "showUserManipulation", {view: this.viewId, hologramName: hologramName})
         });
+    }
+
+    /**
+     * Set a tick for sending event. Is better to send only 20 events for seconds.
+     */
+    clockEventTick(){
+        this.timeElapsed = true;
     }
 
     #serializeDataPosition(hologramName, hologramRender){
@@ -212,7 +235,6 @@ class HologramView extends Croquet.View{
     }
 
     showCurrentManipulation(){
-        console.log(this.model.hologramInUserControl);
         this.model.hologramInUserControl.forEach((v, k)=>{
             this.sceneManager.hologramRenders.get(k).showOtherUserManipulation();
             this.freezeControlButton({hologramName: k});
@@ -235,7 +257,7 @@ class HologramView extends Croquet.View{
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("H-VIEW: " + message);
         }

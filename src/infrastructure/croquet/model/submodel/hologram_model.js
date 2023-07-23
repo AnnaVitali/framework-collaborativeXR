@@ -2,6 +2,7 @@ import {StandardHologramClone} from "../../../hologram/standard_hologram_clone.j
 import {ImportedHologramClone} from "../../../hologram/imported_hologram_clone.js";
 import {infrastructureEventManager} from "../../../utility/infrastructure_event_manager.js";
 import {Vector3} from "../../../../utility/vector3.js";
+import {Quaternion} from "../../../../utility/quaternion.js";
 
 /**
  * Class that represents a model for the holograms in the scene.
@@ -30,7 +31,6 @@ class HologramModel extends Croquet.Model {
      */
     viewJoin(viewId){
         this.#log("received view join");
-        console.log(this.linkedViews);
         this.linkedViews.push(viewId);
     }
 
@@ -42,7 +42,6 @@ class HologramModel extends Croquet.Model {
         this.#log("received view left");
         const values = [...this.hologramInUserControl.values()]
         this.linkedViews.splice(this.linkedViews.indexOf(viewId),1);
-        console.log(this.linkedViews);
 
         if(values.includes(viewId)){
             this.hologramInUserControl.forEach((v, k)=>{
@@ -222,7 +221,7 @@ class HologramModel extends Croquet.Model {
     }
 
     #log(message){
-        const debug = true;
+        const debug = false;
         if(debug){
             console.log("H-MODEL: " + message);
         }
@@ -232,6 +231,8 @@ class HologramModel extends Croquet.Model {
         return {
             "CroquetStandardHologram": StandardHologramClone,
             "CroquetImportedHologram": ImportedHologramClone,
+            "Vector3": Vector3,
+            "Quaternion": Quaternion,
         };
     }
 } 
