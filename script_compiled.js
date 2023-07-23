@@ -119,7 +119,7 @@ class Animation {
     }
   }
 }
-
+export {Animation}
 
 /**
  * Class representing a Button that can be added to a menu.

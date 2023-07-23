@@ -10,44 +10,35 @@
 </head>
 <body>
 <script type="module">
-    import {SessionManager} from "../../src/core/session/sesssion_manager.js";
-    import {Scene} from "../../src/core/scene/scene.js";
-    import {ImportedHologram} from "../../src/core/hologram/imported_hologram.js";
-    import {Vector3} from "../../src/utility/vector3.js";
-    import {Quaternion} from "../../src/utility/quaternion.js";
-    import {ManipulatorMenu} from "../../src/core/gui/menu/maniuplator_menu.js";
-    import {StandardHologram} from "../../src/core/hologram/standard_hologram.js";
-    import {StandardShape} from "../../src/core/hologram/enum/standard_shape.js";
-    import {Button} from "../../src/core/gui/button.js";
-    import {NearMenu} from "../../src/core/gui/menu/near_menu.js";
+    import * as CollaborativeXR from "../../collaborativeXR.min.js"
 
     const apiKey = '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.microverse';
 
-    const sessionManager = new SessionManager();
+    const sessionManager = new CollaborativeXR.SessionManager();
     await sessionManager.startSession(apiKey, appId);
-    const scene = new Scene(sessionManager);
+    const scene = new CollaborativeXR.Scene(sessionManager);
     scene.initializeScene();
 
-    const animatedRobotRotation = new Quaternion(0, 1, 0, 0);
-    const animatedRobotScaling = new Vector3(0.005, 0.005, 0.005);
-    const animatedRobotPosition = new Vector3(0.2, 0.2, 1.2);
-    const robot1 = new ImportedHologram("robot1", "./importedMesh/animated_robot/scene.gltf", animatedRobotPosition, animatedRobotRotation, animatedRobotScaling);
+    const animatedRobotRotation = new CollaborativeXR.Quaternion(0, 1, 0, 0);
+    const animatedRobotScaling = new CollaborativeXR.Vector3(0.005, 0.005, 0.005);
+    const animatedRobotPosition = new CollaborativeXR.Vector3(0.2, 0.2, 1.2);
+    const robot1 = new CollaborativeXR.ImportedHologram("robot1", "./importedMesh/animated_robot/scene.gltf", animatedRobotPosition, animatedRobotRotation, animatedRobotScaling);
     await scene.addImportedHologram(robot1);
 
-    const animatedRobotManipulatorPosition = new Vector3(0.5, 0.8, 1.2)
-    const animatedRobotManipulatorMenu = new ManipulatorMenu(animatedRobotManipulatorPosition,
+    const animatedRobotManipulatorPosition = new CollaborativeXR.Vector3(0.5, 0.8, 1.2)
+    const animatedRobotManipulatorMenu = new CollaborativeXR.ManipulatorMenu(animatedRobotManipulatorPosition,
         "robot1");
     scene.addManipulatorMenu(animatedRobotManipulatorMenu);
 
-    const blueRobotRotation = new Quaternion(0, 1, 0, 0);
-    const blueRobotScaling = new Vector3(0.5, 0.5, 0.5);
-    const blueRobotPosition = new Vector3(-0.6, 1, 1.2);
-    const robot2 = new ImportedHologram("robot2", "./importedMesh/yellow_robot/scene.gltf", blueRobotPosition, blueRobotRotation, blueRobotScaling);
+    const yellowRobotRotation = new CollaborativeXR.Quaternion(0, 1, 0, 0);
+    const yellowRobotScaling = new CollaborativeXR.Vector3(0.5, 0.5, 0.5);
+    const yellowRobotPosition = new CollaborativeXR.Vector3(-0.6, 1, 1.2);
+    const robot2 = new CollaborativeXR.ImportedHologram("robot2", "./importedMesh/yellow_robot/scene.gltf", yellowRobotPosition, yellowRobotRotation, yellowRobotScaling);
     await scene.addImportedHologram(robot2);
 
-    const blueRobotManipulatorPosition = new Vector3(-1, 1, 1.2)
-    const blueRobotManipulatorMenu = new ManipulatorMenu(blueRobotManipulatorPosition,
+    const blueRobotManipulatorPosition = new CollaborativeXR.Vector3(-1, 1, 1.2)
+    const blueRobotManipulatorMenu = new CollaborativeXR.ManipulatorMenu(blueRobotManipulatorPosition,
         "robot2");
     scene.addManipulatorMenu(blueRobotManipulatorMenu);
 

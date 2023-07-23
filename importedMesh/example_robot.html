@@ -36,9 +36,9 @@
           "robot1");
   scene.addManipulatorMenu(animatedRobotManipulatorMenu);
 
-  const blueRobotRotation = new Quaternion(0, 1, 0, 0);
-  const blueRobotScaling = new Vector3(0.5, 0.5, 0.5);
-  const blueRobotPosition = new Vector3(-0.6, 1, 1.2);
+  const yellowRobotRotation = new Quaternion(0, 1, 0, 0);
+  const yellowRobotScaling = new Vector3(0.5, 0.5, 0.5);
+  const yellowRobotPosition = new Vector3(-0.6, 1, 1.2);
   const robot2 = new ImportedHologram("robot2", "./importedMesh/yellow_robot/scene.gltf", blueRobotPosition, blueRobotRotation, blueRobotScaling);
   await scene.addImportedHologram(robot2);
 
