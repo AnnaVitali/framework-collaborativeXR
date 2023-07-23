@@ -57,12 +57,12 @@
   const backGroundTreePosition1 = new CollaborativeXR.Vector3(0.4, 0.2, 2.5);
   const backGroundTree1 = new CollaborativeXR.ImportedHologram("tree1", "./importedMesh/old_tree/scene.gltf", backGroundTreePosition1, backGroundTreeRotation,
           backgroundTreeScaling);
-  //await scene.addImportedHologram(backGroundTree1);
+  await scene.addImportedHologram(backGroundTree1);
 
   const backGroundTreePosition2 = new CollaborativeXR.Vector3(-0.8, 0.2, 2.5);
   const backGroundTree2 = new CollaborativeXR.ImportedHologram("tree2", "./importedMesh/old_tree/scene.gltf", backGroundTreePosition2, backGroundTreeRotation,
           backgroundTreeScaling);
-  //await scene.addImportedHologram(backGroundTree2);
+  await scene.addImportedHologram(backGroundTree2);
 
   const lionRotation = new CollaborativeXR.Quaternion(0, 1, 0, 0);
   const lionScaling = new CollaborativeXR.Vector3(3,3,3);
