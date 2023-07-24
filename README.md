@@ -14,9 +14,9 @@ The dependencies that the framework presents are reported in the following table
 | Babylon.loaders | https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js|
 |                 |                                                           |
 
-## Usage
+## Template
 
-Inside the `index.html` file there is an initial template with which start to write your applications, of which the main part is reported below.
+Inside the `/html/template.html` file there is an initial template with which start to write your applications, of which the main part is reported below.
 
 1. First you need to get an apikey is an appid through the portal of Croquet (https://croquet.io/account/)
 2. Start a session
@@ -25,37 +25,41 @@ Inside the `index.html` file there is an initial template with which start to wr
 5. Activate the render loop
 
 ```javascript
+    import * as CollaborativeXR from "../collaborativeXR.min.js"
+
     const apiKey =  'yourApiKey';
     const appId = 'yourAppId';
-
-    const sessionManager = new SessionManager();
+    
+    const sessionManager = new CollaborativeXR.SessionManager();
     await sessionManager.startSession(apiKey, appId);
-    const scene = new Scene(sessionManager);
+    const scene = new CollaborativeXR.Scene(sessionManager);
     scene.initializeScene();
-
+    
     //here the code of your application
-
+    
     scene.activateRenderLoop();
 ```
 
-## Example
+To see the results use the server pre-set in the file `app.js` setting the *ip* address and the reference *port*, then 
+execute these commands for generating a certificate to be assigned to the site.
 
-Moving on the _example_ branch, you will have the opportunity to see some application examples made through the framework.
+```bash
+openssl genrsa -out private_key.pem
+```
+```bash
+openssl req -new -key private_key.pem -out csr.pem
+```
+```bash
+openssl x509 -req -days 9999 -in csr.pem -signkey private_key.pem -out cert.pem
+```
 
-### Simple Animation
-
-Inside the file `example_animation.html`, you can find out how to create simple holograms and associate them with an animation that is started and stopped via a menu.
-
-![Alt Text](gif/animation.gif)
-
-### Hologram Manipulation
-
-Inside the file `example_robot.html` you can find out how to import holograms defined by a file in `.gltf` format, and how to associate to them a manipulator menu that allows you to move and scale them.
-
-![Alt Text](gif/robot.gif)
-
-### Simple Application
-
-Inside the file `example_animal.html` you can find out how to make a simple application consisting of both imported holograms and simple holograms, allow their manipulation, and create GUI for user interaction.
-
-![Alt Text](gif/animal.gif)
+Once you have created the certificate you can launch the application by running the following commands:
+```bash
+npm init
+```
+```bash
+npm install express
+```
+```bash
+node app.js
+```
