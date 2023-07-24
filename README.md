@@ -14,9 +14,9 @@ The dependencies that the framework presents are reported in the following table
 | Babylon.loaders | https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js|
 |                 |                                                           |
 
-## Usage
+## Application template
 
-Inside the `index.html` file there is an initial template with which start to write your applications, of which the main part is reported below.
+Moving to the branch [_applicationTemplate_](https://github.com/AnnaVitali/framework-collaborativeXR/blob/applicationTemplate/README.md) inside the `html/template.html` file there is an initial template with which start to write your applications, of which the main part is reported below.
 
 1. First you need to get an apikey is an appid through the portal of Croquet (https://croquet.io/account/)
 2. Start a session
@@ -25,22 +25,24 @@ Inside the `index.html` file there is an initial template with which start to wr
 5. Activate the render loop
 
 ```javascript
-    const apiKey =  'yourApiKey';
-    const appId = 'yourAppId';
+        import * as CollaborativeXR from "../collaborativeXR.min.js"
 
-    const sessionManager = new SessionManager();
-    await sessionManager.startSession(apiKey, appId);
-    const scene = new Scene(sessionManager);
-    scene.initializeScene();
-
-    //here the code of your application
-
-    scene.activateRenderLoop();
+        const apiKey =  'yourApiKey';
+        const appId = 'yourAppId';
+        
+        const sessionManager = new CollaborativeXR.SessionManager();
+        await sessionManager.startSession(apiKey, appId);
+        const scene = new CollaborativeXR.Scene(sessionManager);
+        scene.initializeScene();
+        
+        //here the code of your application
+        
+        scene.activateRenderLoop();
 ```
 
 ## Example
 
-Moving on the _example_ branch, you will have the opportunity to see some application examples made through the framework.
+Moving on the [_example_](https://github.com/AnnaVitali/framework-collaborativeXR/blob/example/README.md) branch, you will have the opportunity to see some application examples made through the framework.
 
 ### Simple Animation
 
