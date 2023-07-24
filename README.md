@@ -1,6 +1,6 @@
 # CollaborativeXR - Framework
 
-This repository contains an experimental framework for the realization of shared experiences of eXtended Reality.
+This repository contains an experimental framework for the realization of shared experiences in eXtended Reality.
 
 ## Dependencies
 
