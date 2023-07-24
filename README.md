@@ -25,7 +25,7 @@ Inside the `src/html/template.html` file there is an initial template with which
 5. Activate the render loop
 
 ```javascript
-    import * as CollaborativeXR from "../collaborativeXR.min.js"
+    import * as CollaborativeXR from "../../collaborativeXR.min.js"
 
     const apiKey =  'yourApiKey';
     const appId = 'yourAppId';
