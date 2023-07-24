@@ -46,18 +46,18 @@ In this branch you can experiment with a series of examples that show the functi
 
 ### Simple Animation
 
-Inside the file `example_animation.html`, you can find out how to create simple holograms and associate them with an animation that is started and stopped via a menu.
+Inside the file `src/html/example_animation.html`, you can find out how to create simple holograms and associate them with an animation that is started and stopped via a menu.
 
 ![Alt Text](gif/animation.gif)
 
 ### Hologram Manipulation
 
-Inside the file `example_robot.html` you can find out how to import holograms defined by a file in `.gltf` format, and how to associate to them a manipulator menu that allows you to move and scale them.
+Inside the file `src/html/example_robot.html` you can find out how to import holograms defined by a file in `.gltf` format, and how to associate to them a manipulator menu that allows you to move and scale them.
 
 ![Alt Text](gif/robot.gif)
 
 ### Simple Application
 
-Inside the file `example_animal.html` you can find out how to make a simple application consisting of both imported holograms and simple holograms, allow their manipulation, and create GUI for user interaction.
+Inside the file `src/html/example_animal.html` you can find out how to make a simple application consisting of both imported holograms and simple holograms, allow their manipulation, and create GUI for user interaction.
 
 ![Alt Text](gif/animal.gif)
