@@ -30,6 +30,9 @@ class SceneManager{
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
         light.intensity = 1;
 
+        this.utilityLayer = new BABYLON.UtilityLayerRenderer(this.scene);
+        this.utilityLayer.utilityLayerScene.autoClearDepthAndStencil = false;
+
         this.GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
         this.GUIManager.useRealisticScaling = true;
     }
@@ -50,7 +53,7 @@ class SceneManager{
      */
     addStandardHologram(hologram){
         this.#log("addStandardHologram");
-        const hologramRender = new HologramRenderer(this.scene);
+        const hologramRender = new HologramRenderer(this.scene, this.utilityLayer);
         hologramRender.renderStandardHologram(hologram);
         this.hologramRenders.set(hologram.name, hologramRender);
     }
@@ -61,7 +64,7 @@ class SceneManager{
      */
     addImportedHologram(hologram){
         this.#log("addImportedHologram");
-        const hologramRender = new HologramRenderer(this.scene);
+        const hologramRender = new HologramRenderer(this.scene, this.utilityLayer);
         hologramRender.renderImportedHologram(hologram);
         this.hologramRenders.set(hologram.name, hologramRender);
     }

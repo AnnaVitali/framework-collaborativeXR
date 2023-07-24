@@ -10,10 +10,12 @@ class HologramRenderer{
     /**
      * Constructor of the class.
      * @param scene {BABYLON.Scene} the scene of reference.
+     * @param utilityLayer {BABYLON.UtilityLayerRenderer} the utility layer of reference.
      */
-    constructor(scene) {
+    constructor(scene, utilityLayer) {
         this.mesh = null;
         this.scene = scene;
+        this.utilityLayer = utilityLayer
         this.isUserManipulating = false;
     }
 
@@ -21,9 +23,7 @@ class HologramRenderer{
      * Initialize the element to allow the user to manipulate the hologram.
      */
     initializeElementManipulation(){
-        this.utilityLayer = new BABYLON.UtilityLayerRenderer(this.scene);
-        this.utilityLayer.utilityLayerScene.autoClearDepthAndStencil = false;
-
+        this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
         this.sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
         this.sixDofDragBehavior.dragDeltaRatio = 1;
         this.sixDofDragBehavior.zDragFactor = 1;
@@ -56,7 +56,6 @@ class HologramRenderer{
                 container.meshes[0].scaling = scaling;
 
                 this.mesh = container.meshes[0];
-                this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
                 infrastructureEventManager.sendEvent("importedHologramCreated" + hologram.name, "");
             }catch(error){
                 this.#log("ERROR " + error);
@@ -80,7 +79,6 @@ class HologramRenderer{
         this.mesh.rotate(BABYLON.Axis.Y, euler.y);
         this.mesh.rotate(BABYLON.Axis.Z, euler.z);
         this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(hologram._color);
-        this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
 
         infrastructureEventManager.sendEvent("standardHologramCreated" + hologram.name, "");
     }
@@ -110,6 +108,7 @@ class HologramRenderer{
         this.gizmo.attachedMesh = this.boundingBox;
 
         this.boundingBox.addBehavior(this.sixDofDragBehavior);
+        console.log(this.sixDofDragBehavior);
     }
 
     /**

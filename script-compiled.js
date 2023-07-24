@@ -176,6 +176,7 @@ class Button {
   }
 }
 export { Button };
+
 /**
  * Class representing a menu that can be added to the scene.
  */
@@ -197,6 +198,7 @@ class Menu {
   }
 }
 export { Menu };
+
 /**
  * Class representing a Menu that allow to manipulate an hologram.
  */
@@ -216,6 +218,7 @@ class ManipulatorMenu extends Menu {
   }
 }
 export { ManipulatorMenu };
+
 
 /**
  * Class that represent a menu that can follow the user.
@@ -850,6 +853,7 @@ class SynchronizedElementUpdater {
 const synchronizedElementUpdater = new SynchronizedElementUpdater();
 export { synchronizedElementUpdater };
 
+
 /**
  * Class in charge of the graphic rendering of the hologram
  */
@@ -857,10 +861,12 @@ class HologramRenderer {
   /**
    * Constructor of the class.
    * @param scene {BABYLON.Scene} the scene of reference.
+   * @param utilityLayer {BABYLON.UtilityLayerRenderer} the utility layer of reference.
    */
-  constructor(scene) {
+  constructor(scene, utilityLayer) {
     this.mesh = null;
     this.scene = scene;
+    this.utilityLayer = utilityLayer;
     this.isUserManipulating = false;
   }
 
@@ -868,8 +874,7 @@ class HologramRenderer {
    * Initialize the element to allow the user to manipulate the hologram.
    */
   initializeElementManipulation() {
-    this.utilityLayer = new BABYLON.UtilityLayerRenderer(this.scene);
-    this.utilityLayer.utilityLayerScene.autoClearDepthAndStencil = false;
+    this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
     this.sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
     this.sixDofDragBehavior.dragDeltaRatio = 1;
     this.sixDofDragBehavior.zDragFactor = 1;
@@ -898,7 +903,6 @@ class HologramRenderer {
         container.meshes[0].position = position;
         container.meshes[0].scaling = scaling;
         this.mesh = container.meshes[0];
-        this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
         infrastructureEventManager.sendEvent("importedHologramCreated" + hologram.name, "");
       } catch (error) {
         this.#log("ERROR " + error);
@@ -920,7 +924,6 @@ class HologramRenderer {
     this.mesh.rotate(BABYLON.Axis.Y, euler.y);
     this.mesh.rotate(BABYLON.Axis.Z, euler.z);
     this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(hologram._color);
-    this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
     infrastructureEventManager.sendEvent("standardHologramCreated" + hologram.name, "");
   }
 
@@ -947,6 +950,7 @@ class HologramRenderer {
     this.gizmo.scaleBoxSize = 0.03;
     this.gizmo.attachedMesh = this.boundingBox;
     this.boundingBox.addBehavior(this.sixDofDragBehavior);
+    console.log(this.sixDofDragBehavior);
   }
 
   /**
@@ -1071,6 +1075,8 @@ class SceneManager {
     camera.inputs.addMouseWheel();
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
     light.intensity = 1;
+    this.utilityLayer = new BABYLON.UtilityLayerRenderer(this.scene);
+    this.utilityLayer.utilityLayerScene.autoClearDepthAndStencil = false;
     this.GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
     this.GUIManager.useRealisticScaling = true;
   }
@@ -1091,7 +1097,7 @@ class SceneManager {
    */
   addStandardHologram(hologram) {
     this.#log("addStandardHologram");
-    const hologramRender = new HologramRenderer(this.scene);
+    const hologramRender = new HologramRenderer(this.scene, this.utilityLayer);
     hologramRender.renderStandardHologram(hologram);
     this.hologramRenders.set(hologram.name, hologramRender);
   }
@@ -1102,7 +1108,7 @@ class SceneManager {
    */
   addImportedHologram(hologram) {
     this.#log("addImportedHologram");
-    const hologramRender = new HologramRenderer(this.scene);
+    const hologramRender = new HologramRenderer(this.scene, this.utilityLayer);
     hologramRender.renderImportedHologram(hologram);
     this.hologramRenders.set(hologram.name, hologramRender);
   }
