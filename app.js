@@ -3,8 +3,8 @@ const fs = require("fs");
 const express = require("express");
 const path = require("path");
 const app = express();
-const port = 3000;
-const host = '192.168.1.132'//webXR works only on https connection
+const port = 'your port number';
+const host = 'your ip address'//webXR works only on https connection
 
 https.createServer(
     {
