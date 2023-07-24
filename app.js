@@ -20,5 +20,5 @@ app.use("/", express.static(path.join(__dirname)));
 console.log("static path: " + path.join(__dirname));
 
 app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, '/html/test.html'));
+    res.sendFile(path.join(__dirname, 'src/html/template.html'));
 })

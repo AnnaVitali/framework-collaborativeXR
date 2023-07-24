@@ -16,7 +16,7 @@ The dependencies that the framework presents are reported in the following table
 
 ## Template
 
-Inside the `/html/template.html` file there is an initial template with which start to write your applications, of which the main part is reported below.
+Inside the `src/html/template.html` file there is an initial template with which start to write your applications, of which the main part is reported below.
 
 1. First you need to get an apikey is an appid through the portal of Croquet (https://croquet.io/account/)
 2. Start a session
