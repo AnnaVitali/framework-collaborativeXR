@@ -40,7 +40,7 @@ Inside the `/html/template.html` file there is an initial template with which st
     scene.activateRenderLoop();
 ```
 
-To see the results use the server pre-set in the file `app.js` setting the *ip* address and the reference *port*, then 
+To see the results use the server pre-set in the file `app.js` setting the **ip** address and the reference **port**, then 
 execute these commands for generating a certificate to be assigned to the site.
 
 ```bash
