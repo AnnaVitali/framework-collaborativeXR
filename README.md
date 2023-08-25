@@ -16,7 +16,7 @@ The dependencies that the framework presents are reported in the following table
 
 ## Application template
 
-Moving to the branch [_applicationTemplate_](https://github.com/AnnaVitali/framework-collaborativeXR/blob/applicationTemplate/README.md) inside the `src/html/template.html` file there is an initial template by which you can start to write your applications. The main part is reported below.
+Moving to the branch [_applicationTemplate_](https://github.com/AnnaVitali/framework-collaborativeXR/tree/applicationTemplate) inside the `src/html/template.html` file there is an initial template by which you can start to write your applications. The main part is reported below.
 
 1. Get an _apiKey_ and an _appId_ through the portal of Croquet (https://croquet.io/account/)
 2. Start a session
@@ -42,7 +42,7 @@ Moving to the branch [_applicationTemplate_](https://github.com/AnnaVitali/frame
 
 ## Example
 
-Moving on the [_example_](https://github.com/AnnaVitali/framework-collaborativeXR/blob/example/README.md) branch, you will have the opportunity to see some application examples made through the framework.
+Moving on the [_example_](https://github.com/AnnaVitali/framework-collaborativeXR/tree/example) branch, you will have the opportunity to see some application examples made through the framework.
 
 ### Simple Animation
 
