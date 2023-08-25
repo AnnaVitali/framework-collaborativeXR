@@ -1,9 +1,9 @@
 
-import {infrastructureEventManager} from "../../../utility/infrastructure_event_manager.js";
-import {Vector3} from "../../../../utility/vector3.js";
-import {Quaternion} from "../../../../utility/quaternion.js";
-import {ImportedHologram} from "../../../../core/hologram/imported_hologram.js";
-import {StandardHologram} from "../../../../core/hologram/standard_hologram.js";
+import {infrastructureEventManager} from "../../utility/infrastructure_event_manager.js";
+import {Vector3} from "../../../utility/vector3.js";
+import {Quaternion} from "../../../utility/quaternion.js";
+import {ImportedHologram} from "../../../core/hologram/imported_hologram.js";
+import {StandardHologram} from "../../../core/hologram/standard_hologram.js";
 
 /**
  * Class that represents a model for the holograms in the scene.

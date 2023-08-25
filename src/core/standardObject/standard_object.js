@@ -7,7 +7,7 @@ import {synchronizedElementUpdater} from "../utility/synchronized_element_update
 class StandardObject{
     /**
      * Constructor of the class.
-     * @param name {String} the name of the variable.
+     * @param name {String} the name of the object.
      * @param value the value to assign.
      */
     constructor(name, value) {
@@ -16,7 +16,7 @@ class StandardObject{
     }
 
     /**
-     * Set the value of the variable.
+     * Set the value of the object.
      * @param value
      */
     set value(value) {
@@ -28,6 +28,10 @@ class StandardObject{
 
     }
 
+    /**
+     * Change the value without synchronizing with the other users.
+     * @param value the new value.
+     */
     changeValueWithoutSync(value){
         this._value = value;
     }

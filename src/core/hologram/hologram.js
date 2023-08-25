@@ -68,7 +68,7 @@ class Hologram{
 
     /**
      * Set the positionSphere1 of the hologram.
-     * @param value the new positionSphere1.
+     * @param value the new position.
      */
     set position(value) {
         if(synchronizedElementUpdater.update) {
@@ -82,7 +82,7 @@ class Hologram{
 
     /**
      * Set the rotationSphere1 of the hologram.
-     * @param value the new rotationSphere1.
+     * @param value the new rotation.
      */
     set rotation(value) {
         if(synchronizedElementUpdater.update) {
@@ -94,14 +94,26 @@ class Hologram{
         }
     }
 
+    /**
+     * Change the scale without synchronizing with the other users.
+     * @param value the new scaling.
+     */
     changeScalingWithoutSync(value){
         this._scaling = value;
     }
 
+    /**
+     * Change the position without synchronizing with the other users.
+     * @param value the new position.
+     */
     changePositionWithoutSync(value){
         this._position = value;
     }
 
+    /**
+     * Change the rotation without synchronizing with the other users.
+     * @param value the new rotation.
+     */
     changeRotationWithoutSync(value){
         this._rotation = value;
     }

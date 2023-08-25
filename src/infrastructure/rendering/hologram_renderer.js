@@ -108,7 +108,6 @@ class HologramRenderer{
         this.gizmo.attachedMesh = this.boundingBox;
 
         this.boundingBox.addBehavior(this.sixDofDragBehavior);
-        console.log(this.sixDofDragBehavior);
     }
 
     /**

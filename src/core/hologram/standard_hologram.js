@@ -13,8 +13,8 @@ class StandardHologram extends Hologram{
      * @param name {String} the name of the class.
      * @param shapeName {string} the shape of reference.
      * @param creationOptions {Object} the creation options related to the shape.
-     * @param position {Vector3} the hologram positionSphere1.
-     * @param rotation {Quaternion} the hologram rotationSphere1.
+     * @param position {Vector3} the hologram position.
+     * @param rotation {Quaternion} the hologram rotation.
      * @param color {String} the hologramColor.
      */
     constructor(name, shapeName, creationOptions, position, rotation, color){
@@ -50,7 +50,7 @@ class StandardHologram extends Hologram{
 
     /**
      * Set the colorSphere of the hologram.
-     * @param value the new colorSphere.
+     * @param value the new color.
      */
     set color(value) {
         if(synchronizedElementUpdater.update) {
@@ -62,6 +62,10 @@ class StandardHologram extends Hologram{
         }
     }
 
+    /**
+     * Change the color without synchronizing with the other users.
+     * @param value the new scaling.
+     */
     changeColorWithoutSync(value){
         this._color = value
     }

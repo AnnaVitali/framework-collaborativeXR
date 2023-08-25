@@ -1,6 +1,6 @@
-import {eventBus} from "../../../eventBus/event_bus.js";
-import {SceneManager} from "../../babylon/scene_manager.js"
-import {infrastructureEventManager} from "../../utility/infrastructure_event_manager.js";
+import {eventBus} from "../../eventBus/event_bus.js";
+import {SceneManager} from "../rendering/scene_manager.js"
+import {infrastructureEventManager} from "../utility/infrastructure_event_manager.js";
 import {HologramView} from "./hologram_view.js";
 
 /**

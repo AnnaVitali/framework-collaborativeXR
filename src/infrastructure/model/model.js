@@ -1,5 +1,4 @@
 import {HologramModel} from "./submodel/hologram_model.js";
-import {Vector3} from "../../../utility/vector3.js";
 import {StandardObjectModel} from "./submodel/standard_object_model.js";
 import {AnimationModel} from "./submodel/animation_model.js";
 

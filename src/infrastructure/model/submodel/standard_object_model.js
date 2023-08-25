@@ -1,8 +1,8 @@
-import {infrastructureEventManager} from "../../../utility/infrastructure_event_manager.js";
-import {StandardObject} from "../../../../core/standardObject/standard_object.js";
+import {infrastructureEventManager} from "../../utility/infrastructure_event_manager.js";
+import {StandardObject} from "../../../core/standardObject/standard_object.js";
 
 /**
- * Class that represents a model for the synchronized variable.
+ * Class that represents a model for the standard object.
  */
 class StandardObjectModel extends Croquet.Model{
     /**
@@ -18,7 +18,7 @@ class StandardObjectModel extends Croquet.Model{
 
     /**
      * Add a standardObject.
-     * @param data {Object} object containing the data of the variable.
+     * @param data {Object} object containing the data of the object.
      */
     addObject(data){
         const variable = Object.create(StandardObject.prototype, Object.getOwnPropertyDescriptors(data));
@@ -32,7 +32,7 @@ class StandardObjectModel extends Croquet.Model{
 
     /**
      * Update the value of a synchronized variable.
-     * @param data {Object} object containing the data of the variable.
+     * @param data {Object} object containing the data of the object.
      */
     updateValue(data){
         const variableName = data.variableName;
