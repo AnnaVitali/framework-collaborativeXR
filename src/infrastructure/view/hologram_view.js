@@ -1,4 +1,4 @@
-import {Triple} from "../../../utility/triple.js";
+import {Triple} from "../../utility/triple.js";
 
 const MAX_EVENT_FOR_SECOND = 20;
 const REFERENCE_TIME_EVENT = 1000;

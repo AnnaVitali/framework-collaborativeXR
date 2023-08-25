@@ -37,7 +37,7 @@ class CoreEventManager{
     listenForSynchronizedElementUpdateEvents(){
         eventBus.on("updateValue", (data) =>{
             const object = JSON.parse(data);
-            synchronizedElementUpdater.updateSynchronizedVariable(object.variableName, object.value);
+            synchronizedElementUpdater.updateStandardObject(object.variableName, object.value);
 
         });
 

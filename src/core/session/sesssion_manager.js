@@ -1,4 +1,4 @@
-import {CroquetSession} from "../../infrastructure/croquet/croquet_session.js";
+import {CroquetSession} from "../../infrastructure/croquet_session.js";
 import {elementChecker} from "../utility/element_checker.js";
 import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
 import {coreEventManager} from "../utility/core_event_manager.js";

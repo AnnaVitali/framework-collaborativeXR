@@ -9,7 +9,7 @@ class SceneManager{
      * Constructor of the class.
      */
     constructor() {
-        this.hologramRenders = new Map();
+        this._hologramRenders = new Map();
     }
 
     /**
@@ -33,7 +33,7 @@ class SceneManager{
         this.utilityLayer = new BABYLON.UtilityLayerRenderer(this.scene);
         this.utilityLayer.utilityLayerScene.autoClearDepthAndStencil = false;
 
-        this.GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
+        this._GUIManager = new BABYLON.GUI.GUI3DManager(this.scene);
         this.GUIManager.useRealisticScaling = true;
     }
 
@@ -123,6 +123,14 @@ class SceneManager{
         }
 
         return this.scene;
+    }
+
+    get hologramRenders(){
+        return this._hologramRenders;
+    }
+
+    get GUIManager(){
+        return this._GUIManager;
     }
 
     #log(message){

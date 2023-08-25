@@ -7,7 +7,7 @@ class SynchronizedElementUpdater{
      */
     constructor(){
         this.holograms = new Map();
-        this.synchronizedVariables = new Map();
+        this.standardObjects = new Map();
 
         coreEventManager.listenForInfrastructureEvent("setUpdate", ()=> this.update = true);
     }
@@ -41,7 +41,7 @@ class SynchronizedElementUpdater{
      * @param variable {SynchronizedVariable} the variable to add
      */
     addSynchronizedVariable(variable){
-        this.synchronizedVariables.set(variable.name, variable);
+        this.standardObjects.set(variable.name, variable);
     }
 
     /**
@@ -72,24 +72,24 @@ class SynchronizedElementUpdater{
      * @param variableName {String} the name of the variable.
      * @param value the value of the variable.
      */
-    updateSynchronizedVariable(variableName, value){
-        this.synchronizedVariables.get(variableName)._value = value;
+    updateStandardObject(variableName, value){
+        this.standardObjects.get(variableName).changeValueWithoutSync(value);
     }
  
     #updateColor(hologramName, value) {
-        this.holograms.get(hologramName)._color = value;
+        this.holograms.get(hologramName).changeColorWithoutSync(value);
     }
 
     #updateScaling(hologramName, value) {
-        this.holograms.get(hologramName)._scaling = value;
+        this.holograms.get(hologramName).changeScalingWithoutSync(value);
     }
 
     #updateRotation(hologramName, value) {
-        this.holograms.get(hologramName)._rotation = value;
+        this.holograms.get(hologramName).changeRotationWithoutSync(value);
     }
 
     #updatePosition(hologramName, value) {
-        this.holograms.get(hologramName)._position = value;
+        this.holograms.get(hologramName).changePositionWithoutSync(value);
     }
 }
 
