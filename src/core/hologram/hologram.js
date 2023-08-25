@@ -93,6 +93,19 @@ class Hologram{
             }));
         }
     }
+
+    changeScalingWithoutSync(value){
+        this._scaling = value;
+    }
+
+    changePositionWithoutSync(value){
+        this._position = value;
+    }
+
+    changeRotationWithoutSync(value){
+        this._rotation = value;
+    }
+
 }
 
 export { Hologram }

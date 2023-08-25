@@ -1,6 +1,6 @@
 import {HologramModel} from "./submodel/hologram_model.js";
 import {Vector3} from "../../../utility/vector3.js";
-import {SynchronizedVariableModel} from "./submodel/synchronized_variable_model.js";
+import {StandardObjectModel} from "./submodel/standard_object_model.js";
 import {AnimationModel} from "./submodel/animation_model.js";
 
 /**
@@ -15,7 +15,7 @@ class RootModel extends Croquet.Model {
         this.linkedViews = [];
         this.animationModels = new Map();
         this.hologramModel = HologramModel.create();
-        this.synchronizedVariableModel = SynchronizedVariableModel.create();
+        this.standardObjectModel = StandardObjectModel.create();
 
         this.subscribe(this.sessionId, "view-join", this.viewJoin);
         this.subscribe(this.sessionId, "view-exit", this.viewDrop);

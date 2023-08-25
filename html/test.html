@@ -8,61 +8,137 @@
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@croquet/croquet@1.0.5"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
+    <style>
+        #myProgress {
+            width: 100%;
+            background-color: grey;
+        }
+
+        #myBar {
+            width: 1%;
+            height: 30px;
+            background-color: #0093cb;
+            text-align: center; /* To center it horizontally (if you want) */
+            line-height: 30px; /* To center it vertically */
+            color: white;
+        }
+    </style>
 </head>
 <body>
 <script type="module">
 
-    import {ManipulatorMenu} from "../src/core/gui/menu/maniuplator_menu.js";
-    import {Vector3} from "../src/utility/vector3.js";
-    import {ImportedHologram} from "../src/core/hologram/imported_hologram.js";
-    import {Quaternion} from "../src/utility/quaternion.js";
+
     import {SessionManager} from "../src/core/session/sesssion_manager.js";
     import {Scene} from "../src/core/scene/scene.js";
+    import {Vector3} from "../src/utility/vector3.js";
+    import {Quaternion} from "../src/utility/quaternion.js";
+    import {StandardHologram} from "../src/core/hologram/standard_hologram.js";
+    import {StandardShape} from "../src/core/hologram/enum/standard_shape.js";
+    import {NearMenu} from "../src/core/gui/menu/near_menu.js";
+    import {Button} from "../src/core/gui/button.js";
+    import {ImportedHologram} from "../src/core/hologram/imported_hologram.js";
+    import {ManipulatorMenu} from "../src/core/gui/menu/maniuplator_menu.js";
 
     const apiKey = '1Ms8POLqF7FJlrcmGNj4xx401r3E22bJs4LpMu4bH';
     const appId = 'it.unibo.studio.anna_2evitali4.microverse';
+
+    const importedElementNumber = 4;
+    let elemAdded = 0;
+    const maxWidth = 100;
+    const progressBar = document.getElementById("myBar");
 
     const sessionManager = new SessionManager();
     await sessionManager.startSession(apiKey, appId);
     const scene = new Scene(sessionManager);
     scene.initializeScene();
 
+    const sunPosition = new Vector3(0, 2.4, 1.4);
+    const sunRotation = new Quaternion(0,0,0,0);
+    const color = "#fbff2b";
+    const creationOptions = {diameter: 0.5}
+    const sun = new StandardHologram("sun",
+        StandardShape.Sphere, creationOptions, sunPosition,
+        sunRotation, color);
+    await scene.addStandardHologram(sun);
+
+    const nRowsMenu = 1
+    const nearMenuPosition = new Vector3(-1.2, 1.8, 1.2);
+    const nearMenu = new NearMenu(nearMenuPosition, nRowsMenu);
+    const button1 = new Button("button1", "Morning");
+    button1.setOnPointerDownCallback(() =>{
+        sun.color = "#ffff00"
+    });
+    const button2 = new Button("button2", "Evening");
+    button2.setOnPointerDownCallback(() =>{
+        sun.color = "#ff8c00"
+    });
+    const button3 = new Button("button3", "Sunset");
+    button3.setOnPointerDownCallback(() =>{
+        sun.color = "#ff4400"
+    });
+
+    nearMenu.addButton(button1);
+    nearMenu.addButton(button2);
+    nearMenu.addButton(button3);
+    scene.addNearMenu(nearMenu);
+
     const backGroundTreeRotation = new Quaternion(0,0,0,0);
     const backgroundTreeScaling = new Vector3(0.5,0.5,0.5);
 
-    const backGroundTreePosition1 = new Vector3(0.4, 0.2, 2.5);
+    const backGroundTreePosition1 = new Vector3(0.4, 1.4, 2.5);
     const backGroundTree1 = new ImportedHologram("tree1", "./importedMesh/old_tree/scene.gltf", backGroundTreePosition1, backGroundTreeRotation,
         backgroundTreeScaling);
     await scene.addImportedHologram(backGroundTree1);
 
-    const backGroundTreePosition2 = new Vector3(-0.8, 0.2, 2.5);
+    moveProgressBar();
+
+    const backGroundTreePosition2 = new Vector3(-0.8, 1.4, 2.5);
     const backGroundTree2 = new ImportedHologram("tree2", "./importedMesh/old_tree/scene.gltf", backGroundTreePosition2, backGroundTreeRotation,
         backgroundTreeScaling);
     await scene.addImportedHologram(backGroundTree2);
 
+    moveProgressBar();
+
     const lionRotation = new Quaternion(0, 1, 0, 0);
     const lionScaling = new Vector3(3,3,3);
-    const lionPosition = new Vector3(0.2, 0, 1.2);
+    const lionPosition = new Vector3(0.2, 1, 1.2);
     const lion = new ImportedHologram("lion", "./importedMesh/lion/scene.gltf", lionPosition, lionRotation, lionScaling);
     await scene.addImportedHologram(lion);
 
-    const lionManipulatorPosition = new Vector3(0.2, 0.8, 1.2)
+    moveProgressBar();
+
+    const lionManipulatorPosition = new Vector3(0.4, 1.2, 1.2)
     const lionManipulatorMenu = new ManipulatorMenu(lionManipulatorPosition,
         "lion");
     scene.addManipulatorMenu(lionManipulatorMenu);
 
     const tigerRotation = new Quaternion(0, 1, 0, 0);
     const tigerScaling = new Vector3(0.3,0.3,0.3);
-    const tigerPosition = new Vector3(-0.6, 0, 1.2);
+    const tigerPosition = new Vector3(-0.6, 1, 1.2);
     const tiger = new ImportedHologram("tiger", "./importedMesh/tiger/scene.gltf", tigerPosition, tigerRotation, tigerScaling);
     await scene.addImportedHologram(tiger);
 
-    const tigerManipulatorPosition = new Vector3(-0.6, 0.8, 1.2)
+    moveProgressBar();
+
+    const tigerManipulatorPosition = new Vector3(-0.4, 1.2, 1.2)
     const tigerManipulatorMenu = new ManipulatorMenu(tigerManipulatorPosition,
         "tiger");
     scene.addManipulatorMenu(tigerManipulatorMenu);
 
     scene.activateRenderLoop();
+
+    function moveProgressBar() {
+        elemAdded = elemAdded + 1;
+        const width = (maxWidth * (elemAdded / importedElementNumber).toFixed(2)) ;
+        progressBar.style.width = width + "%";
+        progressBar.innerHTML = width + "%";
+        if(width === 100){
+            progressBar.remove();
+        }
+    }
 </script>
+<div id="myProgress">
+    <div id="myBar">0%</div>
+</div>
 </body>
 </html>

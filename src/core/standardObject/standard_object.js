@@ -2,9 +2,9 @@ import {coreEventManager} from "../utility/core_event_manager.js";
 import {synchronizedElementUpdater} from "../utility/synchronized_element_updater.js";
 
 /**
- * Class representing a synchronized variable for the application.
+ * Class representing a standard object for the application.
  */
-class SynchronizedVariable{
+class StandardObject{
     /**
      * Constructor of the class.
      * @param name {String} the name of the variable.
@@ -28,6 +28,10 @@ class SynchronizedVariable{
 
     }
 
+    changeValueWithoutSync(value){
+        this._value = value;
+    }
+
     /**
      * Get the name of the variable.
      * @returns {String}
@@ -45,4 +49,4 @@ class SynchronizedVariable{
     }
 } 
 
-export {SynchronizedVariable}
+export {StandardObject}

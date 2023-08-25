@@ -1,10 +1,10 @@
 import {infrastructureEventManager} from "../../../utility/infrastructure_event_manager.js";
-import {SynchronizedVariableClone} from "../../../synchronizedVariable/synchronized_variable_clone.js";
+import {StandardObject} from "../../../../core/standardObject/standard_object.js";
 
 /**
  * Class that represents a model for the synchronized variable.
  */
-class SynchronizedVariableModel extends Croquet.Model{
+class StandardObjectModel extends Croquet.Model{
     /**
      * Initialize the model
      * @param options {Object} containing the creation options.
@@ -17,11 +17,11 @@ class SynchronizedVariableModel extends Croquet.Model{
     }
 
     /**
-     * Add a synchronized variable.
+     * Add a standardObject.
      * @param data {Object} object containing the data of the variable.
      */
-    addVariable(data){
-        const variable = Object.create(SynchronizedVariableClone.prototype, Object.getOwnPropertyDescriptors(data));
+    addObject(data){
+        const variable = Object.create(StandardObject.prototype, Object.getOwnPropertyDescriptors(data));
         if(!this.syncrhonizedVariables.has(variable.name)) {
             this.syncrhonizedVariables.set(variable.name, variable);
         }else{
@@ -39,7 +39,7 @@ class SynchronizedVariableModel extends Croquet.Model{
         const value = data.value;
 
         if(this.syncrhonizedVariables.get(variableName).value !== value) {
-            this.syncrhonizedVariables.get(variableName).value = value;
+            this.syncrhonizedVariables.get(variableName).changeValueWithoutSync(value);
             infrastructureEventManager.sendEvent("updateValue", JSON.stringify({
                 variableName: variableName,
                 value: value
@@ -48,17 +48,17 @@ class SynchronizedVariableModel extends Croquet.Model{
     }
 
     #setupViewEventHandlers(){
-        this.subscribe("create", "synchronizedVariable", this.addVariable);
+        this.subscribe("create", "synchronizedVariable", this.addObject);
         this.subscribe("synchronizedVariable", "valueChange", this.updateValue)
     }
 
     static types() {
         return {
-            "CroquetSynchronizedVariable": SynchronizedVariableClone,
+            "StandardObject": StandardObject,
         };
     }
 } 
 
-SynchronizedVariableModel.register("SynchronizedVariableModel");
+StandardObjectModel.register("SynchronizedVariableModel");
 
-export {SynchronizedVariableModel}
+export {StandardObjectModel}

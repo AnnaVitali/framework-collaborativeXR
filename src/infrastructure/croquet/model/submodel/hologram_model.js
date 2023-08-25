@@ -1,8 +1,9 @@
-import {StandardHologramClone} from "../../../hologram/standard_hologram_clone.js";
-import {ImportedHologramClone} from "../../../hologram/imported_hologram_clone.js";
+
 import {infrastructureEventManager} from "../../../utility/infrastructure_event_manager.js";
 import {Vector3} from "../../../../utility/vector3.js";
 import {Quaternion} from "../../../../utility/quaternion.js";
+import {ImportedHologram} from "../../../../core/hologram/imported_hologram.js";
+import {StandardHologram} from "../../../../core/hologram/standard_hologram.js";
 
 /**
  * Class that represents a model for the holograms in the scene.
@@ -57,7 +58,7 @@ class HologramModel extends Croquet.Model {
      * @param data {Object} object containing the data of the hologram.
      */
     addImportedHologram(data){
-        const hologram = Object.create(ImportedHologramClone.prototype, Object.getOwnPropertyDescriptors(data.hologram));
+        const hologram = Object.create(ImportedHologram.prototype, Object.getOwnPropertyDescriptors(data.hologram));
         const view = data.view
         this.#addHologram(hologram, view);
         this.publish(view, "showImportedHologram", hologram.name);
@@ -68,7 +69,7 @@ class HologramModel extends Croquet.Model {
      * @param data {Object} object containing the data of the hologram.
      */
     addStandardHologram(data){
-        const hologram = Object.create(StandardHologramClone.prototype, Object.getOwnPropertyDescriptors(data.hologram));
+        const hologram = Object.create(StandardHologram.prototype, Object.getOwnPropertyDescriptors(data.hologram));
         const view = data.view
         this.#addHologram(hologram, view);
         this.publish(view, "showStandardHologram", hologram.name);
@@ -81,7 +82,7 @@ class HologramModel extends Croquet.Model {
     updatePosition(data){
         const hologramName = data.hologramName;
         const position = data.position
-        this.holograms.get(hologramName).position = position;
+        this.holograms.get(hologramName).changePositionWithoutSync(position);
 
         infrastructureEventManager.sendEvent("updatePosition", JSON.stringify({hologramName: hologramName, position: position}));
         this.publish("view", "updateHologramPosition", hologramName);
@@ -94,7 +95,7 @@ class HologramModel extends Croquet.Model {
     updateScaling(data){
         const hologramName = data.hologramName;
         const scaling = data.scaling;
-        this.holograms.get(hologramName).scaling = scaling;
+        this.holograms.get(hologramName).changeScalingWithoutSync(scaling);
 
         infrastructureEventManager.sendEvent("updateScaling", JSON.stringify({hologramName: hologramName, scale: scaling}));
         this.publish("view", "updateHologramScaling", hologramName);
@@ -107,7 +108,7 @@ class HologramModel extends Croquet.Model {
     updateRotation(data){
         const hologramName = data.hologramName;
         const rotation = data.rotation
-        this.holograms.get(hologramName).rotation = rotation;
+        this.holograms.get(hologramName).changeRotationWithoutSync(rotation);
 
         infrastructureEventManager.sendEvent("updateRotation", JSON.stringify({hologramName: hologramName, rotation: rotation}));
         this.publish("view", "updateHologramRotation", hologramName);
@@ -120,8 +121,7 @@ class HologramModel extends Croquet.Model {
     updateColor(data){
         const hologramName = data.hologramName;
         const color = data.color;
-
-        this.holograms.get(hologramName).color = color;
+        this.holograms.get(hologramName).changeColorWithoutSync(color);
 
         infrastructureEventManager.sendEvent("updateColor", JSON.stringify({hologramName: hologramName, color: color}));
         this.publish("view", "updateHologramColor", hologramName);
@@ -173,7 +173,7 @@ class HologramModel extends Croquet.Model {
         this.#log("received requireHologramUpdate");
         const hologramName = data.hologramName;
         const position = new Vector3(data.position_x, data.position_y, data.position_z)
-        this.holograms.get(hologramName).position = position;
+        this.holograms.get(hologramName).changePositionWithoutSync(position);
 
         infrastructureEventManager.sendEvent("updatePosition", JSON.stringify({hologramName: hologramName, position: position}));
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
@@ -189,7 +189,7 @@ class HologramModel extends Croquet.Model {
         this.#log("received requireHologramUpdate");
         const hologramName = data.hologramName;
         const scaling = new Vector3(data.scale_x, data.scale_y, data.scale_z)
-        this.holograms.get(hologramName).scaling = scaling;
+        this.holograms.get(hologramName).changeScalingWithoutSync(scaling);
 
         infrastructureEventManager.sendEvent("updateScaling", JSON.stringify({hologramName: hologramName, scale: scaling}));
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
@@ -229,8 +229,8 @@ class HologramModel extends Croquet.Model {
 
     static types() {
         return {
-            "CroquetStandardHologram": StandardHologramClone,
-            "CroquetImportedHologram": ImportedHologramClone,
+            "StandardHologram": StandardHologram,
+            "ImportedHologram": ImportedHologram,
             "Vector3": Vector3,
             "Quaternion": Quaternion,
         };

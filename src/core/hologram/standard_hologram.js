@@ -61,6 +61,10 @@ class StandardHologram extends Hologram{
             }));
         }
     }
+
+    changeColorWithoutSync(value){
+        this._color = value
+    }
 } 
 
 export{ StandardHologram }
