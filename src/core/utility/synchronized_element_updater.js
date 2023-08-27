@@ -37,11 +37,11 @@ class SynchronizedElementUpdater{
     }
 
     /**
-     * Add a synchronized variable to the synchronized element.
-     * @param variable {SynchronizedVariable} the variable to add
+     * Add a standard object to the synchronized element.
+     * @param object {StandardObject} the object to add.
      */
-    addSynchronizedVariable(variable){
-        this.standardObjects.set(variable.name, variable);
+    addStandardObject(object){
+        this.standardObjects.set(object.name, object);
     }
 
     /**
@@ -68,7 +68,7 @@ class SynchronizedElementUpdater{
     }
 
     /**
-     * Update the value of a synchronized variable.
+     * Update the value of a standard object.
      * @param variableName {String} the name of the variable.
      * @param value the value of the variable.
      */

@@ -40,16 +40,16 @@ class SessionManager {
     }
 
     /**
-     * Add a new  synchronized variable to the session
-     * @param variable {SynchronizedVariable}
+     * Add a new  standard object to the session
+     * @param object {StandardObject}
      */
-    addSynchronizedVariable(variable){
+    addStandardObject(object){
         if(elementChecker.verifyNameAlreadyExist(name)){
             throw new Error("This name was already used!")
         }
 
-        synchronizedElementUpdater.addSynchronizedVariable(variable);
-        coreEventManager.sendEvent("createSynchronizedVariable", JSON.stringify(variable));
+        synchronizedElementUpdater.addStandardObject(object);
+        coreEventManager.sendEvent("createStandardObject", JSON.stringify(object));
     }
 
     /**

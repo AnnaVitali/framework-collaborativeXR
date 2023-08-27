@@ -20,7 +20,7 @@ class StandardObjectModel extends Croquet.Model{
      * Add a standardObject.
      * @param data {Object} object containing the data of the object.
      */
-    addObject(data){
+    addStandardObject(data){
         const variable = Object.create(StandardObject.prototype, Object.getOwnPropertyDescriptors(data));
         if(!this.syncrhonizedVariables.has(variable.name)) {
             this.syncrhonizedVariables.set(variable.name, variable);
@@ -31,7 +31,7 @@ class StandardObjectModel extends Croquet.Model{
     }
 
     /**
-     * Update the value of a synchronized variable.
+     * Update the value of a standard object.
      * @param data {Object} object containing the data of the object.
      */
     updateValue(data){
@@ -48,8 +48,8 @@ class StandardObjectModel extends Croquet.Model{
     }
 
     #setupViewEventHandlers(){
-        this.subscribe("create", "synchronizedVariable", this.addObject);
-        this.subscribe("synchronizedVariable", "valueChange", this.updateValue)
+        this.subscribe("create", "standardObject", this.addStandardObject);
+        this.subscribe("standardObject", "valueChange", this.updateValue)
     }
 
     static types() {
@@ -59,6 +59,6 @@ class StandardObjectModel extends Croquet.Model{
     }
 } 
 
-StandardObjectModel.register("SynchronizedVariableModel");
+StandardObjectModel.register("StandardObjectModel");
 
 export {StandardObjectModel}

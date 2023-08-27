@@ -52,9 +52,9 @@ class InfrastructureEventManager{
             this.view.notifyEventToModel("create", "standardHologram", {view: this.view.viewId, hologram: JSON.parse(data)});
         } );
 
-        eventBus.on("createSynchronizedVariable", (data)=>{
-            this.#log("create synchronized variable")
-           this.view.notifyEventToModel("create", "synchronizedVariable", JSON.parse(data));
+        eventBus.on("createStandardObject", (data)=>{
+            this.#log("create standard object")
+           this.view.notifyEventToModel("create", "standardObject", JSON.parse(data));
         });
 
         eventBus.on("addManipulatorMenu", (data) => {
@@ -87,7 +87,7 @@ class InfrastructureEventManager{
         })
 
         eventBus.on("valueChange", (data) => {
-            this.view.notifyEventToModel("synchronizedVariable", "valueChange",JSON.parse(data));
+            this.view.notifyEventToModel("standardObject", "valueChange",JSON.parse(data));
         });
 
         eventBus.on("colorChange", (data) => {
