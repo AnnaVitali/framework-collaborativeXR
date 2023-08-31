@@ -54,7 +54,7 @@ class SessionManager {
 
     /**
      * Verify if the session is started or not.
-     * @returns {boolean} true if the session is started false otherwise
+     * @returns {boolean} true if the session is started false otherwise.
      */
     isSessionStarted(){
         return this._sessionStarted;

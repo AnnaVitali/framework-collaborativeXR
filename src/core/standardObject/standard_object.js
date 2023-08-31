@@ -37,7 +37,7 @@ class StandardObject{
     }
 
     /**
-     * Get the name of the variable.
+     * Get the name of the object.
      * @returns {String}
      */
     get name() {
@@ -45,7 +45,7 @@ class StandardObject{
     }
 
     /**
-     * Get the value of the variable.
+     * Get the value of the object.
      * @returns {*}
      */
     get value() {

@@ -103,7 +103,7 @@ class InfrastructureEventManager{
         });
 
         eventBus.on("rotationChange", (data) => {
-            this.view.notifyEventToModel( "updateHologram", "changeColor", JSON.parse(data));
+            this.view.notifyEventToModel( "updateHologram", "changeRotation", JSON.parse(data));
         });
     }
 

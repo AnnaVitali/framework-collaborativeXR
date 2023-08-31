@@ -64,6 +64,7 @@ class SceneManager{
      */
     addImportedHologram(hologram){
         this.#log("addImportedHologram");
+        console.log(hologram)
         const hologramRender = new HologramRenderer(this.scene, this.utilityLayer);
         hologramRender.renderImportedHologram(hologram);
         this.hologramRenders.set(hologram.name, hologramRender);

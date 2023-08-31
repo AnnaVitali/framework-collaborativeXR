@@ -9,8 +9,8 @@ class Hologram{
     /**
      * Constructor of the class.
      * @param name {String} the name of the hologram.
-     * @param position {Vector3} the positionSphere1 of the hologram in the world.
-     * @param rotation {Quaternion} the rotationSphere1 of the hologram.
+     * @param position {Vector3} the position of the hologram in the world.
+     * @param rotation {Quaternion} the rotation of the hologram.
      * @param scaling {Vector3} the scaling of the hologram.
      */
     constructor(name, position, rotation, scaling){
@@ -29,7 +29,7 @@ class Hologram{
     }
 
     /**
-     * Get the rotationSphere1 of the hologram.
+     * Get the rotation of the hologram.
      * @returns {Quaternion} the new rotationSphere1.
      */
     get rotation() {
@@ -45,7 +45,7 @@ class Hologram{
     }
 
     /**
-     * Get the positionSphere1 of the hologram.
+     * Get the position of the hologram.
      * @returns {Vector3}
      */
     get position() {
@@ -67,7 +67,7 @@ class Hologram{
     }
 
     /**
-     * Set the positionSphere1 of the hologram.
+     * Set the position of the hologram.
      * @param value the new position.
      */
     set position(value) {
@@ -81,7 +81,7 @@ class Hologram{
     }
 
     /**
-     * Set the rotationSphere1 of the hologram.
+     * Set the rotation of the hologram.
      * @param value the new rotation.
      */
     set rotation(value) {

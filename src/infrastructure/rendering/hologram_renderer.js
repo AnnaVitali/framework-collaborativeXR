@@ -3,7 +3,7 @@ import {Vector3} from "../../utility/vector3.js";
 import {infrastructureEventManager} from "../utility/infrastructure_event_manager.js";
 
 /**
- * Class in charge of the graphic rendering of the hologram
+ * Class in charge of the graphic rendering of the hologram.
  */
 class HologramRenderer{
 
@@ -13,10 +13,8 @@ class HologramRenderer{
      * @param utilityLayer {BABYLON.UtilityLayerRenderer} the utility layer of reference.
      */
     constructor(scene, utilityLayer) {
-        this.mesh = null;
         this.scene = scene;
         this.utilityLayer = utilityLayer
-        this.isUserManipulating = false;
     }
 
     /**
@@ -24,9 +22,9 @@ class HologramRenderer{
      */
     initializeElementManipulation(){
         this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
-        this.sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
-        this.sixDofDragBehavior.dragDeltaRatio = 1;
-        this.sixDofDragBehavior.zDragFactor = 1;
+        this._sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
+        this._sixDofDragBehavior.dragDeltaRatio = 1.2;
+        this._sixDofDragBehavior.zDragFactor = 1.2;
     }
 
     /**
@@ -56,6 +54,7 @@ class HologramRenderer{
                 container.meshes[0].scaling = scaling;
 
                 this.mesh = container.meshes[0];
+                console.log(this.mesh)
                 infrastructureEventManager.sendEvent("importedHologramCreated" + hologram.name, "");
             }catch(error){
                 this.#log("ERROR " + error);
@@ -87,53 +86,62 @@ class HologramRenderer{
      * Render the bounding box of the hologram to show other user manipulation.
      */
     showOtherUserManipulation(){
-        this.isUserManipulating = true;
-        //this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
-
-        this.gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FF0000"), this.utilityLayer);
-        this.gizmo.rotationSphereSize = 0;
-        this.gizmo.scaleBoxSize = 0;
-        this.gizmo.attachedMesh = this.boundingBox;
+        this._gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FF0000"), this.utilityLayer);
+        this._gizmo.rotationSphereSize = 0;
+        this._gizmo.scaleBoxSize = 0;
+        this._gizmo.attachedMesh = this.boundingBox;
     }
 
     /**
      * Add a hologram manipulator to the element.
      */
     addHologramManipulator(){
-        this.isUserManipulating = true;
+        this._gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FBFF00"), this.utilityLayer)
+        this._gizmo.rotationSphereSize = 0.05;
+        this._gizmo.scaleBoxSize = 0.05;
+        this._gizmo.attachedMesh = this.boundingBox;
 
-        this.gizmo = new BABYLON.BoundingBoxGizmo(BABYLON.Color3.FromHexString("#FBFF00"), this.utilityLayer)
-        this.gizmo.rotationSphereSize = 0;
-        this.gizmo.scaleBoxSize = 0.03;
-        this.gizmo.attachedMesh = this.boundingBox;
-
-        this.boundingBox.addBehavior(this.sixDofDragBehavior);
+        this.boundingBox.addBehavior(this._sixDofDragBehavior);
     }
 
     /**
      * Remove the element of the hologram manipulator.
      */
     removeHologramManipulator(){
-        this.gizmo.attachedMesh = null;
-        this.gizmo.dispose();
-        this.gizmo = null;
-        this.boundingBox.removeBehavior(this.sixDofDragBehavior);
+        this._gizmo.attachedMesh = null;
+        this._gizmo.dispose();
+        this._gizmo = null;
+        this.boundingBox.removeBehavior(this._sixDofDragBehavior);
     }
 
     /**
-     * Update the positionSphere1 of the hologram.
-     * @param newPosition {Vector3} the new Position to assign.
+     * Update the position of the hologram due to a manipulation.
+     * @param newPosition {Vector3} the new position to assign.
+     */
+    updatePositionDueManipulation(newPosition){
+        this.boundingBox.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
+        console.log("MESH position");
+        console.log(this.mesh.position);
+        console.log("MESH absolute poisition")
+        console.log(this.mesh.absolutePosition);
+    }
+
+    /**
+     * Update the position of the hologram.
+     * @param newPosition {Vector3} the new position to assign.
      */
     updatePosition(newPosition){
-        if(this.isUserManipulating) {
-            this.boundingBox.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
+        if(this.boundingBox !== null){
+            this.#removeBoundingBox();
+            this.mesh.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
+            this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
         }else{
             this.mesh.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
         }
     }
 
     /**
-     * Update the rotationSphere1 of the hologram
+     * Update the rotation of the hologram.
      * @param newRotation {Quaternion} the new rotationSphere1 to assign.
      */
     updateRotation(newRotation){
@@ -145,23 +153,61 @@ class HologramRenderer{
     }
 
     /**
+     * Update the scale of the hologram due to a manipulation.
+     * @param newScaling {Vector3} the new scale to assign.
+     */
+    updateScalingDueManipulation(newScaling){
+        this.boundingBox.scaling = new BABYLON.Vector3(newScaling._x, newScaling._y, newScaling._z);
+    }
+
+    /**
      * Update the scale of the hologram.
      * @param newScaling {Vector3} the new scale to assign.
      */
     updateScaling(newScaling){
-        if(this.isUserManipulating) {
-            this.boundingBox.scaling = new BABYLON.Vector3(newScaling._x, newScaling._y, newScaling._z);
+        if(this.boundingBox !== null){
+            this.#removeBoundingBox();
+            this.mesh.scaling = new BABYLON.Vector3(newScaling._x, newScaling._y, newScaling._z);
+            this.boundingBox = BABYLON.BoundingBoxGizmo.MakeNotPickableAndWrapInBoundingBox(this.mesh);
         }else{
             this.mesh.scaling = new BABYLON.Vector3(newScaling._x, newScaling._y, newScaling._z);
         }
     }
 
     /**
-     * Update the hologram colorSphere.
+     * Update the hologram color.
      * @param color {String} the new colorSphere to apply.
      */
     updateColor(color){
         this.mesh.material.diffuseColor = BABYLON.Color3.FromHexString(color);
+    }
+
+    /**
+     * Get the mesh associated to the renderer.
+     * @returns {BABYLON.Mesh}
+     */
+    getHologramMesh(){
+        return this.mesh;
+    }
+
+    /**
+     * Get the six degree of freedom drag behaviour associated to the renderer for the manipulation.
+     * @returns {BABYLON.SixDofDragBehavior}
+     */
+    get sixDofDragBehavior(){
+        return this._sixDofDragBehavior;
+    }
+
+    /**
+     * Get the gizmo associated to the renderer for the manipulation.
+     */
+    get gizmo(){
+        return this._gizmo;
+    }
+
+    #removeBoundingBox() {
+        this.mesh.setParent(null);
+        this.boundingBox.dispose();
     }
 
     #computeMesh(hologramObject, hologramName) {
