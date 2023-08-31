@@ -54,7 +54,6 @@ class HologramRenderer{
                 container.meshes[0].scaling = scaling;
 
                 this.mesh = container.meshes[0];
-                console.log(this.mesh)
                 infrastructureEventManager.sendEvent("importedHologramCreated" + hologram.name, "");
             }catch(error){
                 this.#log("ERROR " + error);
@@ -120,10 +119,6 @@ class HologramRenderer{
      */
     updatePositionDueManipulation(newPosition){
         this.boundingBox.position = new BABYLON.Vector3(newPosition._x, newPosition._y, newPosition._z);
-        console.log("MESH position");
-        console.log(this.mesh.position);
-        console.log("MESH absolute poisition")
-        console.log(this.mesh.absolutePosition);
     }
 
     /**

@@ -57,7 +57,6 @@ class HologramModel extends Croquet.Model {
      * @param data {Object} object containing the data of the hologram.
      */
     addImportedHologram(data){
-        console.log(data);
         const hologram = Object.create(ImportedHologram.prototype, Object.getOwnPropertyDescriptors(data.hologram));
         const view = data.view
         this.#addHologram(hologram, view);
@@ -119,8 +118,6 @@ class HologramModel extends Croquet.Model {
      * @param data {Object} object containing the data of the hologram.
      */
     updateColor(data){
-        console.log("called");
-        console.log(data)
         const hologramName = data.hologramName;
         const color = data.color;
         this.holograms.get(hologramName).changeColorWithoutSync(color);

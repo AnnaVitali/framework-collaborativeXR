@@ -34,7 +34,6 @@ class HologramView extends Croquet.View{
         manipulatorNearMenu.isPinned = true;
 
         this.sceneManager.hologramRenders.get(hologramName).initializeElementManipulation();
-        console.log( this.sceneManager.hologramRenders.get(hologramName).getHologramMesh());
         manipulatorNearMenu.parent = this.sceneManager.hologramRenders.get(hologramName).getHologramMesh();
         manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
 
