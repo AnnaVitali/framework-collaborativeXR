@@ -4,14 +4,14 @@
 class Menu{
     /**
      * Constructor of the class.
-     * @param position {Vector3} the positionSphere1 of the menu.
+     * @param position {Vector3} the position of the menu.
      */
     constructor(position){
         this._position = position;
     }
 
     /**
-     *
+     * Get the position of the menu.
      * @returns {Vector3}
      */
     get position() {

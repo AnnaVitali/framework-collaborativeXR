@@ -6,7 +6,7 @@ import {StandardObject} from "../../../core/standardObject/standard_object.js";
  */
 class StandardObjectModel extends Croquet.Model{
     /**
-     * Initialize the model
+     * Initialize the model.
      * @param options {Object} containing the creation options.
      */
     init(options = {}){

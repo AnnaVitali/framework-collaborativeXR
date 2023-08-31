@@ -1,4 +1,5 @@
 import {Triple} from "../../utility/triple.js";
+import {Vector3} from "../../utility/vector3.js";
 
 const MAX_EVENT_FOR_SECOND = 20;
 const REFERENCE_TIME_EVENT = 1000;
@@ -33,7 +34,7 @@ class HologramView extends Croquet.View{
         manipulatorNearMenu.isPinned = true;
 
         this.sceneManager.hologramRenders.get(hologramName).initializeElementManipulation();
-        manipulatorNearMenu.parent = this.sceneManager.hologramRenders.get(hologramName).mesh;
+        manipulatorNearMenu.parent = this.sceneManager.hologramRenders.get(hologramName).getHologramMesh();
         manipulatorNearMenu.position = new BABYLON.Vector3(menuPosition._x, menuPosition._y, menuPosition._z);
 
         const controlButton = new BABYLON.GUI.HolographicButton("manipulate", false);
@@ -80,6 +81,12 @@ class HologramView extends Croquet.View{
         this.sceneManager.hologramRenders.get(hologramName).updatePosition(newPosition);
     }
 
+    showHologramUpdatedManipulatedPosition(data) {
+        const hologramName = data.hologramName;
+        const position = new Vector3(data.bounding_box_position_x, data.bounding_box_position_y, data.bounding_box_position_z)
+        this.sceneManager.hologramRenders.get(hologramName).updatePositionDueManipulation(position);
+    }
+
     /**
      * Require to show the updated rotationSphere1 of the hologram.
      * @param hologramName {String} the hologram name.
@@ -96,6 +103,12 @@ class HologramView extends Croquet.View{
     showHologramUpdatedScaling(hologramName){
         const newScaling = this.model.holograms.get(hologramName).scaling;
         this.sceneManager.hologramRenders.get(hologramName).updateScaling(newScaling);
+    }
+
+    showHologramUpdatedManipulatedScaling(data){
+        const hologramName = data.hologramName;
+        const scaling = new Vector3(data.bounding_box_scale_x, data.bounding_box_scale_y, data.bounding_box_scale_z)
+        this.sceneManager.hologramRenders.get(hologramName).updateScalingDueManipulation(scaling);
     }
 
     /**
@@ -137,6 +150,13 @@ class HologramView extends Croquet.View{
      */
     clockEventTick(){
         this.timeElapsed = true;
+    }
+
+    showCurrentManipulation(){
+        this.model.hologramInUserControl.forEach((v, k)=>{
+            this.sceneManager.hologramRenders.get(k).showOtherUserManipulation();
+            this.freezeControlButton({hologramName: k});
+        });
     }
 
     #setOtherUserInControlBehaviorControlButton(controlButton){
@@ -200,24 +220,32 @@ class HologramView extends Croquet.View{
     }
 
     #serializeDataPosition(hologramName, hologramRender){
-        const absolutePosition = hologramRender.boundingBox.absolutePosition;
+        const absolutePositionBoundingBox = hologramRender.boundingBox.absolutePosition;
+        const absolutePositionHologram = hologramRender.getHologramMesh().absolutePosition;
         return {
             hologramName: hologramName,
             view: this.viewId,
-            position_x: absolutePosition.x,
-            position_y: absolutePosition.y,
-            position_z: absolutePosition.z
+            bounding_box_position_x: absolutePositionBoundingBox.x,
+            bounding_box_position_y: absolutePositionBoundingBox.y,
+            bounding_box_position_z: absolutePositionBoundingBox.z,
+            hologram_position_x: absolutePositionHologram.x,
+            hologram_position_y: absolutePositionHologram.y,
+            hologram_position_z: absolutePositionHologram.z
         }
     }
 
     #serializeDataScale(hologramName, hologramRender){
-        const absoluteScaling = hologramRender.boundingBox.absoluteScaling;
+        const absoluteScalingBoundingBox = hologramRender.boundingBox.absoluteScaling;
+        const absoluteScalingHologram = hologramRender.getHologramMesh().absoluteScaling;
         return {
             hologramName: hologramName,
             view: this.viewId,
-            scale_x: absoluteScaling.x,
-            scale_y: absoluteScaling.y,
-            scale_z: absoluteScaling.z
+            bounding_box_scale_x: absoluteScalingBoundingBox.x,
+            bounding_box_scale_y: absoluteScalingBoundingBox.y,
+            bounding_box_scale_z: absoluteScalingBoundingBox.z,
+            hologram_scale_x: absoluteScalingHologram.x,
+            hologram_scale_y: absoluteScalingHologram.y,
+            hologram_scale_z: absoluteScalingHologram.z
         }
     }
 
@@ -235,19 +263,12 @@ class HologramView extends Croquet.View{
         });
     }
 
-    showCurrentManipulation(){
-        this.model.hologramInUserControl.forEach((v, k)=>{
-            this.sceneManager.hologramRenders.get(k).showOtherUserManipulation();
-            this.freezeControlButton({hologramName: k});
-        });
-    }
-
     #setupModelEventHandlers(){
         this.subscribe(this.viewId, "freezeControlButton", this.freezeControlButton);
         this.subscribe(this.viewId, "restoreControlButton", this.restoreControlButton);
         this.subscribe(this.viewId, "showUserManipulation", this.showUserManipulation);
-        this.subscribe(this.viewId, "showHologramUpdatedPosition", this.showHologramUpdatedPosition);
-        this.subscribe(this.viewId, "showHologramUpdatedScaling", this.showHologramUpdatedScaling);
+        this.subscribe(this.viewId, "showHologramUpdatedPosition", this.showHologramUpdatedManipulatedPosition);
+        this.subscribe(this.viewId, "showHologramUpdatedScaling", this.showHologramUpdatedManipulatedScaling);
         this.subscribe(this.viewId, "showImportedHologram", this.showImportedHologram);
         this.subscribe(this.viewId, "showStandardHologram", this.showStandardHologram);
 

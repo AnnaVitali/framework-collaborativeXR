@@ -1,4 +1,3 @@
-
 import {infrastructureEventManager} from "../../utility/infrastructure_event_manager.js";
 import {Vector3} from "../../../utility/vector3.js";
 import {Quaternion} from "../../../utility/quaternion.js";
@@ -54,7 +53,7 @@ class HologramModel extends Croquet.Model {
     }
 
     /**
-     * Add a new imported hologram
+     * Add a new imported hologram.
      * @param data {Object} object containing the data of the hologram.
      */
     addImportedHologram(data){
@@ -115,7 +114,7 @@ class HologramModel extends Croquet.Model {
     }
 
     /**
-     * Update the colorSphere of the hologram.
+     * Update the color of the hologram.
      * @param data {Object} object containing the data of the hologram.
      */
     updateColor(data){
@@ -172,12 +171,12 @@ class HologramModel extends Croquet.Model {
     updateHologramPositionAfterManipulation(data){
         this.#log("received requireHologramUpdate");
         const hologramName = data.hologramName;
-        const position = new Vector3(data.position_x, data.position_y, data.position_z)
+        const position = new Vector3(data.hologram_position_x, data.hologram_position_y, data.hologram_position_z)
         this.holograms.get(hologramName).changePositionWithoutSync(position);
 
         infrastructureEventManager.sendEvent("updatePosition", JSON.stringify({hologramName: hologramName, position: position}));
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
-            this.publish(v, "showHologramUpdatedPosition", hologramName);
+            this.publish(v, "showHologramUpdatedPosition", data);
         });
     }
 
@@ -188,12 +187,12 @@ class HologramModel extends Croquet.Model {
     updateHologramScalingAfterManipulation(data){
         this.#log("received requireHologramUpdate");
         const hologramName = data.hologramName;
-        const scaling = new Vector3(data.scale_x, data.scale_y, data.scale_z)
+        const scaling = new Vector3(data.hologram_scale_x, data.hologram_scale_y, data.hologram_scale_z)
         this.holograms.get(hologramName).changeScalingWithoutSync(scaling);
 
         infrastructureEventManager.sendEvent("updateScaling", JSON.stringify({hologramName: hologramName, scale: scaling}));
         this.linkedViews.filter(v => data.view !== v).forEach(v => {
-            this.publish(v, "showHologramUpdatedScaling", hologramName);
+            this.publish(v, "showHologramUpdatedScaling", data);
         });
     }
 

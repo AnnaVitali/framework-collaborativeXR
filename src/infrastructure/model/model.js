@@ -61,7 +61,7 @@ class RootModel extends Croquet.Model {
 
     /**
      * Destroy the animation associated to a specific animation model.
-     * @param animationName {String} the name of the animation
+     * @param animationName {String} the name of the animation.
      */
     destroyAnimation(animationName){
         this.#log("received stop animation");
